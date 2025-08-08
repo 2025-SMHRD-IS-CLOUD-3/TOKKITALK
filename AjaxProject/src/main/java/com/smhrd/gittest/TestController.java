@@ -18,6 +18,8 @@ public class TestController {
 		//소민
 		System.out.println("코드 추가44");
 		
+		System.out.println("Test");
+		
 
 	}
 
