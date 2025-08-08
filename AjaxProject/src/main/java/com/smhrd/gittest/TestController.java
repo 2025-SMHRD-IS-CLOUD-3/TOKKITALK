@@ -30,8 +30,7 @@ public class TestController {
 
 		
 		System.out.println("10101010");
-		System.out.println("?????");
-		System.out.println("영서와진서");
+
 	}
 
 }
