@@ -14,11 +14,12 @@
 <br>
 
 ## ⭐ 주요 기능
-* 기능1
-* 기능2
-* 기능3
-* 기능4
-* 기능5
+* 기능1 : 회원가입 , 로그인 , 회원정보 저장
+* 기능2 : 여자어 / MZ어 / 상사어 사용자가 원하는 해석 모드를 선택 가능
+* 기능3 : 스템이 텍스트 입력 또는 이미지 업로드 옵션을 표시
+* 기능4 : 표면적 의미 분석/ 감정 및 의도 분석/ 관계,상황 추론
+* 기능5 : 사용자가 결과를 확인할 수 있는 직관적인 UI로 제공
+* 기능6 : 센스고사 테스트 이용 가능
 <br>
 
 ## ⛏ 기술스택
@@ -82,7 +83,7 @@
 <br>
 
 ## 📌 SW유스케이스
-![image](https://user-images.githubusercontent.com/25995055/178401023-9a015e66-aa6e-4d74-8564-9b1f9d306649.png)
+<img width="681" height="494" alt="Image" src="https://github.com/user-attachments/assets/3fdf7b06-3f99-4049-bd4c-678c48284a36" />
 <br>
 
 ## 📌 서비스 흐름도
@@ -90,7 +91,7 @@
 <br>
 
 ## 📌 ER다이어그램
-![image](https://user-images.githubusercontent.com/25995055/169925318-102784c2-893f-4fd7-bec9-a54c44b669d4.png)
+<img width="641" height="373" alt="Image" src="https://github.com/user-attachments/assets/e82c321b-665a-4730-a3b4-93b878aade6b" />
 <br>
 
 ## 🖥 화면 구성
@@ -104,25 +105,25 @@
 ## 👨‍👩‍👦‍👦 팀원 역할
 <table>
   <tr>
-    <td align="center"><img src="https://item.kakaocdn.net/do/fd49574de6581aa2a91d82ff6adb6c0115b3f4e3c2033bfd702a321ec6eda72c" width="100" height="100"/></td>
-    <td align="center"><img src="https://mb.ntdtv.kr/assets/uploads/2019/01/Screen-Shot-2019-01-08-at-4.31.55-PM-e1546932545978.png" width="100" height="100"/></td>
-    <td align="center"><img src="https://mblogthumb-phinf.pstatic.net/20160127_177/krazymouse_1453865104404DjQIi_PNG/%C4%AB%C4%AB%BF%C0%C7%C1%B7%BB%C1%EE_%B6%F3%C0%CC%BE%F0.png?type=w2" width="100" height="100"/></td>
-    <td align="center"><img src="https://i.pinimg.com/236x/ed/bb/53/edbb53d4f6dd710431c1140551404af9.jpg" width="100" height="100"/></td>
-    <td align="center"><img src="https://pbs.twimg.com/media/B-n6uPYUUAAZSUx.png" width="100" height="100"/></td>
+    <td align="center"><img width="100" height="100" alt="Image" src="https://github.com/user-attachments/assets/e84232a4-7407-466f-a8e7-c0cc41b11467" /></td>
+    <td align="center"><img width="100" height="100" alt="Image" src="https://github.com/user-attachments/assets/f8ead41c-4281-41c2-be39-47830330061d" /></td>
+    <td align="center"><img width="100" height="100" alt="Image" src="https://github.com/user-attachments/assets/072a27d5-0e96-4677-96ac-8493c46a6971" /></td>
+    <td align="center"><img width="100" height="100" alt="Image" src="https://github.com/user-attachments/assets/1ee8f066-22a4-46a5-ad2c-6a7baac3cb83" /></td>
+    <td align="center"><img width="100" height="100" alt="Image" src="https://github.com/user-attachments/assets/e5e89e3a-ef7b-4dc4-a487-57d0c75fce16" /></td>
   </tr>
   <tr>
     <td align="center"><strong>윤수</strong></td>
     <td align="center"><strong>동민</strong></td>
     <td align="center"><strong>소민</strong></td>
-    <td align="center"><strong>동환</strong></td>
     <td align="center"><strong>종민</strong></td>
+    <td align="center"><strong>동환</strong></td>
   </tr>
   <tr>
-    <td align="center"><b>Frontend</b></td>
-    <td align="center"><b>Frontend</b></td>
-    <td align="center"><b>Backend</b></td>
-    <td align="center"><b>Backend</b></td>
-    <td align="center"><b>Deep Learning</b></td>
+    <td align="center"><b>Team Leader</b></td>
+    <td align="center"><b>Team Cordinator</b></td>
+    <td align="center"><b>Project Manager</b></td>
+    <td align="center"><b>Team Master</b></td>
+    <td align="center"><b>Team Member</b></td>
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/자신의username작성해주세요" target='_blank'>github</a></td>
