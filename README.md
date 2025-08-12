@@ -1,22 +1,16 @@
-# README 테스트
 
-## README 테스트
 
-### README 테스트
-
-#### README 테스트
-
-# 📎 꽃 보러 갈래?(팀명: 아름답조)
-![image](https://user-images.githubusercontent.com/25995055/178401309-2a2ffc86-ef45-439b-bfd8-6978312100bc.png)
+# 📎 맞춤형 언어(여자어) 인식 어플리케이션(팀명: SU:DIVE(수디브))
+<img width="710" height="707" alt="Image" src="https://github.com/user-attachments/assets/fc5ee352-70f8-45c1-81f3-d8c0363f3858" />
 
 
 ## 👀 서비스 소개
-* 서비스명:  꽃 개화 시기별 우리 지역 근처 데이트/드라이브 추천 장소 및 꽃 축제 추천 
-* 서비스설명: 
+* 서비스명: TOKKI Talk (사회적 언어 감정 통역사) 
+* 서비스설명: 자연어처리 기반 사회적 언어 해석 서비스 (여자어, MZ어, 상사어 기반)
 <br>
 
 ## 📅 프로젝트 기간
-2022.04.22 ~ 2022.06.03 (6주)
+2025.08.12 ~ 2025.08.28 (2주)
 <br>
 
 ## ⭐ 주요 기능
@@ -117,11 +111,11 @@
     <td align="center"><img src="https://pbs.twimg.com/media/B-n6uPYUUAAZSUx.png" width="100" height="100"/></td>
   </tr>
   <tr>
-    <td align="center"><strong>홍O동</strong></td>
-    <td align="center"><strong>홍O동</strong></td>
-    <td align="center"><strong>홍O동</strong></td>
-    <td align="center"><strong>홍O동</strong></td>
-    <td align="center"><strong>홍O동</strong></td>
+    <td align="center"><strong>윤수</strong></td>
+    <td align="center"><strong>동민</strong></td>
+    <td align="center"><strong>소민</strong></td>
+    <td align="center"><strong>동환</strong></td>
+    <td align="center"><strong>종민</strong></td>
   </tr>
   <tr>
     <td align="center"><b>Frontend</b></td>
