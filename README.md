@@ -5,8 +5,8 @@
 
 
 ## 👀 서비스 소개
-* 서비스명: TOKKI Talk (사회적 언어 감정 통역사) 
-* 서비스설명: 자연어처리 기반 사회적 언어 해석 서비스 (여자어, MZ어, 상사어 기반)
+* 서비스명 : TOKKI Talk (사회적 언어 감정 통역사) 
+* 서비스설명 : 자연어처리 기반 사회적 언어 해석 서비스 (여자어, MZ어, 상사어 기반)
 <br>
 
 ## 📅 프로젝트 기간
@@ -87,7 +87,7 @@
 <br>
 
 ## 📌 서비스 흐름도
-![image](https://user-images.githubusercontent.com/25995055/178401048-d6484bda-a2d7-40e1-998b-2bd195cd9f89.png)
+<img width="600" height="600" alt="Image" src="https://github.com/user-attachments/assets/b86d921e-6232-467f-882a-22f3d45bb48f" />
 <br>
 
 ## 📌 ER다이어그램
