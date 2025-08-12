@@ -1,7 +1,7 @@
 
 
 # 📎 맞춤형 언어(여자어) 인식 어플리케이션(팀명: SU:DIVE(수디브))
-<img width="710" height="707" alt="Image" src="https://github.com/user-attachments/assets/fc5ee352-70f8-45c1-81f3-d8c0363f3858" />
+<img width="500" height="500" alt="Image" src="https://github.com/user-attachments/assets/fc5ee352-70f8-45c1-81f3-d8c0363f3858" />
 
 
 ## 👀 서비스 소개
