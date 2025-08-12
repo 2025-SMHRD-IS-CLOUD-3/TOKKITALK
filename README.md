@@ -101,17 +101,11 @@
 
 ## 🖥 화면 구성
 
-### 로그인/회원가입/회원괸리/회원수정/회원탈퇴
-![image](https://user-images.githubusercontent.com/25995055/178401098-95f15a0e-a2de-415e-83d5-883bb4cb0656.png)
+### 시작화면/로그인/회원가입/메인페이지/마이페이지/회원정보
+<img width="1050" height="121" alt="Image" src="https://github.com/user-attachments/assets/19a21f98-9e4d-4f25-bfd5-3a5fa2717788" />
 <br>
 
-### 옷 정보/코디 추천(날씨, 팁, 오늘의 코디, 참고할 수 있는 코디)
-![image](https://user-images.githubusercontent.com/25995055/178401127-287e6de2-4396-49fc-a107-59c4d5cd55c7.png)
-<br>
 
-### 일정/고객센터
-![image](https://user-images.githubusercontent.com/25995055/178401150-861f0e93-0f40-4fae-98c1-2099bf513c8d.png)
-<br>
 
 ## 👨‍👩‍👦‍👦 팀원 역할
 <table>
