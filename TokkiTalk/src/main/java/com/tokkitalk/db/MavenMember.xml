@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smhrd.db.MemberMapper">
+
+	<insert id="join" parameterType="com.smhrd.model.MavenMember">
+		INSERT INTO MAVEN_MEMBER VALUES(#{email},#{pw},#{tel},#{address})
+	</insert>
+
+	<select id="login" resultType="com.smhrd.model.MavenMember" parameterType="com.smhrd.model.MavenMember" >
+		SELECT * FROM MAVEN_MEMBER WHERE EMAIL=#{email} AND PW=#{pw}
+	</select>
+	
+	<update id="updateMem" parameterType="com.smhrd.model.MavenMember">
+		UPDATE MAVEN_MEMBER SET PW=#{pw}, TEL=#{tel}, ADDRESS=#{address} WHERE EMAIL =#{email}
+	</update>
+	
+	<select id="selectMem" resultType="com.smhrd.model.MavenMember">
+		SELECT * FROM MAVEN_MEMBER
+	</select>
+
+</mapper>
