@@ -2,7 +2,7 @@
                 
     
     
-    <wb-module deploy-name="AjaxProject">
+    <wb-module deploy-name="Ex08Maven">
                                 
         
         
@@ -19,14 +19,14 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
                                 
         
         
         <property name="java-output-path" value="/TokkiTalk/target/classes"/>
-                                
-        
-        
-        <property name="context-root" value="AjaxProject"/>
+                
+        <property name="context-root" value="Ex08Maven"/>
                             
     
     
