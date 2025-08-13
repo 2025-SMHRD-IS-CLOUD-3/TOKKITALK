@@ -2,17 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<mapper namespace="com.tokkitalk.db.MemberMapper">
+<!-- MemberMapper.xml -->
+<mapper namespace="com.tokkitalk.model.MemberDAO">
 
-   	<!-- 회원가입 -->
-    <insert id="join" parameterType="com.tokkitalk.model.MavenMember">
-        INSERT INTO TB_USER_INFO (USER_ID, USER_PW, USER_NAME, GENDER, USER_DATE) 
+    <!-- 회원가입 쿼리 -->
+    <insert id="insertMember">
+        INSERT INTO members (user_id, password, user_name, gender, birth_date)
         VALUES (#{userId}, #{password}, #{userName}, #{gender}, #{birthDate})
     </insert>
 
-    <!-- 로그인 -->
-    <select id="login" resultType="com.tokkitalk.model.MavenMember" parameterType="com.tokkitalk.model.MavenMember">
-        SELECT * FROM TB_USER_INFO WHERE USER_ID=#{userId} AND USER_PW=#{password}
+    <!-- 로그인 확인 쿼리 -->
+    <select id="validateUser" resultType="com.tokkitalk.model.MavenMember">
+        SELECT * FROM members
+        WHERE user_id = #{userId} AND password = #{password}
     </select>
 
     <!-- 회원 정보 수정 

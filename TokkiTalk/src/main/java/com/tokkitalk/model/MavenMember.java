@@ -20,6 +20,12 @@ public class MavenMember {
         this.birthDate = birthDate;
     }
 
+    // 로그인 시 사용하는 생성자
+    public MavenMember(String userId, String password) {
+        this.userId = userId;
+        this.password = password;
+    }
+
     // getter, setter 메서드들
     public String getUserId() {
         return userId;
