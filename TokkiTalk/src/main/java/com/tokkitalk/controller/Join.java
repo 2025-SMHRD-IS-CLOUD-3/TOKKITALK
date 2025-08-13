@@ -1,24 +1,30 @@
 package com.tokkitalk.controller;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
-/**
- * Servlet implementation class join
- */
-@WebServlet("/join")
-public class Join extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+public class Join {
 
-	/**
-	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
+    // 회원가입 메서드
+    public boolean registerUser(String userId, String password, String userName, String gender, String birthDate) {
+        String sql = "INSERT INTO TB_USER_INFO (USER_ID, USER_PW, USER_NAME, GENDER, USER_DATE) VALUES (?, ?, ?, ?, ?)";
+        
+        try (Connection conn = DatabaseUtil.getConnection();  // DB 연결
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             
+            pstmt.setString(1, userId);
+            pstmt.setString(2, password);
+            pstmt.setString(3, userName);
+            pstmt.setString(4, gender);
+            pstmt.setString(5, birthDate);
 
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;  // 성공적으로 추가된 행이 있다면 true 반환
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
