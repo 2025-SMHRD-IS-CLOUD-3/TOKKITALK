@@ -5,13 +5,13 @@
 <mapper namespace="com.tokkitoalk.db.MemberMapper">
 
    	<!-- 회원가입 -->
-    <insert id="join" parameterType="com.smhrd.model.MavenMember">
+    <insert id="join" parameterType="com.tokkitoalk.model.MavenMember">
         INSERT INTO TB_USER_INFO (USER_ID, USER_PW, USER_NAME, GENDER, USER_DATE) 
         VALUES (#{userId}, #{password}, #{userName}, #{gender}, #{birthDate})
     </insert>
 
     <!-- 로그인 -->
-    <select id="login" resultType="com.smhrd.model.MavenMember" parameterType="com.smhrd.model.MavenMember">
+    <select id="login" resultType="com.tokkitoalk.model.MavenMember" parameterType="com.smhrd.model.MavenMember">
         SELECT * FROM TB_USER_INFO WHERE USER_ID=#{userId} AND USER_PW=#{password}
     </select>
 
