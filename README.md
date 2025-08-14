@@ -79,7 +79,7 @@
 <br>
 
 ## ⚙ 시스템 아키텍처(구조) 예시 
-![서비스 아키텍처](https://user-images.githubusercontent.com/25995055/169925538-15867bd9-aa0b-42fc-a39b-88981e926e51.png)
+![서비스 아키텍처2](https://github.com/user-attachments/assets/da05c1c8-ce92-473f-8840-2cbfc1a191e2)
 <br>
 
 ## 📌 SW유스케이스
