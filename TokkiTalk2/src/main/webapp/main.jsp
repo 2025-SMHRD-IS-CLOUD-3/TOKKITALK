@@ -347,24 +347,7 @@
             }, 500); // 0.5초(500ms) 후에 이동
         }
 
-     // JavaScript 코드 시작
-
-     // 기존 함수들...
-
-     // 로그인 성공 시 호출될 함수 (onclick 이벤트용)
-	     function handleLoginSuccess() {
-	         alert('로그인에 성공했습니다!');
-	         
-	         // 로그인 모달을 닫습니다.
-	         closeModal('loginModal');
-	         
-	         // 1초(1000ms) 후에 'success.jsp' 페이지로 이동합니다.
-	         setTimeout(function() {
-	             window.location.href = 'main.jsp';
-	         }, 1000);
-	     }
-
-     // 기존의 모든 이벤트 리스너들...
+     
     </script>
 </body>
 </html>
