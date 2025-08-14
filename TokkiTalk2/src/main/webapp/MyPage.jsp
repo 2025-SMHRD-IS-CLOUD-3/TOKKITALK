@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% boolean isLoggedIn = (session.getAttribute("member") != null); %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -63,9 +64,14 @@
             color: #ff6b6b;
         }
         
-        .nav-buttons {
+        .nav-buttons a {
             display: flex;
             gap: 15px;
+            text-decoration: none;
+            color: black;
+        }
+        .nav-buttons:hover {
+        	color: #ff6b6b;
         }
         
         .btn-login, .btn-logout {
@@ -81,7 +87,7 @@
         }
         
         .btn-login:hover, .btn-logout:hover {
-            background: #e8eaed;
+            background: #ff6b6b;
         }
         
         .btn-signup, .btn-edit-profile {
@@ -428,7 +434,11 @@
                 <a href="MyPage.jsp" class="nav-item">마이페이지</a>
             </nav>
             <div class="nav-buttons">
-                <button class="btn-logout">로그아웃</button>
+                <% if (isLoggedIn) { %>
+                    <form action="logout" method="post">
+                        <button type="submit" class="btn-logout"><a href="main.jsp">로그아웃</a></button>
+                    </form>
+                <% } %>
             </div>
         </div>
     </header>
