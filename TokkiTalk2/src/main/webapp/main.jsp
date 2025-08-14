@@ -111,7 +111,7 @@
             <nav class="nav-menu">
                 <a href="/권동환/K소개페이지.html" class="nav-item">소개</a>
                 <a href="/권동환/K센스테스트.html" class="nav-item">센스고사</a>
-                <a href="/권동환/K마이페이지.html" class="nav-item">마이페이지</a>
+                <a href="MyPage.jsp" class="nav-item">마이페이지</a>
             </nav>
             <div class="nav-buttons">
                 <% if (isLoggedIn) { %>
