@@ -22,7 +22,7 @@ public class TestController extends HttpServlet {
 			MemberDAO dao = new MemberDAO();
 			System.out.println("DAO 객체 생성 완료");
 			
-			// 기존 데이터 삭제 (중복 방지)
+			// 기존 데이터 삭제 (중복 방지..)
 			System.out.println("기존 테스트 데이터 삭제 중...");
 			int deleteResult = dao.deleteTestData();
 			System.out.println("삭제된 행 수: " + deleteResult);
