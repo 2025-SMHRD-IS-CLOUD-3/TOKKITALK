@@ -174,7 +174,6 @@ function showChatModal(chat) {
 
 function updateProfileDisplay(profile) {
     userNameElement.textContent = `${profile.name}님`;
-    userEmailElement.textContent = profile.email;
     headerUserName.textContent = profile.name;
 }
 
