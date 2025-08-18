@@ -205,7 +205,7 @@ if (saveProfileBtn) {
         }
         
         if (newPassword !== '') {
-            if (currentPassword === '') {
+            if (currentPassword === mockDatabase.userProfile.password) {
                 alert('비밀번호를 변경하려면 현재 비밀번호를 입력해주세요.');
                 return;
             }
@@ -287,7 +287,7 @@ window.addEventListener('load', function() {
 
     if (isLoggedIn && storedUserName) {
         mockDatabase.userProfile.name = storedUserName;
-        mockDatabase.userProfile.password = "1234"; 
+        mockDatabase.userProfile.password = ""; 
         
         // 특정 사용자에게만 가상의 대화 기록을 제공
         if (storedUserName === "김토끼") {
