@@ -21,7 +21,7 @@
         .logo:hover { color: #ff6b6b; }
         .nav-menu { display: flex; gap: 40px; }
         .nav-item { color: #666; text-decoration: none; font-size: 16px; font-weight: 500; transition: color 0.3s; }
-        .nav-item:hover { color: #ff6b6b; }
+        .nav-item:hover { color: #ff6b6b;}
         .nav-buttons { display: flex; gap: 15px; }
         .btn-login { background: #f1f3f4; color: black; border: none; padding: 12px 24px; border-radius: 25px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.3s; }
         .btn-login:hover { background: #ff6b6b; color: white; }
@@ -40,8 +40,10 @@
         .content-section:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
         .main-title { font-size: 36px; font-weight: bold; color: #333; line-height: 1.3; margin-bottom: 25px; }
         .main-description { font-size: 16px; color: #666; line-height: 1.6; margin-bottom: 35px; }
-        .cta-button { background: #FFD200; color: black; border: none; padding: 15px 35px; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px; width: 100%; justify-content: center; }
-        .cta-button:hover { background: #ff5252; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3); }
+        .cta-button { background: #FFD200; text-decoration: none; color: black; border: 0px; padding: 15px 35px; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px; width: 100%; justify-content: center; }
+        .cta-button a{border : none; text-decoration: none;}
+        .cta-button:hover { background: #ff5252; text-decoration: none; border: none; color: white; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3); }
+        .cta-button:hover a{text-decoration: none; color:white;}
         .icon { font-size: 20px; }
         .footer { background: white; padding: 40px 0; margin-top: 80px; border-top: 1px solid #eee; }
         .footer-container { max-width: 1200px; margin: 0 auto; text-align: center; padding: 0 20px; }
@@ -110,7 +112,7 @@
             <div class="logo" onclick="goHome()">TOKKI TALK</div>
             <nav class="nav-menu">
                 <a href="/권동환/K소개페이지.html" class="nav-item">소개</a>
-                <a href="/권동환/K센스테스트.html" class="nav-item">센스고사</a>
+                <a href="SenseTest.jsp" class="nav-item">센스고사</a>
                 <a href="MyPage.jsp" class="nav-item">마이페이지</a>
             </nav>
             <div class="nav-buttons">
@@ -139,9 +141,9 @@
                     TOKKI TALK과 함께<br>
                     그녀의 메시지 속 숨은 의미를 파헤쳐보세요!
                 </p>
-                <button class="cta-button">
+                <button class="cta-button"><a href="Question.jsp">
                     나랑 대화해볼래?
-                    <span class="icon">💬</span>
+                    <span class="icon">💬</a></span>
                 </button>
             </div>
             <div class="content-section">
@@ -150,9 +152,9 @@
                     TOKKI TALK의 센스고사를 통해<br>
                     당신의 숨겨진 매력과 센스를 발견해보세요!
                 </p>
-                <button class="cta-button">
+                <button class="cta-button" ><a href="SenseTest.jsp" >
                     센스고사 시작하기
-                    <span class="icon">🚀</span>
+                    <span class="icon">🚀</a></span>
                 </button>
             </div>
         </div>
@@ -160,7 +162,7 @@
 
     <footer class="footer">
         <div class="footer-container">
-            <p class="footer-text">© 2024 TOKKI TALK. All Rights Reserved.</p>
+            <p class="footer-text">© 2025 TOKKI TALK. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -347,24 +349,7 @@
             }, 500); // 0.5초(500ms) 후에 이동
         }
 
-     // JavaScript 코드 시작
-
-     // 기존 함수들...
-
-     // 로그인 성공 시 호출될 함수 (onclick 이벤트용)
-	     function handleLoginSuccess() {
-	         alert('로그인에 성공했습니다!');
-	         
-	         // 로그인 모달을 닫습니다.
-	         closeModal('loginModal');
-	         
-	         // 1초(1000ms) 후에 'success.jsp' 페이지로 이동합니다.
-	         setTimeout(function() {
-	             window.location.href = 'main.jsp';
-	         }, 1000);
-	     }
-
-     // 기존의 모든 이벤트 리스너들...
+     
     </script>
 </body>
 </html>
