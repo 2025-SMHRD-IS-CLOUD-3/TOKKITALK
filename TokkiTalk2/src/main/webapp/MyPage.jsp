@@ -428,7 +428,7 @@
                 <a href="MyPage.jsp" class="nav-item">마이페이지</a>
             </nav>
             <div class="nav-buttons">
-                <button class="btn-logout">로그아웃</button>
+                <button class="btn-logout"><a href="main.jsp">로그아웃</a></button>
             </div>
         </div>
     </header>
