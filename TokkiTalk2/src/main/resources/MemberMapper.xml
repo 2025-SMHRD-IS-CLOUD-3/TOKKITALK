@@ -17,7 +17,7 @@
 		FROM TB_USER_INFO 
 		WHERE USER_ID = 'test' AND USER_PW = '1234'
 		-->
-		SELECT USER_ID, USER_PW, USER_NAME, GENDER, USER_DATE 
+		SELECT * 
 		FROM TB_USER_INFO 
 		WHERE USER_ID = #{user_id} AND USER_PW = #{user_pw}
 	</select>
@@ -42,5 +42,8 @@
 	<select id="selectAll" resultType="com.tokkitalk.model.MevenMember">
 		SELECT * FROM TB_USER_INFO ORDER BY USER_DATE DESC
 	</select>
-
+	
+	<update id="updateMem" parameterType="com.tokkitalk.model.MevenMember">
+		UPDATE MAVEN_MEMBER SET PW = #{user_pw} WHERE USER_ID = #{user_id}
+	</update>
 </mapper>

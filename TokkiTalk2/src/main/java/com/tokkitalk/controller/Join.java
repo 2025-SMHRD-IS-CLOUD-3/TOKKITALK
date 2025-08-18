@@ -48,10 +48,10 @@ public class Join extends HttpServlet {
 		// 7. 결과에 따른 페이지 이동
 		if (cnt > 0) {
 			// 회원가입 성공
-			response.sendRedirect("main.jsp?msg=join_success");
+			response.sendRedirect("main.html?msg=join_success");
 		} else {
 			// 회원가입 실패
-			response.sendRedirect("main.jsp?msg=join_fail");
+			response.sendRedirect("main.html?msg=join_fail");
 		}
 	}
 }

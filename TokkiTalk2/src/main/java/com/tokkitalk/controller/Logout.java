@@ -18,6 +18,6 @@ public class Logout extends HttpServlet {
 		session.invalidate();
 		
 		// 메인 페이지로 리다이렉트
-		response.sendRedirect("main.jsp?msg=logout_success");
+		response.sendRedirect("main.html?msg=logout_success");
 	}
 }

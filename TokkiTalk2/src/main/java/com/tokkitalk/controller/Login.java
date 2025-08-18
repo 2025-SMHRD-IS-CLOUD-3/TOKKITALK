@@ -28,7 +28,7 @@ public class Login extends HttpServlet {
 		System.out.println("입력된 PW: " + user_pw);
 		
 		// 3. Member 객체 생성
-		MevenMember member = new MevenMember(user_id, user_pw, null, null, null);
+		MevenMember member = new MevenMember();
 		
 		// 4. DAO 객체 생성
 		MemberDAO dao = new MemberDAO();
@@ -52,11 +52,11 @@ public class Login extends HttpServlet {
 			session.setAttribute("member", result);
 			System.out.println("세션에 사용자 정보 저장 완료");
 			 // 사용자 이름을 URL 파라미터로 추가
-		    response.sendRedirect("main.jsp?username=" + result.getUser_id());
+		    response.sendRedirect("main.html?username=" + result.getUser_id());
 		} else {
 			// 로그인 실패
 			System.out.println("로그인 실패 - main.jsp로 리다이렉트");
-			response.sendRedirect("main.jsp?msg=login_fail");
+			response.sendRedirect("main.html?msg=login_fail");
 		}
 	}
 }
