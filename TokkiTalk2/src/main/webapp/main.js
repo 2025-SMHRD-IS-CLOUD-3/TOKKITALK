@@ -155,6 +155,76 @@ document.addEventListener('DOMContentLoaded', function() {
         alert("로그아웃되었습니다.");
         window.location.href = "main.html";
     });
+<<<<<<< HEAD
+=======
+
+    // 로그인 모달 버튼 이벤트
+    const loginSubmitBtn = document.querySelector('.modal-login-btn');
+    loginSubmitBtn.addEventListener('click', () => {
+        // 클라이언트에서 로그인 처리 (백엔드 없이 테스트용)
+        const inputId = document.querySelector('#loginModal .modal-input[placeholder="아이디를 입력하세요"]').value;
+        if (inputId) {
+            // 서버에 데이터를 보내고 결과를 기다리는 로직이 필요하지만,
+            // 이 예제에서는 클라이언트에서 바로 처리
+            sessionStorage.setItem('loggedIn', 'true');
+            sessionStorage.setItem('userName', inputId);
+            closeLoginModal();
+            updateHeaderUI(true, inputId);
+            alert(`${inputId}님, 환영합니다!`);
+            window.location.reload(); // 페이지 새로고침하여 URL 파라미터 처리
+        } else {
+            alert('아이디를 입력해주세요.');
+        }
+    });
+
+    // 회원가입 모달에서 로그인 버튼 클릭 시
+    const signupModalBtn = document.querySelector('#loginModal .modal-signup-btn');
+    signupModalBtn.addEventListener('click', function() {
+        closeLoginModal();
+        openSignupModal();
+    });
+    
+    // 회원가입 모달에서 회원가입 완료 버튼
+    const signupConfirmBtn = document.querySelector('.signup-confirm-btn');
+    signupConfirmBtn.addEventListener('click', function() {
+        alert('회원가입이 완료되었습니다! 🎉');
+        closeSignupModal();
+        openLoginModal();
+    });
+
+    // 아이디 중복 확인 버튼
+    const duplicateCheckBtn = document.querySelector('.duplicate-check-btn');
+    if (duplicateCheckBtn) {
+        duplicateCheckBtn.addEventListener('click', async function() {
+            const idInput = document.querySelector('#signupModal .signup-input-row .signup-input');
+            const userId = (idInput ? idInput.value : '').trim();
+            if (!userId) {
+                alert('아이디를 입력해주세요.');
+                return;
+            }
+            const idRegex = /^[A-Za-z0-9]{1,8}$/;
+            if (!idRegex.test(userId)) {
+                alert('아이디는 영문/숫자 1~8자만 가능합니다.');
+                return;
+            }
+            try {
+                const res = await fetch('check-duplicate?id=' + encodeURIComponent(userId), { method: 'GET' });
+                if (!res.ok) {
+                    alert('중복 확인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                    return;
+                }
+                const data = await res.json();
+                if (data.exists) {
+                    alert('이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.');
+                } else {
+                    alert('사용 가능한 아이디입니다!');
+                }
+            } catch (e) {
+                alert('네트워크 오류가 발생했습니다.');
+            }
+        });
+    }
+>>>>>>> branch 'main' of https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK.git
     
     // 모달 외부 클릭 시 닫기
     document.querySelectorAll('.modal-overlay').forEach(modal => {

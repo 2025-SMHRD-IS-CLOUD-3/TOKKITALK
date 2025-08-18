@@ -1,0 +1,209 @@
+openapi: 3.0.3
+info:
+  title: TokkiTalk Analysis API
+  version: 0.1.0
+servers:
+  - url: /TokkiTalk2
+paths:
+  /analyze:
+    post:
+      summary: Analyze text or image and return 4 cards
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                input_type:
+                  type: string
+                  enum: [text, image]
+                text:
+                  type: string
+                image_base64:
+                  type: string
+                options:
+                  type: object
+                  properties:
+                    turns_used:
+                      type: integer
+                    tone:
+                      type: string
+              required: [input_type]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisResult'
+        '400':
+          description: Bad Request
+  /suggest:
+    post:
+      summary: Regenerate reply suggestions with different tone/length
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                analysis_id:
+                  type: string
+                tone:
+                  type: string
+                length:
+                  type: string
+                  enum: [short, long]
+              required: [analysis_id]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuggestResult'
+        '400':
+          description: Bad Request
+  /feedback:
+    post:
+      summary: Store user feedback for quality loop
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                analysis_id:
+                  type: string
+                like:
+                  type: boolean
+                partner_reaction:
+                  type: string
+              required: [analysis_id]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+  /analysis/{analysis_id}:
+    delete:
+      summary: Delete analysis record by ID
+      parameters:
+        - in: path
+          name: analysis_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+        '404':
+          description: Not Found
+
+components:
+  schemas:
+    AnalysisResult:
+      type: object
+      properties:
+        analysis_id:
+          type: string
+        surface_meaning:
+          type: object
+          properties:
+            one_line:
+              type: string
+            confidence:
+              type: number
+            evidence:
+              type: array
+              items:
+                type: string
+        hidden_meaning:
+          type: object
+          properties:
+            one_line:
+              type: string
+            intent_labels:
+              type: array
+              items:
+                type: object
+                properties:
+                  label:
+                    type: string
+                  score:
+                    type: number
+            risk_flags:
+              type: array
+              items:
+                type: object
+                properties:
+                  flag:
+                    type: string
+                  reason:
+                    type: string
+            confidence:
+              type: number
+        emotion:
+          type: object
+          properties:
+            label:
+              type: string
+            valence:
+              type: integer
+            arousal:
+              type: number
+            politeness_level:
+              type: string
+            cues:
+              type: object
+              additionalProperties: true
+            confidence:
+              type: number
+        response_suggestion:
+          type: object
+          properties:
+            tone:
+              type: string
+            primary:
+              type: string
+            alternatives:
+              type: array
+              items:
+                type: string
+            rationale:
+              type: string
+            confidence:
+              type: number
+        overall_confidence:
+          type: number
+    SuggestResult:
+      type: object
+      properties:
+        primary:
+          type: string
+        alternatives:
+          type: array
+          items:
+            type: string
+        tone:
+          type: string
+
+
+
+
+

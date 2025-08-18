@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tokkitalk.db.AnalysisMapper">
+
+  <insert id="insertAnalysis" parameterType="map">
+    INSERT INTO analyses (
+      analysis_id, literal_summary, implied_intent, risk_flags, emotion_label,
+      emotion_valence, emotion_arousal, politeness_level, cues_json,
+      suggestion_main, suggestion_alt, suggestion_tone, rationale,
+      overall_confidence, model_version
+    ) VALUES (
+      #{analysis_id}, #{literal_summary}, #{implied_intent}, #{risk_flags}, #{emotion_label},
+      #{emotion_valence}, #{emotion_arousal}, #{politeness_level}, #{cues_json},
+      #{suggestion_main}, #{suggestion_alt}, #{suggestion_tone}, #{rationale},
+      #{overall_confidence}, #{model_version}
+    )
+  </insert>
+
+  <update id="updateSuggestion" parameterType="map">
+    UPDATE analyses SET
+      suggestion_main = #{suggestion_main},
+      suggestion_alt = #{suggestion_alt},
+      suggestion_tone = #{suggestion_tone}
+    WHERE analysis_id = #{analysis_id}
+  </update>
+
+  <insert id="insertFeedback" parameterType="map">
+    INSERT INTO analysis_feedback (analysis_id, liked, partner_reaction)
+    VALUES (#{analysis_id}, #{liked}, #{partner_reaction})
+  </insert>
+
+  <select id="selectAnalysis" parameterType="string" resultType="map">
+    SELECT analysis_id, literal_summary, implied_intent
+    FROM analyses WHERE analysis_id = #{value}
+  </select>
+
+  <delete id="deleteAnalysis" parameterType="string">
+    DELETE FROM analyses WHERE analysis_id = #{value}
+  </delete>
+
+</mapper>
+
+

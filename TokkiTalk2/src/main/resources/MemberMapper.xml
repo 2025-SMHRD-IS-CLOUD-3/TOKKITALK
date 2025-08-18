@@ -35,7 +35,12 @@
 	
 	<!-- 회원 정보 조회 -->
 	<select id="selectMember" parameterType="String" resultType="com.tokkitalk.model.MevenMember">
-		SELECT * FROM TB_USER_INFO WHERE USER_ID = #{user_id}
+		SELECT * FROM TB_USER_INFO WHERE USER_ID = #{value}
+	</select>
+
+	<!-- 아이디 중복 확인 -->
+	<select id="existsById" parameterType="String" resultType="int">
+		SELECT COUNT(1) FROM TB_USER_INFO WHERE USER_ID = #{value}
 	</select>
 	
 	<!-- 전체 회원 조회 -->

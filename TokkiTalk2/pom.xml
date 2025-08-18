@@ -68,6 +68,27 @@
       <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
+    
+    <!-- JSON (Gson) -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10.1</version>
+    </dependency>
+    
+    <!-- HTTP client for external API calls (OpenAI) -->
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.11.0</version>
+    </dependency>
+    
+    <!-- Commons Validator (optional, for PII patterns) -->
+    <dependency>
+      <groupId>commons-validator</groupId>
+      <artifactId>commons-validator</artifactId>
+      <version>1.7</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -92,7 +113,7 @@
       <!-- Tomcat 플러그인 -->
       <plugin>
         <groupId>org.apache.tomcat.maven</groupId>
-        <artifactId>tomcat7-maven-plugin</artifactId>
+        <artifactId>tomcat9-maven-plugin</artifactId>
         <version>2.2</version>
         <configuration>
           <port>8081</port>
