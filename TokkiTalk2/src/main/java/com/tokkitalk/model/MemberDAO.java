@@ -78,6 +78,17 @@ public class MemberDAO {
 		}
 		return member;
 	}
+
+	// 아이디 중복 확인
+	public boolean existsById(String userId) {
+		SqlSession session = sqlSessionFactory.openSession();
+		try {
+			Integer count = session.selectOne("com.tokkitalk.db.MemberMapper.existsById", userId);
+			return count != null && count > 0;
+		} finally {
+			session.close();
+		}
+	}
 	
 	// 전체 회원 조회
 	public List<MevenMember> selectAll() {

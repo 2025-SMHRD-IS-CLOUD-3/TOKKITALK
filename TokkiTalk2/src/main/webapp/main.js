@@ -146,6 +146,39 @@ document.addEventListener('DOMContentLoaded', function() {
         closeSignupModal();
         openLoginModal();
     });
+
+    // 아이디 중복 확인 버튼
+    const duplicateCheckBtn = document.querySelector('.duplicate-check-btn');
+    if (duplicateCheckBtn) {
+        duplicateCheckBtn.addEventListener('click', async function() {
+            const idInput = document.querySelector('#signupModal .signup-input-row .signup-input');
+            const userId = (idInput ? idInput.value : '').trim();
+            if (!userId) {
+                alert('아이디를 입력해주세요.');
+                return;
+            }
+            const idRegex = /^[A-Za-z0-9]{1,8}$/;
+            if (!idRegex.test(userId)) {
+                alert('아이디는 영문/숫자 1~8자만 가능합니다.');
+                return;
+            }
+            try {
+                const res = await fetch('check-duplicate?id=' + encodeURIComponent(userId), { method: 'GET' });
+                if (!res.ok) {
+                    alert('중복 확인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                    return;
+                }
+                const data = await res.json();
+                if (data.exists) {
+                    alert('이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.');
+                } else {
+                    alert('사용 가능한 아이디입니다!');
+                }
+            } catch (e) {
+                alert('네트워크 오류가 발생했습니다.');
+            }
+        });
+    }
     
     // 모달 외부 클릭 시 닫기
     document.querySelectorAll('.modal-overlay').forEach(modal => {
