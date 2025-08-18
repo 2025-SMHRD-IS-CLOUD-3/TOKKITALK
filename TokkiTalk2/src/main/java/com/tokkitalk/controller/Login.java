@@ -51,7 +51,8 @@ public class Login extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("member", result);
 			System.out.println("세션에 사용자 정보 저장 완료");
-			response.sendRedirect("main.jsp");
+			 // 사용자 이름을 URL 파라미터로 추가
+		    response.sendRedirect("main.jsp?username=" + result.getUser_id());
 		} else {
 			// 로그인 실패
 			System.out.println("로그인 실패 - main.jsp로 리다이렉트");
