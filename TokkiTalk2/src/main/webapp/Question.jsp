@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% boolean isLoggedIn = (session.getAttribute("member") != null); %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -340,6 +341,13 @@
                 ← 홈으로 돌아가기
             </button>
         </div>
+        <div class="nav-buttons">
+                <% if (isLoggedIn) { %>
+                    <form action="logout" method="post">
+                        <button type="submit" class="btn-logout"><a href="Logout">로그아웃</a></button>
+                    </form>
+                <% } %>
+            </div>
     </header>
 
     <!-- 메인 콘텐츠 -->

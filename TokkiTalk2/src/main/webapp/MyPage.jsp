@@ -436,7 +436,7 @@
             <div class="nav-buttons">
                 <% if (isLoggedIn) { %>
                     <form action="logout" method="post">
-                        <button type="submit" class="btn-logout"><a href="main.jsp">로그아웃</a></button>
+                        <button type="submit" class="btn-logout"><a href="Logout">로그아웃</a></button>
                     </form>
                 <% } %>
             </div>

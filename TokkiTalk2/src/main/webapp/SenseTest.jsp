@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% boolean isLoggedIn = (session.getAttribute("member") != null); %>    
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -253,10 +254,13 @@
                 <a href="SenseTest.jsp" class="nav-item">센스고사</a>
                 <a href="MyPage.jsp" class="nav-item">마이페이지</a>
             </nav>
-            <div class="nav-buttons">
-                <button class="btn-login">로그인</button>
-                <button class="btn-signup">회원가입</button>
-            </div>
+		<div class="nav-buttons">
+            <% if (isLoggedIn) { %>
+                <form action="logout" method="post">
+                    <button type="submit" class="btn-logout"><a href="Logout">로그아웃</a></button>
+                </form>
+            <% } %>
+        </div>
         </div>
     </header>
 
