@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOKKI TALK</title>
     <style>
-        /* CSS 코드는 변경사항 없음 */
         * {
             margin: 0;
             padding: 0;
@@ -623,16 +622,16 @@
     </footer>
 
     <div id="loginModal" class="modal-overlay">
-        <form id="loginForm" class="modal-content" action="login" method="post">
-            <button type="button" class="modal-close" onclick="closeLoginModal()">&times;</button>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeLoginModal()">&times;</button>
             <h2 class="modal-title">로그인</h2>
             
             <div class="input-group">
-                <input type="text" name="user_id" id="loginId" class="modal-input" placeholder="아이디를 입력하세요">
+                <input type="text" class="modal-input" placeholder="아이디를 입력하세요">
             </div>
             
             <div class="input-group">
-                <input type="password" name="user_pw" id="loginPw" class="modal-input" placeholder="비밀번호를 입력하세요">
+                <input type="password" class="modal-input" placeholder="비밀번호를 입력하세요">
             </div>
             
             <div class="character-icons">
@@ -643,56 +642,54 @@
             
             <div class="forgot-password">로그인 정보가 없으신가요?</div> 
             <div class="divider"></div>
-            
-            <button type="submit" class="modal-login-btn">로그인</button>
-            <button type="button" class="modal-signup-btn" onclick="closeLoginModal(); openSignupModal();">회원가입</button>
-        </form>
+            <button class="modal-login-btn">로그인</button>
+            <button class="modal-signup-btn">회원가입</button>
+        </div>
     </div>
 
     <div id="signupModal" class="modal-overlay">
-        <form id="signupForm" class="signup-modal-content" action="join" method="post">
-            <button type="button" class="modal-close" onclick="closeSignupModal()">&times;</button>
+        <div class="signup-modal-content">
+            <button class="modal-close" onclick="closeSignupModal()">&times;</button>
             <h2 class="signup-title">회원가입</h2>
             <div class="signup-underline"></div>
             
             <div class="signup-input-row">
-			    <input type="text" name="id" id="signupId" class="signup-input" placeholder="아이디 입력 ( 영문, 숫자 8자 이내 )">
-			    <button type="button" class="duplicate-check-btn" onclick="checkIdDuplicate()">중복 확인</button>
-			</div>
-			
-			<div class="input-group">
-			    <input type="password" name="pw" id="signupPw" class="signup-input" placeholder="비밀번호 입력(숫자 4자)">
-			</div>
-			<div class="input-group">
-			    <!-- 두 번째 비밀번호 확인 필드. name과 id를 다르게 설정합니다. -->
-			    <input type="password" name="user_pw_check" id="signupPwCheck" class="signup-input" placeholder="비밀번호 확인">
-			</div>
-			<div class="input-group">
-			    <input type="text" name="name" id="signupName" class="signup-input" placeholder="이름을 입력해주세요">
-			</div>
+                <input type="text" class="signup-input" placeholder="아이디 입력 ( 영문, 숫자 8자 이내 )">
+                <button class="duplicate-check-btn">중복 확인</button>
+            </div>
             
             <div class="input-group">
-                <input type="date" name="user_date" id="signupDate" class="date-input">
+                <input type="password" class="signup-input" placeholder="비밀번호 입력(숫자 4자)">
+            </div>
+            
+            <div class="input-group">
+                <input type="password" class="signup-input" placeholder="비밀번호 확인">
+            </div>
+            
+            <div class="input-group">
+                <input type="text" class="signup-input" placeholder="이름을 입력해주세요">
+            </div>
+            
+            <div class="input-group">
+                <input type="date" class="date-input">
             </div>
             
             <div class="gender-group">
                 <div class="gender-option">
-                    <input type="radio" id="genderMale" name="gender" value="male" style="display:none;">
-                    <div class="gender-radio" onclick="selectGender('genderMale')"></div>
-                    <label for="genderMale" class="gender-label">남자</label>
+                    <div class="gender-radio" onclick="selectGender('male')"></div>
+                    <label class="gender-label">남자</label>
                 </div>
                 <div class="gender-option">
-                    <input type="radio" id="genderFemale" name="gender" value="female" style="display:none;">
-                    <div class="gender-radio" onclick="selectGender('genderFemale')"></div>
-                    <label for="genderFemale" class="gender-label">여자</label>
+                    <div class="gender-radio" onclick="selectGender('female')"></div>
+                    <label class="gender-label">여자</label>
                 </div>
             </div>
             
             <div class="signup-buttons">
-                <button type="submit" class="signup-confirm-btn">회원가입 완료</button>
-                <button type="button" class="signup-cancel-btn" onclick="closeSignupModal()">돌아가기</button>
+                <button class="signup-confirm-btn">회원가입 완료</button>
+                <button class="signup-cancel-btn" onclick="closeSignupModal()">돌아가기</button>
             </div>
-        </form>
+        </div>
     </div>
 
     <script src="main.js"></script>

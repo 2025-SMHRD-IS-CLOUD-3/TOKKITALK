@@ -17,9 +17,7 @@
 		FROM TB_USER_INFO 
 		WHERE USER_ID = 'test' AND USER_PW = '1234'
 		-->
-		SELECT * 
-		FROM TB_USER_INFO 
-		WHERE USER_ID = #{user_id} AND USER_PW = #{user_pw}
+		SELECT * FROM TB_USER_INFO WHERE USER_ID = #{user_id} AND USER_PW = #{user_pw}
 	</select>
 	
 	<!-- 테스트용 전체 데이터 조회 -->

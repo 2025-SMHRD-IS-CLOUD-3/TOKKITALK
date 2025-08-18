@@ -21,9 +21,9 @@ public class Join extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		
 		// 2. 파라미터 수집
-		String id = request.getParameter("id");
-		String pw = request.getParameter("pw");
-		String name = request.getParameter("name");
+		String user_id = request.getParameter("id");
+		String user_pw = request.getParameter("pw");
+		String user_name = request.getParameter("name");
 		String gender = request.getParameter("gender");
 		String user_date_str = request.getParameter("user_date");
 		
@@ -37,7 +37,7 @@ public class Join extends HttpServlet {
 		}
 		
 		// 4. Member 객체 생성
-		MevenMember member = new MevenMember(id, pw, name, gender, user_date);
+		MevenMember member = new MevenMember(user_id, user_pw, user_name, gender, user_date);
 		
 		// 5. DAO 객체 생성
 		MemberDAO dao = new MemberDAO();
