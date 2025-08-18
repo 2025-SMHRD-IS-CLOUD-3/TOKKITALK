@@ -1,5 +1,3 @@
-// quiz.js
-
 const quizData = [
     {
         question: "Q1. 다음 카톡 이후 적절한 행동으로 올바른 것은?",
@@ -54,7 +52,7 @@ const quizData = [
 ];
 
 let currentQuestionIndex = 0;
-let score = 0; // 정답 개수를 추적하는 변수 추가
+let score = 0;
 
 const quizContainer = document.querySelector('.quiz-container');
 const questionTitle = document.querySelector('.question-title');
@@ -76,7 +74,6 @@ function loadQuiz() {
             answerOptionsContainer.appendChild(optionElement);
         });
     } else {
-        // 모든 퀴즈가 끝나면 결과 페이지를 보여줍니다.
         showResultPage();
     }
 }
@@ -84,27 +81,22 @@ function loadQuiz() {
 function selectAnswer(selectedOption) {
     const currentQuiz = quizData[currentQuestionIndex];
     if (selectedOption === currentQuiz.correctAnswer) {
-        score++; // 정답일 경우 점수 증가
+        score++;
     }
     
     currentQuestionIndex++;
     loadQuiz();
 }
 
-// 결과 페이지를 보여주는 새로운 함수
 function showResultPage() {
-    // 퀴즈 컨테이너의 내용을 지웁니다.
     quizContainer.innerHTML = '';
 
-    // 새로운 결과 페이지 콘텐츠를 생성합니다.
     const resultCard = document.createElement('div');
     resultCard.classList.add('result-card');
     
-    // 결과 제목
     const resultTitle = document.createElement('h2');
     resultTitle.classList.add('result-title');
     
-    // 점수 및 결과에 따른 메시지
     const resultText = document.createElement('p');
     resultText.classList.add('result-text');
 
@@ -119,8 +111,6 @@ function showResultPage() {
 
     resultTitle.textContent = `센스고사 결과: ${score} / 5점`;
     resultText.textContent = resultMessage;
-
-    
     
     resultCard.appendChild(resultTitle);
     resultCard.appendChild(resultText);
@@ -128,4 +118,23 @@ function showResultPage() {
     quizContainer.appendChild(resultCard);
 }
 
+// 로그인 상태를 가정하는 변수 (실제로는 서버에서 받아와야 합니다)
+const loggedIn = true;
+const userName = "김토끼"; // 실제 사용자 이름으로 대체
+
+const welcomeText = document.getElementById('userName');
+const logoutBtn = document.getElementById('logoutBtn');
+
+if (loggedIn) {
+    welcomeText.textContent = userName;
+    logoutBtn.addEventListener('click', () => {
+        // 로그아웃 처리 로직
+        // 예: 세션 삭제, 쿠키 삭제 등
+        alert("로그아웃되었습니다.");
+        // 메인 페이지로 리디렉션
+        window.location.href = "main.html";
+    });
+}
+
+// 페이지 로드 시 퀴즈 시작
 document.addEventListener('DOMContentLoaded', loadQuiz);
