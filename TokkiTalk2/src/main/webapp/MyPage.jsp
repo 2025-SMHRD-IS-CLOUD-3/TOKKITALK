@@ -434,15 +434,12 @@
                 <a href="MyPage.jsp" class="nav-item">마이페이지</a>
             </nav>
             <div class="nav-buttons">
-<<<<<<< HEAD
                 <button class="btn-logout"><a href="main.jsp">로그아웃</a></button>
-=======
                 <% if (isLoggedIn) { %>
                     <form action="logout" method="post">
                         <button type="submit" class="btn-logout"><a href="Logout">로그아웃</a></button>
                     </form>
                 <% } %>
->>>>>>> branch 'main' of https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK.git
             </div>
         </div>
     </header>
