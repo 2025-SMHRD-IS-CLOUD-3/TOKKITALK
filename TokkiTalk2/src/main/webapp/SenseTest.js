@@ -58,6 +58,9 @@ const quizContainer = document.querySelector('.quiz-container');
 const questionTitle = document.querySelector('.question-title');
 const chatImage = document.querySelector('.chat-image');
 const answerOptionsContainer = document.querySelector('.answer-options');
+const headerUserName = document.getElementById('headerUserName');
+const welcomeText = document.getElementById('welcomeText');
+const logoutBtn = document.getElementById('logoutBtn');
 
 function loadQuiz() {
     if (currentQuestionIndex < quizData.length) {
@@ -118,23 +121,33 @@ function showResultPage() {
     quizContainer.appendChild(resultCard);
 }
 
-// 로그인 상태를 가정하는 변수 (실제로는 서버에서 받아와야 합니다)
-const loggedIn = true;
-const userName = "김토끼"; // 실제 사용자 이름으로 대체
-
-const welcomeText = document.getElementById('userName');
-const logoutBtn = document.getElementById('logoutBtn');
-
-if (loggedIn) {
-    welcomeText.textContent = userName;
-    logoutBtn.addEventListener('click', () => {
-        // 로그아웃 처리 로직
-        // 예: 세션 삭제, 쿠키 삭제 등
-        alert("로그아웃되었습니다.");
-        // 메인 페이지로 리디렉션
-        window.location.href = "main.html";
-    });
-}
-
-// 페이지 로드 시 퀴즈 시작
-document.addEventListener('DOMContentLoaded', loadQuiz);
+// 로그인 상태 및 사용자 이름 동적 로드
+document.addEventListener('DOMContentLoaded', () => {
+    const loggedIn = sessionStorage.getItem('loggedIn');
+    const userName = sessionStorage.getItem('userName');
+    
+    if (loggedIn === 'true' && userName) {
+        // 헤더에 사용자 이름 표시
+        headerUserName.textContent = userName;
+        
+        // 로그아웃 버튼에 이벤트 리스너 추가
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('loggedIn');
+            sessionStorage.removeItem('userName');
+            alert("로그아웃되었습니다.");
+            window.location.href = "main.html";
+        });
+    } else {
+        // 로그인 상태가 아닐 경우, 로그인/회원가입 버튼을 표시
+        document.getElementById('auth-buttons').style.display = 'flex';
+        document.getElementById('user-info-area').style.display = 'none';
+        
+        // 마이페이지 같은 페이지는 로그인 필수 로직 추가
+        if (window.location.pathname.includes('SenseTest.html')) {
+            alert('로그인이 필요한 서비스입니다.');
+            window.location.href = "main.html";
+        }
+    }
+    
+    loadQuiz();
+});

@@ -1,5 +1,4 @@
-
-</body><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -41,6 +40,11 @@
             letter-spacing: 2px;
             cursor: pointer;
             transition: color 0.3s;
+        }
+
+        .logo a {
+            color: #FFD200;
+            text-decoration: none;
         }
 
         .logo:hover {
@@ -99,6 +103,36 @@
 
         .btn-signup:hover {
             background: #ff5252;
+        }
+
+        /* 로그인 후 표시될 영역 스타일 */
+        .user-info {
+            display: none; /* JavaScript로 제어 */
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .welcome-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .btn-logout {
+            background: #f1f3f4;
+            color: black;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #ff6b6b;
+            color: white;
         }
 
         /* 메인 콘텐츠 */
@@ -566,15 +600,19 @@
 <body>
     <header class="header">
         <div class="nav-container">
-            <div class="logo" onclick="goHome()">TOKKI TALK</div>
+            <div class="logo"><a href="main.html">TOKKI TALK</a></div>
             <nav class="nav-menu">
                 <a href="intro.html" class="nav-item">소개</a>
                 <a href="SenseTest.html" class="nav-item">센스고사</a>
-                <a href="MyPage.html" class="nav-item">마이페이지</a>
+                <a href="Mypage.html" class="nav-item">마이페이지</a>
             </nav>
-            <div class="nav-buttons">
-                <button class="btn-login">로그인</button>
-                <button class="btn-signup">회원가입</button>
+            <div class="nav-buttons" id="auth-buttons">
+                <button class="btn-login" onclick="window.location.href='/권동환/K메인페이지.html'">로그인</button>
+                <button class="btn-signup" onclick="window.location.href='/권동환/K메인페이지.html'">회원가입</button>
+            </div>
+            <div class="user-info" id="user-info-area">
+                <span class="welcome-text"><span id="headerUserName">사용자</span>님 환영합니다!</span>
+                <button class="btn-logout" id="logoutBtn">로그아웃</button>
             </div>
         </div>
     </header>
@@ -609,10 +647,10 @@
             </div>
         </div>
         
-        <button class="cta-button" onclick="goHome()">
+        <a href="main.html" class="cta-button">
             메인 페이지로 돌아가기
             <span class="icon">🏠</span>
-        </button>
+        </a>
     </main>
 
     <footer class="footer">
@@ -620,92 +658,7 @@
             <p class="footer-text">© 2024 TOKKI TALK. All Rights Reserved.</p>
         </div>
     </footer>
-
-    <footer class="footer">
-        <div class="footer-container">
-            <p class="footer-text">© 2024 TOKKI TALK. All Rights Reserved.</p>
-        </div>
-    </footer>
-
-    <!-- 로그인 모달 -->
-    <div id="loginModal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeLoginModal()">&times;</button>
-            <h2 class="modal-title">로그인</h2>
-            
-            <div class="input-group">
-                <input type="text" class="modal-input" placeholder="아이디를 입력하세요">
-            </div>
-            
-            <div class="input-group">
-                <input type="password" class="modal-input" placeholder="비밀번호를 입력하세요">
-            </div>
-            
-            <div class="character-icons">
-                <div class="character-icon icon-cool">😎</div>
-                <div class="character-icon icon-cute">🐰</div>
-                <div class="character-icon icon-smart">🤓</div>
-            </div>
-            
-            <div class="forgot-password">로그인 정보가 없으신가요?</div>
-            
-            <div class="divider"></div>
-            
-            <button class="modal-signup-btn">회원가입</button>
-        </div>
-    </div>
-
-    <!-- 회원가입 모달 -->
-    <div id="signupModal" class="modal-overlay">
-        <div class="signup-modal-content">
-            <button class="modal-close" onclick="closeSignupModal()">&times;</button>
-            <h2 class="signup-title">회원가입</h2>
-            <div class="signup-underline"></div>
-            
-            <div class="signup-input-row">
-                <input type="text" class="signup-input" placeholder="아이디 입력 ( 영문, 숫자 8자 이내 )">
-                <button class="duplicate-check-btn">중복 확인</button>
-            </div>
-            
-            <div class="input-group">
-                <input type="password" class="signup-input" placeholder="비밀번호 입력(숫자 4자)">
-            </div>
-            
-            <div class="input-group">
-                <input type="password" class="signup-input" placeholder="비밀번호 확인">
-            </div>
-            
-            <div class="input-group">
-                <input type="text" class="signup-input" placeholder="이름을 입력해주세요">
-            </div>
-            
-            <div class="input-group">
-                <input type="date" class="date-input">
-            </div>
-            
-            <div class="input-group">
-                <input type="text" class="signup-input" placeholder="상대를 선택하세요">
-            </div>
-            
-            <div class="gender-group">
-                <div class="gender-option">
-                    <div class="gender-radio" onclick="selectGender('male')"></div>
-                    <label class="gender-label">남자</label>
-                </div>
-                <div class="gender-option">
-                    <div class="gender-radio" onclick="selectGender('female')"></div>
-                    <label class="gender-label">여자</label>
-                </div>
-            </div>
-            
-            <div class="signup-buttons">
-                <button class="signup-confirm-btn">회원가입 완료</button>
-                <button class="signup-cancel-btn" onclick="closeSignupModal()">돌아가기</button>
-            </div>
-        </div>
-    </div>
-<script src="intro.js"></script>
     
+    <script src="intro.js"></script>
 </body>
-</html>
 </html>

@@ -5,26 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOKKI TALK - 센스고사</title>
     <style>
-        /* 기본 스타일 초기화 */
+        /* CSS 스타일은 이전과 동일 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
-            background: #e9e9e9;
+            background: #f8f9fa;
             color: #333;
         }
-
-        /* 헤더 스타일 */
+        
+        /* 헤더 */
         .header {
             background: white;
             padding: 20px 0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-
+        
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -33,12 +33,13 @@
             align-items: center;
             padding: 0 20px;
         }
-
+        
         .logo {
             font-size: 28px;
             font-weight: bold;
             color: #FFD200;
             letter-spacing: 2px;
+            cursor: pointer;
         }
         .logo a {
             color: #FFD200;
@@ -47,12 +48,12 @@
         .logo a:hover {
             color: #ff6b6b;
         }
-
+        
         .nav-menu {
             display: flex;
             gap: 40px;
         }
-
+        
         .nav-item {
             color: #666;
             text-decoration: none;
@@ -60,14 +61,47 @@
             font-weight: 500;
             transition: color 0.3s;
         }
-
+        
         .nav-item:hover {
             color: #ff6b6b;
         }
         
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn-login, .btn-signup {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn-login {
+            background: #f1f3f4;
+            color: black;
+        }
+        
+        .btn-login:hover {
+            background: #ff6b6b;
+        }
+        
+        .btn-signup {
+            background: #FFD200;
+            color: black;
+        }
+        
+        .btn-signup:hover {
+            background: #ff5252;
+        }
+
         /* 로그인 후 표시될 영역 스타일 */
         .user-info {
-            display: flex;
+            display: none;
             align-items: center;
             gap: 15px;
         }
@@ -94,76 +128,78 @@
             background: #ff6b6b;
             color: white;
         }
-        
-        /* 퀴즈 페이지 스타일 */
-        .quiz-container {
-            display: flex;
-            background: #FFD200;
-            border-radius: 15px;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            height: auto;
-            max-width: 800px;
-            margin: 0 auto;
-        }
 
-        .question-card {
+        /* 퀴즈 컨테이너 */
+        .quiz-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
             background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             text-align: center;
-            width: 100%;
-            margin-bottom: 30px;
         }
 
         .question-title {
             font-size: 24px;
             font-weight: bold;
-            color: #333;
             margin-bottom: 20px;
         }
 
         .chat-image {
-            width: 100%;
-            max-width: 400px;
+            max-width: 100%;
             height: auto;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .answer-options {
-            width: 100%;
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
         .answer-option {
-            background: white;
+            padding: 15px;
             border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
             font-size: 16px;
             font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
             text-align: left;
         }
 
         .answer-option:hover {
-            background: #fffbe6;
-            border-color: #FFD200;
+            background: #f1f3f4;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
 
-        /* 푸터 스타일 */
+        .result-card {
+            padding: 40px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .result-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .result-text {
+            font-size: 18px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        /* 푸터 */
         .footer {
             background: white;
             padding: 40px 0;
+            margin-top: 80px;
             border-top: 1px solid #eee;
         }
 
@@ -178,64 +214,10 @@
             color: #999;
             font-size: 14px;
         }
-
-        /* 반응형 디자인 */
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-
-            .main-title {
-                font-size: 36px;
-            }
-            .question-title {
-                font-size: 20px;
-            }
-        }
-
-        /* 결과 페이지 스타일 */
-        .result-card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .result-title {
-            font-size: 32px;
-            font-weight: bold;
-            color: #FFD200;
-            margin-bottom: 15px;
-        }
-
-        .result-text {
-            font-size: 18px;
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 30px;
-        }
-
-        .btn-share {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .btn-share:hover {
-            background: #e84a5f;
-        }
     </style>
 </head>
 <body>
+
     <header class="header">
         <div class="nav-container">
             <div class="logo"><a href="main.html">TOKKI TALK</a></div>
@@ -244,23 +226,21 @@
                 <a href="SenseTest.html" class="nav-item">센스고사</a>
                 <a href="MyPage.html" class="nav-item">마이페이지</a>
             </nav>
-            <div class="user-info">
-                <span class="welcome-text"><span id="userName">사용자</span>님 환영합니다!</span>
+            <div class="nav-buttons" id="auth-buttons">
+                <button class="btn-login" onclick="window.location.href='/권동환/K메인페이지.html'">로그인</button>
+                <button class="btn-signup" onclick="window.location.href='/권동환/K메인페이지.html'">회원가입</button>
+            </div>
+            <div class="user-info" id="user-info-area">
+                <span class="welcome-text"><span id="headerUserName">사용자</span>님 환영합니다!</span>
                 <button class="btn-logout" id="logoutBtn">로그아웃</button>
             </div>
         </div>
     </header>
 
     <main class="quiz-container">
-        <div class="question-card">
-            <h2 class="question-title">Q1. 다음 카톡 이후 적절한 행동으로 <span style="color: #ff6b6b;">올바른</span> 것은?</h2>
-            <img src="https://i.imgur.com/your_chat_image.png" alt="대화 내용" class="chat-image">
-            <div class="answer-options">
-                <div class="answer-option">A. 선택지 1 내용입니다.</div>
-                <div class="answer-option">B. 선택지 2 내용입니다.</div>
-                <div class="answer-option">C. 선택지 3 내용입니다.</div>
-            </div>
-        </div>
+        <h1 class="question-title"></h1>
+        <img src="" alt="퀴즈 이미지" class="chat-image">
+        <div class="answer-options"></div>
     </main>
 
     <footer class="footer">
@@ -268,7 +248,156 @@
             <p class="footer-text">© 2025 TOKKI TALK. All Rights Reserved.</p>
         </div>
     </footer>
-    
-    <script src="SenseTest.js"></script>
+
+    <script>
+        const quizData = [
+            {
+                question: "Q1. 다음 카톡 이후 적절한 행동으로 올바른 것은?",
+                image: "https://i.imgur.com/your_chat_image_1.png",
+                options: [
+                    "A. 선택지 1 내용입니다.",
+                    "B. 선택지 2 내용입니다.",
+                    "C. 선택지 3 내용입니다."
+                ],
+                correctAnswer: "A. 선택지 1 내용입니다."
+            },
+            {
+                question: "Q2. 다른 상황에 대한 적절한 행동으로 올바른 것은?",
+                image: "https://i.imgur.com/your_chat_image_2.png",
+                options: [
+                    "A. 다음 선택지 1 내용입니다.",
+                    "B. 다음 선택지 2 내용입니다.",
+                    "C. 다음 선택지 3 내용입니다."
+                ],
+                correctAnswer: "B. 다음 선택지 2 내용입니다."
+            },
+            {
+                question: "Q3. 세 번째 문제의 질문입니다.",
+                image: "https://i.imgur.com/your_chat_image_3.png",
+                options: [
+                    "A. 세 번째 선택지 1 내용입니다.",
+                    "B. 세 번째 선택지 2 내용입니다.",
+                    "C. 세 번째 선택지 3 내용입니다."
+                ],
+                correctAnswer: "C. 세 번째 선택지 3 내용입니다."
+            },
+            {
+                question: "Q4. 네 번째 문제의 질문입니다.",
+                image: "https://i.imgur.com/your_chat_image_4.png",
+                options: [
+                    "A. 네 번째 선택지 1 내용입니다.",
+                    "B. 네 번째 선택지 2 내용입니다.",
+                    "C. 네 번째 선택지 3 내용입니다."
+                ],
+                correctAnswer: "A. 네 번째 선택지 1 내용입니다."
+            },
+            {
+                question: "Q5. 마지막 문제의 질문입니다.",
+                image: "https://i.imgur.com/your_chat_image_5.png",
+                options: [
+                    "A. 마지막 선택지 1 내용입니다.",
+                    "B. 마지막 선택지 2 내용입니다.",
+                    "C. 마지막 선택지 3 내용입니다."
+                ],
+                correctAnswer: "B. 마지막 선택지 2 내용입니다."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const quizContainer = document.querySelector('.quiz-container');
+        const questionTitle = document.querySelector('.question-title');
+        const chatImage = document.querySelector('.chat-image');
+        const answerOptionsContainer = document.querySelector('.answer-options');
+        const headerUserName = document.getElementById('headerUserName');
+        const authButtons = document.getElementById('auth-buttons');
+        const userInfoArea = document.getElementById('user-info-area');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        function loadQuiz() {
+            if (currentQuestionIndex < quizData.length) {
+                const currentQuiz = quizData[currentQuestionIndex];
+                questionTitle.textContent = currentQuiz.question;
+                chatImage.src = currentQuiz.image;
+                answerOptionsContainer.innerHTML = '';
+
+                currentQuiz.options.forEach(option => {
+                    const optionElement = document.createElement('div');
+                    optionElement.classList.add('answer-option');
+                    optionElement.textContent = option;
+                    optionElement.addEventListener('click', () => selectAnswer(option));
+                    answerOptionsContainer.appendChild(optionElement);
+                });
+            } else {
+                showResultPage();
+            }
+        }
+
+        function selectAnswer(selectedOption) {
+            const currentQuiz = quizData[currentQuestionIndex];
+            if (selectedOption === currentQuiz.correctAnswer) {
+                score++;
+            }
+            
+            currentQuestionIndex++;
+            loadQuiz();
+        }
+
+        function showResultPage() {
+            quizContainer.innerHTML = '';
+
+            const resultCard = document.createElement('div');
+            resultCard.classList.add('result-card');
+            
+            const resultTitle = document.createElement('h2');
+            resultTitle.classList.add('result-title');
+            
+            const resultText = document.createElement('p');
+            resultText.classList.add('result-text');
+
+            let resultMessage = '';
+            if (score === 5) {
+                resultMessage = "당신은 센스 만점! 모든 질문에 완벽하게 대처하셨네요. 👍";
+            } else if (score >= 3) {
+                resultMessage = "꽤 괜찮은 센스! 조금만 더 노력하면 완벽한 센스쟁이가 될 거예요. 😉";
+            } else {
+                resultMessage = "아직 센스가 부족하네요. 다음번엔 더 좋은 결과를 기대해 봐요! 🤔";
+            }
+
+            resultTitle.textContent = `센스고사 결과: ${score} / 5점`;
+            resultText.textContent = resultMessage;
+            
+            resultCard.appendChild(resultTitle);
+            resultCard.appendChild(resultText);
+
+            quizContainer.appendChild(resultCard);
+        }
+
+        // 로그인 상태 및 사용자 이름 동적 로드
+        document.addEventListener('DOMContentLoaded', () => {
+            const loggedIn = sessionStorage.getItem('loggedIn');
+            const userName = sessionStorage.getItem('userName');
+            
+            if (loggedIn === 'true' && userName) {
+                authButtons.style.display = 'none';
+                userInfoArea.style.display = 'flex';
+                headerUserName.textContent = userName;
+                
+                // 로그아웃 버튼에 이벤트 리스너 추가
+                logoutBtn.addEventListener('click', () => {
+                    sessionStorage.removeItem('loggedIn');
+                    sessionStorage.removeItem('userName');
+                    alert("로그아웃되었습니다.");
+                    window.location.href = "main.html";
+                });
+            } else {
+                authButtons.style.display = 'flex';
+                userInfoArea.style.display = 'none';
+            }
+            
+            loadQuiz();
+        });
+    </script>
 </body>
 </html>

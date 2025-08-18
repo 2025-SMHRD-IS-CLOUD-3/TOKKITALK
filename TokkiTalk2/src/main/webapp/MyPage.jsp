@@ -430,7 +430,7 @@
             <div class="logo"><a href="main.jsp">TOKKI TALK</a></div>
             <nav class="nav-menu">
                 <a href="#" class="nav-item">소개</a>
-                <a href="./센스고사.html" class="nav-item">센스고사</a>
+                <a href=".SenseTest.html" class="nav-item">센스고사</a>
                 <a href="MyPage.jsp" class="nav-item">마이페이지</a>
             </nav>
             <div class="nav-buttons">

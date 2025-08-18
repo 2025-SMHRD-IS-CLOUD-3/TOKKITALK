@@ -2,6 +2,7 @@
 const mockDatabase = {
     userProfile: {
         name: "",
+        email: "",
         password: ""
     },
     chatList: [],
@@ -47,6 +48,7 @@ function loadChatDetails(chatId) {
 
 const chatListElement = document.getElementById('chatList');
 const userNameElement = document.getElementById('userName');
+const userEmailElement = document.getElementById('userEmail');
 const openProfileModalBtn = document.getElementById('openProfileModal');
 const deleteAccountBtn = document.getElementById('deleteAccountBtn');
 
@@ -174,6 +176,7 @@ function showChatModal(chat) {
 
 function updateProfileDisplay(profile) {
     userNameElement.textContent = `${profile.name}님`;
+    userEmailElement.textContent = profile.email;
     headerUserName.textContent = profile.name;
 }
 
@@ -240,7 +243,7 @@ if (deleteAccountBtn) {
             sessionStorage.removeItem('loggedIn');
             sessionStorage.removeItem('userName');
 
-            mockDatabase.userProfile = { name: "", password: "" };
+            mockDatabase.userProfile = { name: "", email: "", password: "" };
             mockDatabase.chatList = [];
             mockDatabase.chatDetails = {};
 
@@ -286,6 +289,7 @@ window.addEventListener('load', function() {
 
     if (isLoggedIn && storedUserName) {
         mockDatabase.userProfile.name = storedUserName;
+        mockDatabase.userProfile.email = `${storedUserName.toLowerCase().replace(/\s/g, '')}@email.com`;
         mockDatabase.userProfile.password = "1234"; 
         
         // 특정 사용자에게만 가상의 대화 기록을 제공
@@ -302,6 +306,7 @@ window.addEventListener('load', function() {
     } else {
         mockDatabase.userProfile = {
             name: "방문자",
+            email: "guest@email.com",
             password: ""
         };
         mockDatabase.chatList = [];
@@ -314,7 +319,7 @@ window.addEventListener('load', function() {
     document.querySelectorAll('.nav-item').forEach(link => {
         link.addEventListener('click', (e) => {
             const href = e.target.getAttribute('href');
-            if (href === 'intro.html' || href === 'intro.html') {
+            if (href === 'intro.html' || href === 'main.html') {
                 return;
             } else {
                 e.preventDefault();
