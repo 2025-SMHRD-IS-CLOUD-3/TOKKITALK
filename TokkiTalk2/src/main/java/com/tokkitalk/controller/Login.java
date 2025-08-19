@@ -1,6 +1,7 @@
 package com.tokkitalk.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,6 +23,7 @@ public class Login extends HttpServlet {
 		// 2. 파라미터 수집
 		String user_id = request.getParameter("id");
 		String user_pw = request.getParameter("pw");
+		String ajax = request.getParameter("ajax");
 		
 		System.out.println("=== 로그인 시도 ===");
 		System.out.println("입력된 ID: " + user_id);
@@ -45,18 +47,31 @@ public class Login extends HttpServlet {
 			System.out.println("- 가입일: " + result.getUser_date());
 		}
 		
-		// 6. 결과에 따른 페이지 이동
-		if (result != null) {
-			// 로그인 성공
-			HttpSession session = request.getSession();
-			session.setAttribute("member", result);
-			System.out.println("세션에 사용자 정보 저장 완료");
-			 // 사용자 이름을 URL 파라미터로 추가
-		    response.sendRedirect("main.jsp?username=" + result.getUser_id());
+		// 6. 결과에 따른 응답 처리 (AJAX vs Redirect)
+		if ("1".equals(ajax)) {
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application/json; charset=UTF-8");
+			try (PrintWriter out = response.getWriter()) {
+				if (result != null) {
+					HttpSession session = request.getSession();
+					session.setAttribute("member", result);
+					out.write("{\"success\":true,\"userId\":\"" + result.getUser_id() + "\",\"userName\":\"" + (result.getUser_name() != null ? result.getUser_name() : result.getUser_id()) + "\"}");
+				} else {
+					out.write("{\"success\":false}");
+				}
+			}
 		} else {
-			// 로그인 실패
-			System.out.println("로그인 실패 - main.jsp로 리다이렉트");
-			response.sendRedirect("main.jsp?msg=login_fail");
+			if (result != null) {
+				// 로그인 성공
+				HttpSession session = request.getSession();
+				session.setAttribute("member", result);
+				System.out.println("세션에 사용자 정보 저장 완료");
+				response.sendRedirect("main.html?username=" + result.getUser_id());
+			} else {
+				// 로그인 실패
+				System.out.println("로그인 실패 - main.html로 리다이렉트");
+				response.sendRedirect("main.html?msg=login_fail");
+			}
 		}
 	}
 }

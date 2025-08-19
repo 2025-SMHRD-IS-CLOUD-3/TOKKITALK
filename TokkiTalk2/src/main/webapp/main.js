@@ -87,6 +87,19 @@ function getUrlParameter(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+// 현재 배포 컨텍스트 경로를 계산 (예: '/TokkiTalk2' 또는 '/')
+function getContextPath() {
+    var pathSegments = window.location.pathname.split('/').filter(function(seg){ return seg.length > 0; });
+    if (pathSegments.length === 0) {
+        return '';
+    }
+    // 첫 세그먼트가 파일명(예: main.html)인 경우 컨텍스트 경로 없음으로 처리
+    if (pathSegments[0].indexOf('.') !== -1) {
+        return '';
+    }
+    return '/' + pathSegments[0];
+}
+
 // DOM이 로드된 후 이벤트 리스너 등록
 document.addEventListener('DOMContentLoaded', function() {
     // 1. URL에서 userid 파라미터가 있는지 확인
@@ -115,20 +128,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 로그인 모달 버튼 이벤트
     const loginSubmitBtn = document.querySelector('.modal-login-btn');
-    loginSubmitBtn.addEventListener('click', () => {
-        // 클라이언트에서 로그인 처리 (백엔드 없이 테스트용)
-        const inputId = document.querySelector('#loginModal .modal-input[placeholder="아이디를 입력하세요"]').value;
-        if (inputId) {
-            // 서버에 데이터를 보내고 결과를 기다리는 로직이 필요하지만,
-            // 이 예제에서는 클라이언트에서 바로 처리
-            sessionStorage.setItem('loggedIn', 'true');
-            sessionStorage.setItem('userName', inputId);
-            closeLoginModal();
-            updateHeaderUI(true, inputId);
-            alert(`${inputId}님, 환영합니다!`);
-            window.location.reload(); // 페이지 새로고침하여 URL 파라미터 처리
-        } else {
-            alert('아이디를 입력해주세요.');
+    loginSubmitBtn.addEventListener('click', async () => {
+        const idInputEl = document.querySelector('#loginModal .modal-input[placeholder="아이디를 입력하세요"]');
+        const pwInputEl = document.querySelector('#loginModal .modal-input[placeholder="비밀번호를 입력하세요"]');
+        const inputId = idInputEl ? idInputEl.value.trim() : '';
+        const inputPw = pwInputEl ? pwInputEl.value.trim() : '';
+        if (!inputId || !inputPw) {
+            alert('아이디와 비밀번호를 모두 입력해주세요.');
+            return;
+        }
+        try {
+            const basePath = getContextPath();
+            const url = window.location.origin + basePath + '/login';
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                    'Accept': 'application/json'
+                },
+                body: new URLSearchParams({ id: inputId, pw: inputPw, ajax: '1' }).toString()
+            });
+            if (!res.ok) {
+                alert('로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요.');
+                return;
+            }
+            const data = await res.json();
+            if (data && data.success) {
+                const nameToUse = data.userName || data.userId || inputId;
+                sessionStorage.setItem('loggedIn', 'true');
+                sessionStorage.setItem('userName', nameToUse);
+                closeLoginModal();
+                updateHeaderUI(true, nameToUse);
+                alert(`${nameToUse}님, 환영합니다!`);
+                window.location.reload();
+            } else {
+                alert('로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요.');
+            }
+        } catch (e) {
+            alert('네트워크 오류가 발생했습니다.');
         }
     });
 
@@ -157,15 +194,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('아이디를 입력해주세요.');
                 return;
             }
-            const idRegex = /^[A-Za-z0-9]{1,8}$/;
+            const idRegex = /^[A-Za-z0-9]{1,20}$/;
             if (!idRegex.test(userId)) {
-                alert('아이디는 영문/숫자 1~8자만 가능합니다.');
+                alert('아이디는 영문/숫자 1~20자만 가능합니다.');
                 return;
             }
             try {
-                const res = await fetch('check-duplicate?id=' + encodeURIComponent(userId), { method: 'GET' });
+                const basePath = getContextPath();
+                const url = window.location.origin + basePath + '/check-duplicate?id=' + encodeURIComponent(userId);
+                const res = await fetch(url, { method: 'GET' });
                 if (!res.ok) {
-                    alert('중복 확인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                    if (res.status === 404 || res.status === 0) {
+                        alert('중복 확인 API에 연결할 수 없습니다. Tomcat에서 페이지를 열어주세요: http://localhost:8081/TokkiTalk2/main.html');
+                    } else {
+                        alert('중복 확인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                    }
                     return;
                 }
                 const data = await res.json();
