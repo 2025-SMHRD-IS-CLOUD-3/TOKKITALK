@@ -20,8 +20,8 @@ public class Login extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		
 		// 2. 파라미터 수집
-		String user_id = request.getParameter("id");
-		String user_pw = request.getParameter("pw");
+		String user_id = request.getParameter("user_id");
+		String user_pw = request.getParameter("user_pw");
 		
 		System.out.println("=== 로그인 시도 ===");
 		System.out.println("입력된 ID: " + user_id);
