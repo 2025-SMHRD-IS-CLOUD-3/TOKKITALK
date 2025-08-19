@@ -21,16 +21,21 @@ public class Login extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		
 		// 2. 파라미터 수집
+<<<<<<< HEAD
 		String user_id = request.getParameter("id");
 		String user_pw = request.getParameter("pw");
 		String ajax = request.getParameter("ajax");
+=======
+		String user_id = request.getParameter("user_id");
+		String user_pw = request.getParameter("user_pw");
+>>>>>>> branch 'main' of https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK.git
 		
 		System.out.println("=== 로그인 시도 ===");
 		System.out.println("입력된 ID: " + user_id);
 		System.out.println("입력된 PW: " + user_pw);
 		
 		// 3. Member 객체 생성
-		MevenMember member = new MevenMember(user_id, user_pw, null, null, null);
+		MevenMember member = new MevenMember();
 		
 		// 4. DAO 객체 생성
 		MemberDAO dao = new MemberDAO();
@@ -47,6 +52,7 @@ public class Login extends HttpServlet {
 			System.out.println("- 가입일: " + result.getUser_date());
 		}
 		
+<<<<<<< HEAD
 		// 6. 결과에 따른 응답 처리 (AJAX vs Redirect)
 		if ("1".equals(ajax)) {
 			response.setCharacterEncoding("UTF-8");
@@ -60,7 +66,18 @@ public class Login extends HttpServlet {
 					out.write("{\"success\":false}");
 				}
 			}
+=======
+		// 6. 결과에 따른 페이지 이동
+		if (result != null) {
+			// 로그인 성공
+			HttpSession session = request.getSession();
+			session.setAttribute("member", result);
+			System.out.println("세션에 사용자 정보 저장 완료");
+			 // 사용자 이름을 URL 파라미터로 추가
+		    response.sendRedirect("main.html?username=" + result.getUser_id());
+>>>>>>> branch 'main' of https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK.git
 		} else {
+<<<<<<< HEAD
 			if (result != null) {
 				// 로그인 성공
 				HttpSession session = request.getSession();
@@ -72,6 +89,11 @@ public class Login extends HttpServlet {
 				System.out.println("로그인 실패 - main.html로 리다이렉트");
 				response.sendRedirect("main.html?msg=login_fail");
 			}
+=======
+			// 로그인 실패
+			System.out.println("로그인 실패 - main.jsp로 리다이렉트");
+			response.sendRedirect("main.html?msg=login_fail");
+>>>>>>> branch 'main' of https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK.git
 		}
 	}
 }
