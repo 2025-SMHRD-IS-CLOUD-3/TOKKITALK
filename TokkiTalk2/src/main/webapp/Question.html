@@ -10,7 +10,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -18,7 +18,6 @@
             min-height: 100vh;
         }
         
-        /* 헤더 */
         .header {
             background: white;
             padding: 20px 0;
@@ -65,22 +64,21 @@
             transform: translateY(-1px);
         }
         
-        /* 메인 콘텐츠 */
         .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        
-        .content-wrapper {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            min-height: 70vh;
             display: flex;
-            gap: 30px;
-            align-items: flex-start;
+            flex-direction: column;
         }
         
         .page-title {
             text-align: center;
-            font-size: 36px;
+            font-size: 28px;
             font-weight: bold;
             color: #333;
             margin-bottom: 10px;
@@ -90,38 +88,69 @@
             text-align: center;
             font-size: 16px;
             color: #666;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
         
-        /* 입력 영역 */
-        .input-section {
-            background: white;
+        .chat-area {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .chat-message {
+            max-width: 70%;
+            padding: 12px 18px;
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            flex: 1;
-            min-height: 500px;
+            word-wrap: break-word;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease-out;
         }
         
-        .input-title {
-            font-size: 18px;
-            font-weight: 600;
+        .chat-message.user {
+            background-color: #FFD200;
             color: #333;
-            margin-bottom: 15px;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .chat-message.bot {
+            background-color: #f1f3f4;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            position: relative;
+        }
+
+        .bot .message-title {
+            font-weight: bold;
+            color: #FFD200;
+            margin-bottom: 5px;
+        }
+        
+        .bot .message-content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .input-section {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         
         .message-input {
-            width: 100%;
-            min-height: 120px;
+            flex-grow: 1;
             padding: 15px;
             border: 2px solid #e9ecef;
-            border-radius: 12px;
+            border-radius: 25px;
             font-size: 16px;
             font-family: inherit;
-            resize: vertical;
             transition: border-color 0.3s;
         }
         
@@ -130,35 +159,17 @@
             border-color: #FFD200;
         }
         
-        .message-input.error {
-            border-color: #ff5252;
-            background-color: #fff5f5;
-        }
-        
-        .char-count {
-            text-align: right;
-            font-size: 12px;
-            color: #999;
-            margin-top: 5px;
-        }
-        
-        .char-count.error {
-            color: #ff5252;
-        }
-        
         .analyze-btn {
             background: linear-gradient(135deg, #FFD200 0%, #ff8a80 100%);
             color: black;
             border: none;
-            padding: 15px 40px;
-            border-radius: 30px;
-            font-size: 18px;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            display: block;
-            margin: 20px auto 0;
-            min-width: 200px;
+            white-space: nowrap;
         }
         
         .analyze-btn:hover {
@@ -174,163 +185,81 @@
             box-shadow: none;
         }
         
-        /* 로딩 애니메이션 */
-        .loading {
-            flex: 1;
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            text-align: center;
-            display: none;
-            min-height: 500px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .loading.show {
-            display: flex;
-        }
-        
-        .spinner {
+        .loading-dots {
             width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #FFD200;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* 결과 영역 */
-        .result-section {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            flex: 1;
-            min-height: 500px;
-            display: none;
-        }
-        
-        .result-section.show {
-            display: block;
-            animation: fadeInUp 0.5s ease-out;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .result-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-around;
+        }
+
+        .loading-dots div {
+            width: 8px;
+            height: 8px;
+            background-color: #999;
+            border-radius: 50%;
+            animation: bounce 1s infinite ease-in-out;
+        }
+
+        .loading-dots div:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots div:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
         }
         
-        .analysis-card {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 4px solid #FFD200;
-        }
-        
-        .analysis-type {
-            font-size: 14px;
-            font-weight: 600;
+        .reset-btn {
+            background: #f1f3f4;
             color: #666;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-        
-        .analysis-content {
-            font-size: 16px;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .confidence-bar {
-            background: #e9ecef;
-            border-radius: 10px;
-            height: 6px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-        
-        .confidence-fill {
-            background: linear-gradient(90deg, #FFD200, #ff8a80);
-            height: 100%;
-            border-radius: 10px;
-            transition: width 1s ease-out;
-        }
-        
-        /* 오류 메시지 */
-        .error-message {
-            background: #fff5f5;
-            color: #e53e3e;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 10px;
-            border-left: 4px solid #e53e3e;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
             display: none;
+            margin-top: 20px;
+            align-self: center;
         }
         
-        .error-message.show {
-            display: block;
-            animation: shake 0.5s ease-in-out;
+        .reset-btn:hover {
+            background: #e8eaed;
+            transform: translateY(-1px);
         }
         
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        
-        /* 반응형 */
         @media (max-width: 768px) {
             .main-container {
-                padding: 20px 15px;
+                margin: 20px 15px;
+                padding: 15px;
             }
-            
-            .content-wrapper {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
             .page-title {
-                font-size: 28px;
+                font-size: 24px;
             }
-            
-            .input-section,
-            .result-section,
-            .loading {
-                padding: 20px;
-                min-height: auto;
+            .page-subtitle {
+                font-size: 14px;
+            }
+            .input-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .analyze-btn {
+                width: 100%;
+                margin: 0;
+            }
+            .chat-message {
+                max-width: 90%;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 헤더 -->
     <header class="header">
         <div class="nav-container">
             <div class="logo" onclick="goHome()">TOKKI TALK</div>
@@ -340,264 +269,169 @@
         </div>
     </header>
 
-    <!-- 메인 콘텐츠 -->
     <main class="main-container">
-        <h1 class="page-title">💬 대화 분석하기</h1>
-        <p class="page-subtitle">그녀가 보낸 메시지를 입력하면, 숨겨진 의미를 분석해드려요!</p>
+        <h1 class="page-title">💬 TOKKI에게 메시지 보내기</h1>
+        <p class="page-subtitle">상대방의 메시지를 입력하면, TOKKI가 숨은 의미를 분석해드려요!</p>
 
-        <div class="content-wrapper">
-            <!-- 입력 영역 -->
-            <section class="input-section">
-                <div class="input-title">
-                    💌 분석하고 싶은 메시지를 입력해주세요
+        <div class="chat-area" id="chatArea">
+            <div class="chat-message bot">
+                <div class="message-title">TOKKI</div>
+                <div class="message-content">
+                    안녕하세요! 분석하고 싶은 메시지를 입력해주세요. 🐰<br>
+                    <br>
+                    **예시**<br>
+                    "응... 좀 피곤해" 라고 입력해보세요.<br>
+                    "오늘 저녁에 뭐 먹을까? 🍕" 라고 입력해보세요.<br>
+                    "괜찮아, 신경 쓰지 마" 라고 입력해보세요.
                 </div>
-                <textarea 
-                    class="message-input" 
-                    id="messageInput"
-                    placeholder="예: '응.. 괜찮아' 또는 '아니야 진짜 괜찮다고!' 같은 메시지를 입력해보세요."
-                    maxlength="500"
-                ></textarea>
-                <div class="char-count" id="charCount">0 / 500</div>
-                <div class="error-message" id="errorMessage"></div>
-                <button class="analyze-btn" id="analyzeBtn" onclick="analyzeMessage()">
-                    🔍 속마음 분석하기
-                </button>
-            </section>
-
-            <!-- 로딩 -->
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>토끼가 열심히 분석 중이에요... 🐰</p>
             </div>
-
-            <!-- 결과 영역 -->
-            <section class="result-section" id="resultSection">
-                <div class="result-title">
-                    🎯 분석 결과
-                </div>
-                <div id="analysisResults"></div>
-                <button class="analyze-btn" onclick="resetAnalysis()" style="margin-top: 20px;">
-                    🔄 다시 분석하기
-                </button>
-            </section>
         </div>
+
+        <div class="input-section" id="inputSection">
+            <textarea 
+                class="message-input" 
+                id="messageInput"
+                placeholder="상대방의 메시지를 여기에 붙여넣어주세요."
+                maxlength="500"
+            ></textarea>
+            <button class="analyze-btn" id="analyzeBtn">
+                🔍 분석하기
+            </button>
+        </div>
+        
+        <button class="reset-btn" id="resetBtn" onclick="resetAnalysis()">
+            🔄 다시 분석하기
+        </button>
     </main>
 
     <script>
-        let isAnalyzing = false;
+        const messageInput = document.getElementById('messageInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const chatArea = document.getElementById('chatArea');
+        const resetBtn = document.getElementById('resetBtn');
+        const inputSection = document.getElementById('inputSection');
+        
+        const ANALYSES = {
+            "surface": "💬 표면적 의미",
+            "hidden": "💡 숨은 의도",
+            "emotion": "💖 감정 상태",
+            "advice": "✍️ TOKKI의 제안"
+        };
 
-        // 문자 수 카운터
-        document.getElementById('messageInput').addEventListener('input', function() {
-            const input = this;
-            const charCount = document.getElementById('charCount');
-            const length = input.value.length;
-            
-            charCount.textContent = `${length} / 500`;
-            
-            if (length > 500) {
-                charCount.classList.add('error');
-                input.classList.add('error');
-            } else {
-                charCount.classList.remove('error');
-                input.classList.remove('error');
+        function simulateAnalysis(message) {
+            let analysis = {
+                surface: `상대방의 메시지는 **"${message}"** 라고 말하고 있어요.`,
+                hidden: "분석 중...",
+                emotion: "분석 중...",
+                advice: "분석 중..."
+            };
+
+            // 예시 1: "응... 좀 피곤해"
+            if (message.includes("피곤") && message.includes("...")) {
+                analysis.hidden = "단순한 피곤함이 아니라, 당신과의 대화에 부담을 느끼거나 대화를 끝내고 싶어하는 의도가 숨어있을 수 있어요. '...'은 망설이거나 힘든 상황을 나타내요.";
+                analysis.emotion = "상대방은 피로와 부담감을 느끼고 있어요. 당신의 질문에 솔직하게 답하기 어려운 상황일 수도 있습니다.";
+                analysis.advice = "먼저 상대방을 배려하는 답변을 해보세요. '오늘은 푹 쉬고 내일 다시 얘기할까?'와 같이 상대방의 상황을 이해하고 배려하는 것이 중요해요. 👍";
+            }
+            // 예시 2: "오늘 저녁에 뭐 먹을까? 🍕"
+            else if (message.includes("저녁") && message.includes("?")) {
+                analysis.hidden = "상대방은 당신과 더 깊은 관계를 맺고 싶어하거나, 함께 시간을 보내고 싶어하는 의도를 보이고 있어요. '저녁'이라는 단어는 데이트 신청의 신호일 수 있습니다.";
+                analysis.emotion = "기대감과 설렘을 느끼고 있어요. 당신의 답변을 기다리고 있습니다.";
+                analysis.advice = "긍정적으로 화답해 보세요. '좋아! 뭐 먹고 싶은 거 있어?'와 같이 적극적으로 반응하면 상대방도 더 즐거워할 거예요. 💕";
+            }
+            // 예시 3: "괜찮아, 신경 쓰지 마"
+            else if (message.includes("괜찮아") && message.includes("신경 쓰지 마")) {
+                analysis.hidden = "상대방은 괜찮지 않을 가능성이 높아요. '신경 쓰지 마'는 오히려 당신의 관심과 위로를 바라는 반어법일 수 있어요.";
+                analysis.emotion = "속상함, 서운함, 외로움 등의 감정을 숨기고 있어요. 당신이 자신의 마음을 알아주기를 기대하고 있습니다.";
+                analysis.advice = "상대방의 말만 믿지 말고, 더 깊이 공감해주세요. '말은 그렇게 해도 괜찮지 않아 보이는데... 무슨 일 있었어?'와 같이 진심을 담아 물어보면 상대방도 마음을 열 거예요. 🥺";
+            }
+            // 기본 분석
+            else {
+                analysis.hidden = "메시지를 분석한 결과, 특별한 숨은 의도는 보이지 않아요. 상대방은 현재 대화에 대해 중립적인 반응을 보이고 있습니다.";
+                analysis.emotion = "상대방은 중립적이고 편안한 감정을 느끼고 있어요. 대화에 부담을 느끼지 않고 편안하게 참여하고 있습니다.";
+                analysis.advice = "자연스럽게 대화를 이어가세요. 상대방의 말에 공감하고, 더 깊은 대화를 유도하는 질문을 던져보세요! 👍";
             }
 
-            // 오류 메시지 숨기기
-            hideError();
-        });
-
-        // 오류 표시 함수
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.textContent = message;
-            errorDiv.classList.add('show');
+            return analysis;
         }
 
-        function hideError() {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.classList.remove('show');
-        }
+        // --- UI 및 이벤트 핸들링 ---
+        
+        analyzeBtn.addEventListener('click', () => {
+            const message = messageInput.value.trim();
+            if (message.length > 0) {
+                appendMessage(message, 'user');
+                const loadingMessage = appendMessage('<div class="loading-dots"><div></div><div></div><div></div></div>', 'bot');
 
-        // 입력 유효성 검사
-        function validateInput() {
-            const input = document.getElementById('messageInput').value.trim();
-            
-            if (!input) {
-                showError('메시지를 입력해주세요! 🤔');
-                return false;
-            }
-            
-            if (input.length < 2) {
-                showError('메시지가 너무 짧아요. 최소 2글자 이상 입력해주세요.');
-                return false;
-            }
-            
-            if (input.length > 500) {
-                showError('메시지가 너무 길어요. 500자 이내로 입력해주세요.');
-                return false;
-            }
+                messageInput.disabled = true;
+                analyzeBtn.disabled = true;
 
-            return true;
-        }
-
-        // 메시지 분석 함수
-        function analyzeMessage() {
-            if (isAnalyzing) return;
-
-            if (!validateInput()) {
-                return;
-            }
-
-            isAnalyzing = true;
-            const input = document.getElementById('messageInput').value.trim();
-            
-            // UI 상태 변경
-            document.getElementById('analyzeBtn').disabled = true;
-            document.getElementById('loading').classList.add('show');
-            document.getElementById('resultSection').classList.remove('show');
-            hideError();
-
-            // 실제 분석 로직 (시뮬레이션)
-            setTimeout(() => {
-                try {
-                    const analysis = performAnalysis(input);
-                    displayResults(analysis);
-                } catch (error) {
-                    handleAnalysisError(error);
-                } finally {
-                    isAnalyzing = false;
-                    document.getElementById('analyzeBtn').disabled = false;
-                    document.getElementById('loading').classList.remove('show');
-                }
-            }, 2000);
-        }
-
-        // 분석 로직 (실제로는 서버 API 호출)
-        function performAnalysis(message) {
-            // 간단한 키워드 기반 분석 시뮬레이션
-            const analysisResults = [];
-            
-            // 감정 분석
-            let emotionScore = 50;
-            let emotionText = "중립적";
-            
-            if (message.includes('괜찮아') || message.includes('아니야')) {
-                if (message.includes('..') || message.includes('응')) {
-                    emotionScore = 25;
-                    emotionText = "사실은 괜찮지 않을 수 있어요. 더 관심을 보여주세요! 😊";
-                } else if (message.includes('진짜') || message.includes('정말')) {
-                    emotionScore = 75;
-                    emotionText = "정말로 괜찮다는 뜻일 가능성이 높아요!";
-                }
-            } else if (message.includes('ㅎㅎ') || message.includes('ㅋㅋ')) {
-                emotionScore = 80;
-                emotionText = "좋은 기분인 것 같아요! 대화가 잘 흘러가고 있네요 💝";
-            } else if (message.includes('아') || message.includes('음')) {
-                emotionScore = 30;
-                emotionText = "약간 시큰둥한 반응일 수 있어요. 더 재미있는 화제로 바꿔보세요!";
-            }
-
-            analysisResults.push({
-                type: "감정 분석",
-                content: emotionText,
-                confidence: emotionScore
-            });
-
-            // 의도 분석
-            let intentText = "일반적인 대화를 나누고 있어요.";
-            let intentScore = 60;
-
-            if (message.includes('?') || message.includes('뭐')) {
-                intentText = "궁금한 것이 있거나 관심을 보이고 있어요!";
-                intentScore = 85;
-            } else if (message.includes('바빠') || message.includes('나중에')) {
-                intentText = "지금은 대화하기 어려운 상황일 수 있어요.";
-                intentScore = 40;
-            }
-
-            analysisResults.push({
-                type: "의도 분석",
-                content: intentText,
-                confidence: intentScore
-            });
-
-            // 조언
-            let adviceText = "자연스럽게 대화를 이어가세요!";
-            if (emotionScore < 40) {
-                adviceText = "조금 더 관심을 보이거나 다른 화제로 넘어가는 것을 추천해요! 🌟";
-            } else if (emotionScore > 70) {
-                adviceText = "좋은 분위기에요! 이 기회에 더 깊은 대화를 해보세요 💕";
-            }
-
-            analysisResults.push({
-                type: "TOKKI 조언",
-                content: adviceText,
-                confidence: Math.max(60, emotionScore)
-            });
-
-            return analysisResults;
-        }
-
-        // 결과 표시
-        function displayResults(analysis) {
-            const resultsDiv = document.getElementById('analysisResults');
-            resultsDiv.innerHTML = '';
-
-            analysis.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'analysis-card';
-                card.innerHTML = `
-                    <div class="analysis-type">${item.type}</div>
-                    <div class="analysis-content">${item.content}</div>
-                    <div class="confidence-bar">
-                        <div class="confidence-fill" style="width: 0%"></div>
-                    </div>
-                `;
-                resultsDiv.appendChild(card);
-
-                // 애니메이션 효과
                 setTimeout(() => {
-                    const fill = card.querySelector('.confidence-fill');
-                    fill.style.width = `${item.confidence}%`;
-                }, 100);
-            });
-
-            document.getElementById('resultSection').classList.add('show');
+                    const analysis = simulateAnalysis(message);
+                    chatArea.removeChild(loadingMessage);
+                    
+                    const analysisKeys = Object.keys(analysis);
+                    analysisKeys.forEach((key, index) => {
+                        setTimeout(() => {
+                            const title = ANALYSES[key];
+                            appendMessage(`<b>${title}</b><br>${analysis[key]}`, 'bot');
+                            
+                            if (index === analysisKeys.length - 1) {
+                                inputSection.style.display = 'none';
+                                resetBtn.style.display = 'block';
+                            }
+                        }, 1000 * (index));
+                    });
+                }, 2000);
+            }
+        });
+        
+        function appendMessage(text, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message', sender);
+            messageElement.innerHTML = text;
+            chatArea.appendChild(messageElement);
+            chatArea.scrollTop = chatArea.scrollHeight;
+            return messageElement;
         }
 
-        // 분석 오류 처리
-        function handleAnalysisError(error) {
-            console.error('Analysis error:', error);
-            showError('분석 중 오류가 발생했어요. 다시 시도해주세요! 🐰💦');
-        }
-
-        // 다시 분석하기
         function resetAnalysis() {
-            document.getElementById('messageInput').value = '';
-            document.getElementById('charCount').textContent = '0 / 500';
-            document.getElementById('resultSection').classList.remove('show');
-            hideError();
-            document.getElementById('messageInput').focus();
+            messageInput.value = '';
+            messageInput.disabled = false;
+            analyzeBtn.disabled = false;
+            
+            chatArea.innerHTML = `
+                <div class="chat-message bot">
+                    <div class="message-title">TOKKI</div>
+                    <div class="message-content">
+                        안녕하세요! 분석하고 싶은 메시지를 입력해주세요. 🐰<br>
+                        <br>
+                        **예시**<br>
+                        "응... 좀 피곤해" 라고 입력해보세요.<br>
+                        "오늘 저녁에 뭐 먹을까? 🍕" 라고 입력해보세요.<br>
+                        "괜찮아, 신경 쓰지 마" 라고 입력해보세요.
+                    </div>
+                </div>
+            `;
+            
+            inputSection.style.display = 'flex';
+            resetBtn.style.display = 'none';
+            messageInput.focus();
         }
-
-        // 홈으로 돌아가기
+        
         function goHome() {
             if (confirm('홈 페이지로 돌아가시겠어요?')) {
-                // 실제 구현시에는 이전 페이지로 이동
-                history.back();
+                window.location.href = 'main.html';
             }
         }
-
-        // 엔터키로 분석 실행
-        document.getElementById('messageInput').addEventListener('keydown', function(e) {
+        
+        messageInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                analyzeMessage();
+                analyzeBtn.click();
             }
         });
-
-        // 페이지 로드시 포커스
+        
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('messageInput').focus();
+            messageInput.focus();
         });
     </script>
 </body>
