@@ -11,6 +11,8 @@ public class AnalysisRecord {
     public String tone;
     public String analysisResult; // JSON string
     public String suggestions;    // JSON string
+    public Long userId;
+    public java.sql.Timestamp createdAt;
 }
 
 

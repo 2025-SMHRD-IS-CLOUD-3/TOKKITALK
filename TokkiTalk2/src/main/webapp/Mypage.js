@@ -44,9 +44,30 @@ function checkLoginState() {
     }
 }
 
-function fetchChatList() {
-    const chats = [];
-    renderChatList(chats);
+function getApiBase() {
+    const segs = window.location.pathname.split('/').filter(s => s.length>0);
+    if (segs.length>0 && segs[0].indexOf('.')===-1) return window.location.origin + '/' + segs[0];
+    const host = window.location.hostname;
+    if (host==='127.0.0.1' || host==='localhost') return 'http://localhost:8081/TokkiTalk2';
+    return window.location.origin;
+}
+
+async function fetchChatList() {
+    try {
+        // 서버가 세션으로 사용자 식별 → 파라미터 없이 호출
+        const url = getApiBase() + '/history?limit=20';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const list = await res.json();
+        const chats = list.map(r => ({
+            id: r.analysisId,
+            title: r.text ? (r.text.length>40 ? r.text.substring(0,40)+'…' : r.text) : '(무제)',
+            date: r.createdAt ? new Date(r.createdAt).toLocaleString() : ''
+        }));
+        renderChatList(chats);
+    } catch (e) {
+        chatListElement.innerHTML = '<li class="loading-message">불러오기 실패</li>';
+    }
 }
 
 function renderChatList(chats) {
@@ -76,7 +97,7 @@ function renderChatList(chats) {
 }
 
 function fetchChatDetails(chatId) {
-    modalContentArea.innerHTML = '<div class="loading-message">대화 내용을 불러올 수 없습니다.</div>';
+    modalContentArea.innerHTML = '<div class="loading-message">불러오는 중...</div>';
     chatModal.style.display = "flex";
 }
 
@@ -232,4 +253,5 @@ document.querySelectorAll('.nav-item').forEach(link => {
             }
         }
     });
+    fetchChatList();
 });

@@ -53,7 +53,17 @@ public class AnalysisServlet extends HttpServlet {
         // Generate ID early
         String analysisId = UUID.randomUUID().toString();
 
-        AnalysisResult result = analysisService.analyze(analysisId, masked);
+        // 세션 사용자 숫자 ID를 읽어 저장에 넘김 (로그인 시 저장되어 있다고 가정)
+        Long userNumericId = null;
+        try {
+            if (request.getSession(false) != null) {
+                Object v = request.getSession(false).getAttribute("userNumericId");
+                if (v instanceof Number) userNumericId = ((Number) v).longValue();
+                else if (v instanceof String) userNumericId = Long.parseLong((String) v);
+            }
+        } catch (Exception ignore) {}
+
+        AnalysisResult result = analysisService.analyze(analysisId, masked, userNumericId);
 
         String json = gson.toJson(result);
         try (PrintWriter out = response.getWriter()) {

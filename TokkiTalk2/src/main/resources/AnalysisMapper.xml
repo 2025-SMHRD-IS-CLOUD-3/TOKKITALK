@@ -12,6 +12,7 @@
       TONE,
       ANALYSIS_RESULT,
       SUGGESTIONS,
+      USER_ID,
       CREATED_AT,
       UPDATED_AT
     ) VALUES (
@@ -22,6 +23,7 @@
       #{tone, jdbcType=VARCHAR},
       #{analysisResult, jdbcType=CLOB},
       #{suggestions,    jdbcType=CLOB},
+      #{userId, jdbcType=NUMERIC},
       SYSTIMESTAMP,
       SYSTIMESTAMP
     )
@@ -35,9 +37,27 @@
       IMAGE_URL     AS imageUrl,
       TONE          AS tone,
       ANALYSIS_RESULT AS analysisResult,
-      SUGGESTIONS     AS suggestions
+      SUGGESTIONS     AS suggestions,
+      USER_ID         AS userId
     FROM ANALYSIS
     WHERE ANALYSIS_ID = #{value}
+  </select>
+
+  <select id="selectByUser" parameterType="map" resultType="com.tokkitalk.analysis.store.AnalysisRecord">
+    SELECT
+      ANALYSIS_ID   AS analysisId,
+      INPUT_TYPE    AS inputType,
+      TEXT          AS text,
+      IMAGE_URL     AS imageUrl,
+      TONE          AS tone,
+      ANALYSIS_RESULT AS analysisResult,
+      SUGGESTIONS     AS suggestions,
+      USER_ID         AS userId,
+      CREATED_AT      AS createdAt
+    FROM ANALYSIS
+    WHERE USER_ID = #{userId}
+    ORDER BY CREATED_AT DESC
+    OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
   </select>
 
   <!-- Feedback 저장 (스키마에 맞춤) -->

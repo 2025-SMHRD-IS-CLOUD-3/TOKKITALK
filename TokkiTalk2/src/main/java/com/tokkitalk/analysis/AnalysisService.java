@@ -2,7 +2,7 @@ package com.tokkitalk.analysis;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+ 
 import java.util.Map;
 
 import com.tokkitalk.analysis.dto.AnalyzeRequest;
@@ -24,7 +24,7 @@ public class AnalysisService {
     private final AnalysisDAO analysisDAO = new AnalysisDAO();
     private final OpenAiClient openAiClient = new OpenAiClient();
 
-    public AnalysisResult analyze(String analysisId, AnalyzeRequest request) {
+    public AnalysisResult analyze(String analysisId, AnalyzeRequest request, Long userId) {
         AnalysisResult result = null;
         // Try LLM if configured; fallback to heuristic
         if (openAiClient.isConfigured()) {
@@ -83,7 +83,7 @@ public class AnalysisService {
         }
 
         // Persist minimal record
-        analysisDAO.saveResult(result);
+        analysisDAO.saveResult(result, userId);
         return result;
     }
 

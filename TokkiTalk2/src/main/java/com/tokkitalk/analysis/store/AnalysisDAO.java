@@ -31,7 +31,7 @@ public class AnalysisDAO {
         }
     }
 
-    public void saveResult(AnalysisResult result) {
+    public void saveResult(AnalysisResult result, Long userId) {
         AnalysisRecord rec = new AnalysisRecord();
         rec.analysisId = result.analysis_id;
         rec.inputType = "text"; // 현재는 텍스트만
@@ -41,6 +41,7 @@ public class AnalysisDAO {
                 ? result.response_suggestion.tone : "";
         rec.analysisResult = gson.toJson(result);
         rec.suggestions = result.response_suggestion != null ? gson.toJson(result.response_suggestion) : null;
+        rec.userId = (userId != null ? userId : 0L);
 
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             session.insert(MAPPER_NS + ".insertAnalysis", rec);
@@ -61,12 +62,22 @@ public class AnalysisDAO {
         }
     }
 
+    public java.util.List<AnalysisRecord> selectByUser(long userId, int offset, int limit) {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            java.util.Map<String, Object> p = new java.util.HashMap<>();
+            p.put("userId", userId);
+            p.put("offset", offset);
+            p.put("limit", limit);
+            return session.selectList(MAPPER_NS + ".selectByUser", p);
+        }
+    }
+
     public void updateSuggestion(AnalysisResult updated) {
         if (updated == null || updated.response_suggestion == null) {
             return;
         }
-        // 간단히 새 전체 JSON으로 덮어쓰기 (select 후 insert/update 로직 필요시 확장)
-        saveResult(updated);
+        // 간단히 새 전체 JSON으로 덮어쓰기: userId는 보존 불가라 0L로 저장되니, 실제 서비스에 맞게 UPDATE로 교체 권장
+        saveResult(updated, 0L);
     }
 
     public void insertFeedback(String analysisId, int liked, String partnerReaction) {
