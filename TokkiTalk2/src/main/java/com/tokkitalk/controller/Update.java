@@ -2,7 +2,6 @@ package com.tokkitalk.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
 import com.tokkitalk.model.MemberDAO;
 import com.tokkitalk.model.MevenMember;
 
@@ -19,49 +19,57 @@ public class Update extends HttpServlet {
 
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        Gson gson = new Gson();
 
-        // 1. 세션에서 현재 로그인된 사용자 정보 가져오기
         HttpSession session = request.getSession();
         MevenMember existingMember = (MevenMember) session.getAttribute("member");
 
-        // 세션 정보가 없으면, 로그인되지 않은 상태이므로 로그인 페이지로 리다이렉트
         if (existingMember == null) {
-            System.out.println("로그인되지 않은 사용자입니다.");
-            response.sendRedirect("main.html?msg=not_logged_in");
+            out.print(gson.toJson(new ApiResponse(false, "로그인이 필요합니다.")));
             return;
         }
 
-        // 2. 파라미터 수집
-        String user_id = request.getParameter("user_id");
-        String user_pw = request.getParameter("user_pw");
-        String user_name = request.getParameter("user_name");
-        String gender = request.getParameter("gender");
-        String user_date = request.getParameter("user_date");
+        String user_id = request.getParameter("id");
+        String current_pw = request.getParameter("currentPw");
+        String new_pw = request.getParameter("newPw");
         
-        // 3. 비밀번호 일치 여부 확인 (보안 강화)
-        // 사용자가 입력한 비밀번호와 기존 비밀번호가 일치하는지 확인
-        if (!user_pw.equals(existingMember.getUser_pw())) {
-            System.out.println("비밀번호 불일치. 업데이트 실패.");
-            response.sendRedirect("myPage.jsp?msg=password_mismatch");
+        System.out.println("회원 ID: " + user_id);
+        System.out.println("현재 PW: " + current_pw);
+        System.out.println("새 PW: " + new_pw);
+        
+        // 현재 비밀번호 일치 여부 확인
+        if (!current_pw.equals(existingMember.getUser_pw())) {
+            out.print(gson.toJson(new ApiResponse(false, "현재 비밀번호가 일치하지 않습니다.")));
             return;
         }
         
-        // 4. 업데이트할 회원 정보 객체 생성
-        MevenMember updatedMember = new MevenMember(user_id, user_pw, user_name, null, null);
+        // 업데이트할 회원 정보 객체 생성
+        MevenMember updatedMember = new MevenMember();
+        updatedMember.setUser_id(user_id);
+        updatedMember.setUser_pw(new_pw);
 
-        // 5. DAO를 통해 데이터베이스 업데이트 실행
+        // DAO를 통해 데이터베이스 업데이트 실행
         MemberDAO dao = new MemberDAO();
         int cnt = dao.update(updatedMember);
         
-        // 6. 업데이트 결과 판별 및 세션 갱신
+        // 업데이트 결과 판별 및 세션 갱신
         if (cnt > 0) {
-            System.out.println("회원 업데이트 성공!");
-            // 데이터베이스 업데이트 성공 시 세션 정보도 최신으로 갱신
-            session.setAttribute("member", updatedMember);
-            response.sendRedirect("MyPage.html?msg=update_success");
+            existingMember.setUser_pw(new_pw);
+            out.print(gson.toJson(new ApiResponse(true, "비밀번호가 성공적으로 변경되었습니다.")));
         } else {
-            System.out.println("회원 업데이트 실패");
-            response.sendRedirect("MyPage.html?msg=update_fail");
+            out.print(gson.toJson(new ApiResponse(false, "비밀번호 업데이트에 실패했습니다.")));
+        }
+    }
+
+    class ApiResponse {
+        boolean success;
+        String message;
+
+        public ApiResponse(boolean success, String message) {
+            this.success = success;
+            this.message = message;
         }
     }
 }

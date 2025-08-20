@@ -44,8 +44,8 @@
 	</select>
 	
 	<update id="updateMem" parameterType="com.tokkitalk.model.MevenMember">
-		UPDATE MAVEN_MEMBER SET PW = #{user_pw} WHERE USER_ID = #{user_id}
-	</update>
+    UPDATE TB_USER_INFO SET USER_PW = #{user_pw} WHERE USER_ID = #{user_id}
+</update>
 	
 	<delete id="deleteMember" parameterType="String">
 		DELETE FROM TB_USER_INFO WHERE USER_ID = #{value}

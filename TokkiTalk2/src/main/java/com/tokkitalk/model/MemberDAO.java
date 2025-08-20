@@ -127,16 +127,14 @@ public class MemberDAO {
 	}
 	
 	public int update(MevenMember updateMember) {
-		// 회원 정보 수정 기능
-		// 1. 메서드 선언
-		// 2. 메서드 내에서의 sqlsession 생성
-		SqlSession sqlsession = sqlSessionFactory.openSession(true);
-		// 3. db에서 수정 기능을 실행할 수 있는 메서드 호출
-		int cnt = sqlsession.update("updateMem", updateMember);
-		// 4. sqlsession 닫기
-		sqlsession.close();
-		// 5. 결과값 리턴
-		return cnt;
+	    SqlSession sqlsession = sqlSessionFactory.openSession(true);
+	    int cnt = 0;
+	    try {
+	        cnt = sqlsession.update("com.tokkitalk.db.MemberMapper.updateMem", updateMember);
+	    } finally {
+	        sqlsession.close();
+	    }
+	    return cnt;
 	}
 	
 	// 회원 삭제 메서드 (MyBatis를 사용하도록 수정)
