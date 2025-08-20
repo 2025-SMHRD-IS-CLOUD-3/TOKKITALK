@@ -5,26 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOKKI TALK - 센스고사</title>
     <style>
-        /* CSS 스타일은 이전과 동일 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
             background: #f8f9fa;
             color: #333;
         }
-        
+
         /* 헤더 */
         .header {
             background: white;
             padding: 20px 0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-        
+
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -33,7 +32,7 @@
             align-items: center;
             padding: 0 20px;
         }
-        
+
         .logo {
             font-size: 28px;
             font-weight: bold;
@@ -41,19 +40,21 @@
             letter-spacing: 2px;
             cursor: pointer;
         }
+
         .logo a {
             color: #FFD200;
             text-decoration: none;
         }
+
         .logo a:hover {
             color: #ff6b6b;
         }
-        
+
         .nav-menu {
             display: flex;
             gap: 40px;
         }
-        
+
         .nav-item {
             color: #666;
             text-decoration: none;
@@ -61,17 +62,18 @@
             font-weight: 500;
             transition: color 0.3s;
         }
-        
+
         .nav-item:hover {
             color: #ff6b6b;
         }
-        
+
         .nav-buttons {
             display: flex;
             gap: 15px;
         }
-        
-        .btn-login, .btn-signup {
+
+        .btn-login,
+        .btn-signup {
             padding: 12px 24px;
             border: none;
             border-radius: 25px;
@@ -80,21 +82,21 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-        
+
         .btn-login {
             background: #f1f3f4;
             color: black;
         }
-        
+
         .btn-login:hover {
             background: #ff6b6b;
         }
-        
+
         .btn-signup {
             background: #FFD200;
             color: black;
         }
-        
+
         .btn-signup:hover {
             background: #ff5252;
         }
@@ -105,7 +107,7 @@
             align-items: center;
             gap: 15px;
         }
-        
+
         .welcome-text {
             font-size: 16px;
             color: #333;
@@ -123,7 +125,7 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-        
+
         .btn-logout:hover {
             background: #ff6b6b;
             color: white;
@@ -136,7 +138,7 @@
             padding: 40px;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             text-align: center;
         }
 
@@ -179,7 +181,7 @@
             padding: 40px;
             background: #fff;
             border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             text-align: center;
         }
 
@@ -193,6 +195,32 @@
             font-size: 18px;
             line-height: 1.5;
             color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .result-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+            background: #FFD200;
+            color: black;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .result-btn:hover {
+            background: #ff5252;
+            color: white;
+        }
+
+        .result-image {
+            max-width: 300px;
+            height: auto;
+            margin-bottom: 20px;
         }
 
         /* 푸터 */
@@ -238,9 +266,11 @@
     </header>
 
     <main class="quiz-container">
-        <h1 class="question-title"></h1>
-        <img src="" alt="퀴즈 이미지" class="chat-image">
-        <div class="answer-options"></div>
+        <div id="quizContent">
+            <h1 class="question-title"></h1>
+            <img src="" alt="퀴즈 이미지" class="chat-image">
+            <div class="answer-options"></div>
+        </div>
     </main>
 
     <footer class="footer">
@@ -253,7 +283,7 @@
         const quizData = [
             {
                 question: "Q1. 다음 사진을 보고 당신의 선택을 골라주세요.",
-                image: src="Image/센스테스트 문제1.png",
+                image: "Image/센스테스트 문제1.png",
                 options: [
                     "A. 제발 갖다 버리고 그만 좀 입어.",
                     "B. 옷 진짜 잘 어울린다.",
@@ -263,7 +293,7 @@
             },
             {
                 question: "Q2. 다음 상황에 대한 적절한 행동으로 올바른 것은?",
-                image: src="Image/센스테스트 문제2.png",
+                image: "Image/센스테스트 문제2.png",
                 options: [
                     "A. 무슨 일 있었어? 대화를 시도한다.",
                     "B. 질 수 없지 같이 화를 낸다.",
@@ -273,7 +303,7 @@
             },
             {
                 question: "Q3. 세 번째 문제의 질문입니다.",
-                image: src="Image/센스테스트 문제3.png",
+                image: "Image/센스테스트 문제3.png",
                 options: [
                     "A. 배 안 고픈데.",
                     "B. 정말 아무거나.",
@@ -283,7 +313,7 @@
             },
             {
                 question: "Q4. 네 번째 문제의 질문입니다.",
-                image: src="Image/센스테스트 문제4.png",
+                image: "Image/센스테스트 문제4.png",
                 options: [
                     "A. 안 쪘어, 그리고 좀 찌면 어때? 쪄도 너무예뻐",
                     "B. 뭐가 살쪄!!!!",
@@ -293,7 +323,7 @@
             },
             {
                 question: "Q5. 마지막 문제의 질문입니다.",
-                image: src="Image/센스테스트 문제5.png",
+                image: "Image/센스테스트 문제5.png",
                 options: [
                     "A. 나는 푸는게 좋아.",
                     "B. 나는 묶는게 좋아.",
@@ -305,7 +335,9 @@
 
         let currentQuestionIndex = 0;
         let score = 0;
+        let canSelect = true;
 
+        const quizContent = document.getElementById('quizContent');
         const quizContainer = document.querySelector('.quiz-container');
         const questionTitle = document.querySelector('.question-title');
         const chatImage = document.querySelector('.chat-image');
@@ -317,6 +349,7 @@
 
         function loadQuiz() {
             if (currentQuestionIndex < quizData.length) {
+                canSelect = true;
                 const currentQuiz = quizData[currentQuestionIndex];
                 questionTitle.textContent = currentQuiz.question;
                 chatImage.src = currentQuiz.image;
@@ -326,7 +359,7 @@
                     const optionElement = document.createElement('div');
                     optionElement.classList.add('answer-option');
                     optionElement.textContent = option;
-                    optionElement.addEventListener('click', () => selectAnswer(option));
+                    optionElement.addEventListener('click', () => handleAnswerClick(option, optionElement));
                     answerOptionsContainer.appendChild(optionElement);
                 });
             } else {
@@ -334,44 +367,106 @@
             }
         }
 
-        function selectAnswer(selectedOption) {
+        function handleAnswerClick(option, element) {
+            if (!canSelect) return;
+            canSelect = false;
+
             const currentQuiz = quizData[currentQuestionIndex];
-            if (selectedOption === currentQuiz.correctAnswer) {
+            if (option === currentQuiz.correctAnswer) {
                 score++;
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+                document.querySelectorAll('.answer-option').forEach(opt => {
+                    if (opt.textContent === currentQuiz.correctAnswer) {
+                        opt.classList.add('correct');
+                    }
+                });
             }
             
-            currentQuestionIndex++;
-            loadQuiz();
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuiz();
+            }, 1500); // 1.5초 후 다음 문제로
         }
 
         function showResultPage() {
-            quizContainer.innerHTML = '';
+            quizContent.innerHTML = '';
 
             const resultCard = document.createElement('div');
             resultCard.classList.add('result-card');
-            
+
             const resultTitle = document.createElement('h2');
             resultTitle.classList.add('result-title');
-            
+
             const resultText = document.createElement('p');
             resultText.classList.add('result-text');
 
+            const resultImage = document.createElement('img');
+            resultImage.classList.add('result-image');
+            resultImage.style.maxWidth = '300px';
+            resultImage.style.height = 'auto';
+            resultImage.style.marginBottom = '20px';
+            resultImage.alt = "결과 이미지";
+
             let resultMessage = '';
-            if (score === 5) {
+            let imageSrc = '';
+
+            if (score === quizData.length) {
                 resultMessage = "당신은 센스 만점! 모든 질문에 완벽하게 대처하셨네요. 👍";
+                imageSrc = 'Image/1.jpg';
             } else if (score >= 3) {
                 resultMessage = "꽤 괜찮은 센스! 조금만 더 노력하면 완벽한 센스쟁이가 될 거예요. 😉";
+                imageSrc = 'Image/2.jpg';
             } else {
                 resultMessage = "아직 센스가 부족하네요. 다음번엔 더 좋은 결과를 기대해 봐요! 🤔";
+                imageSrc = 'Image/3.jpg';
             }
 
-            resultTitle.textContent = `센스고사 결과: ${score} / 5점`;
+            resultTitle.textContent = `센스고사 결과: ${score} / ${quizData.length}점`;
             resultText.textContent = resultMessage;
+            resultImage.src = imageSrc;
+
+            const restartBtn = document.createElement('a');
+            restartBtn.href = "main.html"; // 이 부분을 main.html로 수정
+            restartBtn.classList.add('result-btn');
+            restartBtn.textContent = "메인으로 돌아가기"; // 텍스트도 변경
+            
+            // 더 이상 preventDefault()가 필요 없으므로 onclick 이벤트는 제거해도 됩니다.
+            // 버튼을 클릭하면 바로 main.html로 이동하게 됩니다.
+            // restartBtn.onclick = (e) => {
+            //     e.preventDefault();
+            //     resetQuiz();
+            // };
             
             resultCard.appendChild(resultTitle);
+            resultCard.appendChild(resultImage);
             resultCard.appendChild(resultText);
+            resultCard.appendChild(restartBtn);
 
-            quizContainer.appendChild(resultCard);
+            quizContent.appendChild(resultCard);
+        }
+        
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            quizContent.innerHTML = '';
+            
+            const initialQuizContent = `
+                <div class="quiz-status" id="quizStatus"></div>
+                <h1 class="question-title" id="questionTitle"></h1>
+                <img src="" alt="퀴즈 이미지" class="chat-image" id="chatImage">
+                <div class="answer-options" id="answerOptions"></div>
+            `;
+            quizContent.innerHTML = initialQuizContent;
+            
+            // DOM 요소 재할당
+            const quizStatus = document.getElementById('quizStatus');
+            const questionTitle = document.getElementById('questionTitle');
+            const chatImage = document.getElementById('chatImage');
+            const answerOptions = document.getElementById('answerOptions');
+
+            loadQuiz();
         }
 
         // 로그인 상태 및 사용자 이름 동적 로드

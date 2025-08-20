@@ -104,13 +104,16 @@ function showResultPage() {
     resultText.classList.add('result-text');
 
     let resultMessage = '';
-    if (score === 5) {
-        resultMessage = "당신은 센스 만점! 모든 질문에 완벽하게 대처하셨네요. 👍";
-    } else if (score >= 3) {
-        resultMessage = "꽤 괜찮은 센스! 조금만 더 노력하면 완벽한 센스쟁이가 될 거예요. 😉";
-    } else {
-        resultMessage = "아직 센스가 부족하네요. 다음번엔 더 좋은 결과를 기대해 봐요! 🤔";
-    }
+	if (score === 5) {
+	        resultMessage = "당신은 센스 만점! 모든 질문에 완벽하게 대처하셨네요. 👍";
+	        imageSrc = 'Image/1.jpg';
+	    } else if (score >= 3) {
+	        resultMessage = "꽤 괜찮은 센스! 조금만 더 노력하면 완벽한 센스쟁이가 될 거예요. 😉";
+	        imageSrc = 'Image/2.jpg';
+	    } else {
+	        resultMessage = "아직 센스가 부족하네요. 다음번엔 더 좋은 결과를 기대해 봐요! 🤔";
+	        imageSrc = 'Image/3.jpg';
+	    }
 
     resultTitle.textContent = `센스고사 결과: ${score} / 5점`;
     resultText.textContent = resultMessage;
