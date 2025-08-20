@@ -167,8 +167,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await res.json();
             if (data && data.success) {
                 const nameToUse = data.userName || data.userId || inputId;
-                sessionStorage.setItem('loggedIn', 'true');
-                sessionStorage.setItem('userName', nameToUse);
+				sessionStorage.setItem('loggedIn', 'true');
+				sessionStorage.setItem('userId', data.userId); // ★ 아이디를 'userId' 키에 저장
+				sessionStorage.setItem('userName', data.userName); // ★ 이름을 'userName' 키에 저장
                 closeLoginModal();
                 updateHeaderUI(true, nameToUse);
                 alert(`${nameToUse}님, 환영합니다!`);

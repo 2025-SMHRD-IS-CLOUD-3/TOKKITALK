@@ -9,8 +9,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import com.tokkitalk.model.MevenMember;
-
 public class MemberDAO {
 	private SqlSessionFactory sqlSessionFactory;
 	
@@ -138,8 +136,19 @@ public class MemberDAO {
 		// 4. sqlsession 닫기
 		sqlsession.close();
 		// 5. 결과값 리턴
-		return cnt; 
+		return cnt;
 	}
 	
-	
+	// 회원 삭제 메서드 (MyBatis를 사용하도록 수정)
+	public int deleteMember(String id) {
+		SqlSession session = sqlSessionFactory.openSession(true); // auto-commit 설정
+		int row = 0;
+		try {
+			// MemberMapper.xml에 있는 deleteMember 쿼리 호출
+			row = session.delete("com.tokkitalk.db.MemberMapper.deleteMember", id);
+		} finally {
+			session.close();
+		}
+		return row;
+	}
 }
