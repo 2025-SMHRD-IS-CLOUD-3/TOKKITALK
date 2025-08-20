@@ -100,6 +100,19 @@ function getContextPath() {
     return '/' + pathSegments[0];
 }
 
+// API 베이스 URL 계산: 동일 도메인 컨텍스트 우선, 없으면 로컬 톰캣(8081)로 폴백
+function getApiBase() {
+    var basePath = getContextPath();
+    if (basePath) {
+        return window.location.origin + basePath;
+    }
+    var host = window.location.hostname;
+    if (host === '127.0.0.1' || host === 'localhost') {
+        return 'http://localhost:8081/TokkiTalk2';
+    }
+    return window.location.origin; // 최후수단
+}
+
 // DOM이 로드된 후 이벤트 리스너 등록
 document.addEventListener('DOMContentLoaded', function() {
     // 1. URL에서 userid 파라미터가 있는지 확인
@@ -138,8 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         try {
-            const basePath = getContextPath();
-            const url = window.location.origin + basePath + '/login';
+            const url = getApiBase() + '/login';
             const res = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -178,10 +190,86 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 회원가입 모달에서 회원가입 완료 버튼
     const signupConfirmBtn = document.querySelector('.signup-confirm-btn');
-    signupConfirmBtn.addEventListener('click', function() {
-        alert('회원가입이 완료되었습니다! 🎉');
-        closeSignupModal();
-        openLoginModal();
+    signupConfirmBtn.addEventListener('click', async function() {
+        const idInputEl = document.querySelector('#signupModal .signup-input-row .signup-input');
+        const pw1El = document.querySelector('#signupModal .signup-input[placeholder="비밀번호 입력(숫자 4자)"]');
+        const pw2El = document.querySelector('#signupModal .signup-input[placeholder="비밀번호 확인"]');
+        const nameEl = document.querySelector('#signupModal .signup-input[placeholder="이름을 입력해주세요"]');
+        const dateEl = document.querySelector('#signupModal .date-input');
+        const genderChecked = document.querySelector('#signupModal .gender-radio.checked');
+
+        const userId = idInputEl ? idInputEl.value.trim() : '';
+        const userPw1 = pw1El ? pw1El.value.trim() : '';
+        const userPw2 = pw2El ? pw2El.value.trim() : '';
+        const userName = nameEl ? nameEl.value.trim() : '';
+        const userDate = dateEl ? dateEl.value : '';
+        let gender = '';
+        if (genderChecked) {
+            const labelEl = genderChecked.parentElement.querySelector('.gender-label');
+            const text = labelEl ? labelEl.textContent.trim() : '';
+            gender = text.startsWith('남') ? 'male' : (text.startsWith('여') ? 'female' : '');
+        }
+
+        const idRegex = /^[A-Za-z0-9]{1,20}$/;
+        if (!idRegex.test(userId)) {
+            alert('아이디는 영문/숫자 1~20자만 가능합니다.');
+            return;
+        }
+        if (!/^\d{4}$/.test(userPw1)) {
+            alert('비밀번호는 숫자 4자리여야 합니다.');
+            return;
+        }
+        if (userPw1 !== userPw2) {
+            alert('비밀번호가 일치하지 않습니다.');
+            return;
+        }
+        if (!userName) {
+            alert('이름을 입력해주세요.');
+            return;
+        }
+        if (!userDate) {
+            alert('생년월일을 선택해주세요.');
+            return;
+        }
+        if (!gender) {
+            alert('성별을 선택해주세요.');
+            return;
+        }
+
+        try {
+            const url = getApiBase() + '/join';
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                    'Accept': 'application/json'
+                },
+                body: new URLSearchParams({
+                    id: userId,
+                    pw: userPw1,
+                    name: userName,
+                    gender: gender,
+                    user_date: userDate,
+                    ajax: '1'
+                }).toString()
+            });
+            if (!res.ok) {
+                alert('회원가입 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                return;
+            }
+            const data = await res.json();
+            if (data && data.success) {
+                alert('회원가입이 완료되었습니다! 🎉');
+                closeSignupModal();
+                openLoginModal();
+            } else if (data && data.reason === 'duplicate') {
+                alert('이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.');
+            } else {
+                alert('회원가입에 실패했습니다. 입력 정보를 확인해주세요.');
+            }
+        } catch (e) {
+            alert('네트워크 오류가 발생했습니다.');
+        }
     });
 
     // 아이디 중복 확인 버튼
@@ -200,8 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             try {
-                const basePath = getContextPath();
-                const url = window.location.origin + basePath + '/check-duplicate?id=' + encodeURIComponent(userId);
+                const url = getApiBase() + '/check-duplicate?id=' + encodeURIComponent(userId);
                 const res = await fetch(url, { method: 'GET' });
                 if (!res.ok) {
                     if (res.status === 404 || res.status === 0) {

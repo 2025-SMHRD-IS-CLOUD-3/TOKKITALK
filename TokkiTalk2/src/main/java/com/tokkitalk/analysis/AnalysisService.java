@@ -13,6 +13,7 @@ import com.tokkitalk.analysis.dto.ResponseSuggestion;
 import com.tokkitalk.analysis.dto.SuggestRequest;
 import com.tokkitalk.analysis.dto.SuggestResult;
 import com.tokkitalk.analysis.store.AnalysisDAO;
+import com.tokkitalk.analysis.external.OpenAiClient;
 
 /**
  * High level orchestration service. MVP: uses simple heuristics and placeholders.
@@ -21,11 +22,23 @@ import com.tokkitalk.analysis.store.AnalysisDAO;
 public class AnalysisService {
 
     private final AnalysisDAO analysisDAO = new AnalysisDAO();
+    private final OpenAiClient openAiClient = new OpenAiClient();
 
     public AnalysisResult analyze(String analysisId, AnalyzeRequest request) {
-        // MVP: pretend we call a model and fill fields deterministically
-        AnalysisResult result = new AnalysisResult();
-        result.analysis_id = analysisId;
+        AnalysisResult result = null;
+        // Try LLM if configured; fallback to heuristic
+        if (openAiClient.isConfigured()) {
+            try {
+                result = openAiClient.analyzeWithLLM(analysisId, request);
+            } catch (Exception e) {
+                // swallow and fallback
+                result = null;
+            }
+        }
+        if (result == null) {
+            // MVP: deterministic stub
+            result = new AnalysisResult();
+            result.analysis_id = analysisId;
 
         // Surface meaning
         AnalysisResult.SurfaceMeaning sm = new AnalysisResult.SurfaceMeaning();
@@ -66,7 +79,8 @@ public class AnalysisService {
         rs.confidence = 0.79;
         result.response_suggestion = rs;
 
-        result.overall_confidence = 0.80;
+            result.overall_confidence = 0.80;
+        }
 
         // Persist minimal record
         analysisDAO.saveResult(result);

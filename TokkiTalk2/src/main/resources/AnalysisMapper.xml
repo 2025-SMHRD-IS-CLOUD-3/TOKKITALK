@@ -3,40 +3,54 @@
 
 <mapper namespace="com.tokkitalk.db.AnalysisMapper">
 
-  <insert id="insertAnalysis" parameterType="map">
-    INSERT INTO analyses (
-      analysis_id, literal_summary, implied_intent, risk_flags, emotion_label,
-      emotion_valence, emotion_arousal, politeness_level, cues_json,
-      suggestion_main, suggestion_alt, suggestion_tone, rationale,
-      overall_confidence, model_version
+  <insert id="insertAnalysis" parameterType="com.tokkitalk.analysis.store.AnalysisRecord">
+    INSERT INTO ANALYSIS (
+      ANALYSIS_ID,
+      INPUT_TYPE,
+      TEXT,
+      IMAGE_URL,
+      TONE,
+      ANALYSIS_RESULT,
+      SUGGESTIONS,
+      CREATED_AT,
+      UPDATED_AT
     ) VALUES (
-      #{analysis_id}, #{literal_summary}, #{implied_intent}, #{risk_flags}, #{emotion_label},
-      #{emotion_valence}, #{emotion_arousal}, #{politeness_level}, #{cues_json},
-      #{suggestion_main}, #{suggestion_alt}, #{suggestion_tone}, #{rationale},
-      #{overall_confidence}, #{model_version}
+      #{analysisId},
+      #{inputType, jdbcType=VARCHAR},
+      #{text, jdbcType=VARCHAR},
+      #{imageUrl, jdbcType=VARCHAR},
+      #{tone, jdbcType=VARCHAR},
+      #{analysisResult, jdbcType=CLOB},
+      #{suggestions,    jdbcType=CLOB},
+      SYSTIMESTAMP,
+      SYSTIMESTAMP
     )
   </insert>
 
-  <update id="updateSuggestion" parameterType="map">
-    UPDATE analyses SET
-      suggestion_main = #{suggestion_main},
-      suggestion_alt = #{suggestion_alt},
-      suggestion_tone = #{suggestion_tone}
-    WHERE analysis_id = #{analysis_id}
-  </update>
-
-  <insert id="insertFeedback" parameterType="map">
-    INSERT INTO analysis_feedback (analysis_id, liked, partner_reaction)
-    VALUES (#{analysis_id}, #{liked}, #{partner_reaction})
-  </insert>
-
-  <select id="selectAnalysis" parameterType="string" resultType="map">
-    SELECT analysis_id, literal_summary, implied_intent
-    FROM analyses WHERE analysis_id = #{value}
+  <select id="selectAnalysis" parameterType="string" resultType="com.tokkitalk.analysis.store.AnalysisRecord">
+    SELECT
+      ANALYSIS_ID   AS analysisId,
+      INPUT_TYPE    AS inputType,
+      TEXT          AS text,
+      IMAGE_URL     AS imageUrl,
+      TONE          AS tone,
+      ANALYSIS_RESULT AS analysisResult,
+      SUGGESTIONS     AS suggestions
+    FROM ANALYSIS
+    WHERE ANALYSIS_ID = #{value}
   </select>
 
+  <!-- Feedback 저장 (스키마에 맞춤) -->
+  <insert id="insertFeedback" parameterType="map">
+    INSERT INTO ANALYSIS_FEEDBACK (
+      FEEDBACK_ID, ANALYSIS_ID, LIKE_STATUS, PARTNER_REACTION, USER_COMMENT, CREATED_AT
+    ) VALUES (
+      ANALYSIS_FEEDBACK_SEQ.NEXTVAL, #{analysis_id}, #{liked}, #{partner_reaction}, #{user_comment, jdbcType=VARCHAR}, SYSTIMESTAMP
+    )
+  </insert>
+
   <delete id="deleteAnalysis" parameterType="string">
-    DELETE FROM analyses WHERE analysis_id = #{value}
+    DELETE FROM ANALYSIS WHERE ANALYSIS_ID = #{value}
   </delete>
 
 </mapper>

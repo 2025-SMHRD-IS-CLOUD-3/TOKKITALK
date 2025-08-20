@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.servlet.ServletException;
+import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -45,13 +46,25 @@ public class Join extends HttpServlet {
       // 6. 회원가입 실행
       int cnt = dao.join(member);
       
-      // 7. 결과에 따른 페이지 이동
-      if (cnt > 0) {
-         // 회원가입 성공
-         response.sendRedirect("main.jsp?msg=join_success");
+      // 7. AJAX 여부 확인
+      String ajax = request.getParameter("ajax");
+      if ("1".equals(ajax)) {
+         response.setCharacterEncoding("UTF-8");
+         response.setContentType("application/json; charset=UTF-8");
+         try (PrintWriter out = response.getWriter()) {
+            if (cnt > 0) {
+               out.write("{\"success\":true}");
+            } else {
+               out.write("{\"success\":false}");
+            }
+         }
       } else {
-         // 회원가입 실패
-         response.sendRedirect("main.jsp?msg=join_fail");
+         // 8. 결과에 따른 페이지 이동 (비-AJAX)
+         if (cnt > 0) {
+            response.sendRedirect("main.html?msg=join_success");
+         } else {
+            response.sendRedirect("main.html?msg=join_fail");
+         }
       }
    }
 }

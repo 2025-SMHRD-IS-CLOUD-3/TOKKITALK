@@ -318,6 +318,19 @@
             "advice": "✍️ TOKKI의 제안"
         };
 
+        // API 베이스 계산 (정적서버에서도 톰캣으로 폴백)
+        function getApiBase() {
+            const segs = window.location.pathname.split('/').filter(s => s.length > 0);
+            if (segs.length > 0 && segs[0].indexOf('.') === -1) {
+                return window.location.origin + '/' + segs[0];
+            }
+            const host = window.location.hostname;
+            if (host === '127.0.0.1' || host === 'localhost') {
+                return 'http://localhost:8081/TokkiTalk2';
+            }
+            return window.location.origin;
+        }
+
         function simulateAnalysis(message) {
             let analysis = {
                 surface: `상대방의 메시지는 **"${message}"** 라고 말하고 있어요.`,
@@ -356,7 +369,7 @@
 
         // --- UI 및 이벤트 핸들링 ---
         
-        analyzeBtn.addEventListener('click', () => {
+        analyzeBtn.addEventListener('click', async () => {
             const message = messageInput.value.trim();
             if (message.length > 0) {
                 appendMessage(message, 'user');
@@ -365,23 +378,53 @@
                 messageInput.disabled = true;
                 analyzeBtn.disabled = true;
 
-                setTimeout(() => {
-                    const analysis = simulateAnalysis(message);
+                try {
+                    const url = getApiBase() + '/analyze';
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            input_type: 'text',
+                            text: message,
+                            options: { tone: '상큼' }
+                        })
+                    });
+
+                    let analysis;
+                    if (res.ok) {
+                        const data = await res.json();
+                        analysis = {
+                            surface: (data.surface_meaning && data.surface_meaning.one_line) ? data.surface_meaning.one_line : `상대방의 메시지는 **"${message}"** 라고 말하고 있어요.`,
+                            hidden: (data.hidden_meaning && data.hidden_meaning.one_line) ? data.hidden_meaning.one_line : '분석 중...',
+                            emotion: (data.emotion && data.emotion.label) ? data.emotion.label : '분석 중...',
+                            advice: (data.response_suggestion && data.response_suggestion.primary) ? data.response_suggestion.primary : '분석 중...'
+                        };
+                    } else {
+                        analysis = simulateAnalysis(message);
+                    }
+
                     chatArea.removeChild(loadingMessage);
-                    
                     const analysisKeys = Object.keys(analysis);
                     analysisKeys.forEach((key, index) => {
                         setTimeout(() => {
                             const title = ANALYSES[key];
                             appendMessage(`<b>${title}</b><br>${analysis[key]}`, 'bot');
-                            
                             if (index === analysisKeys.length - 1) {
                                 inputSection.style.display = 'none';
                                 resetBtn.style.display = 'block';
                             }
-                        }, 1000 * (index));
+                        }, 250 * (index));
                     });
-                }, 2000);
+                } catch (e) {
+                    chatArea.removeChild(loadingMessage);
+                    const analysis = simulateAnalysis(message);
+                    Object.keys(analysis).forEach((key) => {
+                        const title = ANALYSES[key];
+                        appendMessage(`<b>${title}</b><br>${analysis[key]}`, 'bot');
+                    });
+                    inputSection.style.display = 'none';
+                    resetBtn.style.display = 'block';
+                }
             }
         });
         
