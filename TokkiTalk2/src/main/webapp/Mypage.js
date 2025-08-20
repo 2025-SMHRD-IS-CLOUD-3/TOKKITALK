@@ -149,13 +149,47 @@ if (saveProfileBtn) {
 }
 
 if (deleteAccountBtn) {
-    deleteAccountBtn.addEventListener('click', function() {
+    deleteAccountBtn.addEventListener('click', async function() {
         if (confirm("정말 회원 탈퇴하시겠습니까? 모든 정보가 삭제됩니다.")) {
-            // This part should be handled by a server-side request in a real app
-            sessionStorage.removeItem('loggedIn');
-            sessionStorage.removeItem('userName');
-            alert('회원 탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.');
-            window.location.href = 'main.html';
+            // ★ 수정된 부분: sessionStorage에서 'userId'를 가져와야 합니다.
+            // 현재 로그인 로직이 'userName'만 저장하므로, 임시로 'userName'을 사용합니다.
+            // 로그인 로직 수정이 필요합니다.
+            const userId = sessionStorage.getItem('userId');
+            
+            if (!userId) {
+                alert('로그인 정보가 유효하지 않습니다.');
+                window.location.href = 'main.html';
+                return;
+            }
+
+            try {
+                // 서버의 Delete 컨트롤러로 POST 요청 보내기
+                const url = '/TokkiTalk2/Delete';
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                    },
+                    body: `id=${encodeURIComponent(userId)}`
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        sessionStorage.removeItem('loggedIn');
+                        sessionStorage.removeItem('userName');
+                        alert('회원 탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.');
+                        window.location.href = 'main.html';
+                    } else {
+                        alert('회원 탈퇴에 실패했습니다: ' + (result.message || '알 수 없는 오류'));
+                    }
+                } else {
+                    alert('서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+                }
+            } catch (error) {
+                console.error('Error during account deletion:', error);
+                alert('네트워크 오류가 발생했습니다.');
+            }
         }
     });
 }
