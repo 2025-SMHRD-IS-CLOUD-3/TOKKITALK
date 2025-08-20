@@ -83,7 +83,7 @@ function fetchChatDetails(chatId) {
 if (openProfileModalBtn) {
     openProfileModalBtn.addEventListener('click', function() {
         const currentName = sessionStorage.getItem('userName');
-        editNameInput.value = currentName;
+        editNameInput.value = currentName; // ★★★ 이 코드가 실제 이름을 입력합니다. ★★★
         currentPasswordInput.value = "";
         editPasswordInput.value = "";
         confirmPasswordInput.value = "";
@@ -92,59 +92,57 @@ if (openProfileModalBtn) {
 }
 
 if (saveProfileBtn) {
-    saveProfileBtn.addEventListener('click', function(event) {
+    saveProfileBtn.addEventListener('click', async function(event) {
         event.preventDefault();
 
-        const user_id = sessionStorage.getItem('userName');
-        const user_pw = currentPasswordInput.value.trim();
-        const user_name = editNameInput.value.trim();
-
-        if (!user_pw || !user_name) {
-            alert('현재 비밀번호와 이름은 필수 입력 항목입니다.');
+        const user_id = sessionStorage.getItem('userId');
+        const current_pw = currentPasswordInput.value.trim();
+        const new_pw = editPasswordInput.value.trim();
+        const confirm_pw = confirmPasswordInput.value.trim();
+        
+        if (!user_id) {
+            alert('로그인 정보가 유효하지 않습니다.');
             return;
         }
 
-        const newPassword = editPasswordInput.value.trim();
-        const confirmPassword = confirmPasswordInput.value.trim();
+        if (!current_pw || !new_pw || !confirm_pw) {
+            alert('현재 비밀번호와 새 비밀번호를 모두 입력해주세요.');
+            return;
+        }
 
-        if (newPassword && newPassword !== confirmPassword) {
+        if (new_pw !== confirm_pw) {
             alert('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
             return;
         }
 
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = 'Update';
+        try {
+            const url = '/TokkiTalk2/Update';
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                },
+                body: `id=${encodeURIComponent(user_id)}&currentPw=${encodeURIComponent(current_pw)}&newPw=${encodeURIComponent(new_pw)}`
+            });
 
-        const idInput = document.createElement('input');
-        idInput.type = 'hidden';
-        idInput.name = 'id';
-        idInput.value = user_id;
+            if (!response.ok) {
+                alert('서버와의 통신 오류가 발생했습니다.');
+                return;
+            }
+            
+            const result = await response.json();
 
-        const pwInput = document.createElement('input');
-        pwInput.type = 'hidden';
-        pwInput.name = 'pw';
-        pwInput.value = user_pw;
-        
-        const nameInput = document.createElement('input');
-        nameInput.type = 'hidden';
-        nameInput.name = 'name';
-        nameInput.value = user_name;
-
-        if (newPassword) {
-            const newPwInput = document.createElement('input');
-            newPwInput.type = 'hidden';
-            newPwInput.name = 'newPw';
-            newPwInput.value = newPassword;
-            form.appendChild(newPwInput);
+            if (result.success) {
+                alert(result.message);
+                window.location.href = 'MyPage.html'; // ★★★ 성공 시 페이지 이동 ★★★
+            } else {
+                alert(result.message);
+            }
+            
+        } catch (error) {
+            console.error('Error during password update:', error);
+            alert('네트워크 오류가 발생했습니다.');
         }
-
-        form.appendChild(idInput);
-        form.appendChild(pwInput);
-        form.appendChild(nameInput);
-        
-        document.body.appendChild(form);
-        form.submit();
     });
 }
 
