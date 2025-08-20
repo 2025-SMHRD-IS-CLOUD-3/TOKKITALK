@@ -8,7 +8,13 @@ public class AnalysisResult {
     public HiddenMeaning hidden_meaning;
     public Emotion emotion;
     public ResponseSuggestion response_suggestion;
+    public List<AdviceItem> advice;  // 스타일 정보가 포함된 제안들
     public double overall_confidence;
+    
+    public static class AdviceItem {
+        public String style;
+        public String text;
+    }
 
     public static class SurfaceMeaning {
         public String one_line;

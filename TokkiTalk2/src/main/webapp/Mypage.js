@@ -96,9 +96,57 @@ function renderChatList(chats) {
     });
 }
 
-function fetchChatDetails(chatId) {
-    modalContentArea.innerHTML = '<div class="loading-message">불러오는 중...</div>';
-    chatModal.style.display = "flex";
+async function fetchChatDetails(chatId) {
+    try {
+        modalContentArea.innerHTML = '<div class="loading-message">불러오는 중...</div>';
+        chatModal.style.display = "flex";
+        
+        const url = getApiBase() + '/analysis/' + chatId;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        
+        const data = await res.json();
+        
+                 // 새로운 구조 지원: advice 배열을 렌더링
+         let adviceHtml = '';
+         if (data.response_suggestion && data.response_suggestion.alternatives) {
+             const allAdvice = [data.response_suggestion.primary, ...data.response_suggestion.alternatives];
+             const styleNames = ['무난·호감형', '구체 포인트형', '선택권 존중형', '장난·플러팅형', '응원형', '위로형'];
+             
+             adviceHtml = allAdvice.map((advice, index) => {
+                 const style = index === 0 ? data.response_suggestion.tone : 
+                              (index < styleNames.length ? styleNames[index] : `제안 ${index + 1}`);
+                 return `<li><b>${style}</b> ${advice}</li>`;
+             }).join('');
+         }
+        
+        modalContentArea.innerHTML = `
+            <div class="chat-detail">
+                <h3>분석 결과</h3>
+                <div class="analysis-section">
+                    <h4>표면적 의미</h4>
+                    <p>${data.surface_meaning ? data.surface_meaning.one_line : '분석 없음'}</p>
+                </div>
+                <div class="analysis-section">
+                    <h4>숨은 의도</h4>
+                    <p>${data.hidden_meaning ? data.hidden_meaning.one_line : '분석 없음'}</p>
+                </div>
+                <div class="analysis-section">
+                    <h4>감정 상태</h4>
+                    <p>${data.emotion ? data.emotion.label : '분석 없음'}</p>
+                </div>
+                <div class="analysis-section">
+                    <h4>TOKKI의 제안</h4>
+                    <ul class="advice-list">
+                        ${adviceHtml}
+                    </ul>
+                </div>
+            </div>
+        `;
+    } catch (e) {
+        modalContentArea.innerHTML = '<div class="error-message">불러오기 실패</div>';
+        console.error('Error fetching chat details:', e);
+    }
 }
 
 if (openProfileModalBtn) {
