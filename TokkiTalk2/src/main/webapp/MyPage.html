@@ -179,7 +179,7 @@
             gap: 10px;
         }
 
-        .btn-edit-profile, .btn-delete-account, .btn-history {
+        .btn-edit-profile, .btn-delete-account, .btn-history{
             padding: 10px 20px;
             border: 1px solid #ddd;
             border-radius: 25px;
@@ -187,18 +187,14 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        .btn-history a{
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .btn-history{
+        .btn-history {
             background: #FFD200;
             color: #333;
             border: none;
-            
+            text-decoration: none;
+            color: inherit;
         }
-
+		
         .btn-history:hover {
             background: #ff5252;
             color: white;
@@ -528,7 +524,11 @@
                 <h2 id="userName"></h2>
                 <br>
                 <div class="btn-group">
+<<<<<<< HEAD
                     <button class="btn-history"><a href="History.html">히스토리</a></button>
+=======
+                    <a href="History.html" class="btn-history" >히스토리</a>
+>>>>>>> branch 'main' of https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK.git
                     <button class="btn-edit-profile" id="openProfileModal">프로필 수정</button>
                     <button class="btn-delete-account" id="deleteAccountBtn">회원 탈퇴</button>
                 </div>

@@ -624,7 +624,7 @@
 
     <div id="loginModal" class="modal-overlay">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeLoginModal()">&times;</button>
+            <button class="modal-close" data-target="loginModal" onclick="closeLoginModal()">&times;</button>
             <h2 class="modal-title">로그인</h2>
             
             <div class="input-group">
@@ -650,7 +650,7 @@
 
     <div id="signupModal" class="modal-overlay">
         <div class="signup-modal-content">
-            <button class="modal-close" onclick="closeSignupModal()">&times;</button>
+            <button class="modal-close" data-target="signupModal" onclick="closeSignupModal()">&times;</button>
             <h2 class="signup-title">회원가입</h2>
             <div class="signup-underline"></div>
             
@@ -672,8 +672,9 @@
             </div>
             
             <div class="input-group">
-                <input type="date" class="date-input">
-            </div>
+    <label for="date-input">생년월일을 입력하세요.</label>
+    <input type="date" class="date-input" id="date-input">
+</div>
             
             <div class="gender-group">
                 <div class="gender-option">
