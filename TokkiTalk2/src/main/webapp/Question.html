@@ -427,7 +427,7 @@
             <div class="chat-message bot">
                 <div class="message-title">TOKKI</div>
                 <div class="message-content">
-                    안녕하세요! 분석하고 싶은 메시지를 입력하거나 이미지를 첨부해주세요. 🐰<br>
+                    안녕하세요! 분석하고 싶은 메시지를 입력해주세요. 🐰<br>
                     <br>
                     **예시**<br>
                     "응... 좀 피곤해" 라고 입력해보세요.<br>
@@ -458,17 +458,10 @@
         </div>
         
         <div class="buttons-container">
-
-            <button class="save-btn" id="saveBtn" onclick="saveAnalysis()">히스토리에 저장하기</button>
+            <button class="save-btn" id="saveBtn" onclick="saveAnalysis()">📎 히스토리에 저장하기</button>
             <button class="reset-btn" id="resetBtn" onclick="resetAnalysis()">
                 🔄 다시 분석하기
             </button>
-
-        <button class="save-btn" id="saveBtn" onclick="saveAnalysis()">📎 히스토리에 저장하기</button>
-        <button class="reset-btn" id="resetBtn" onclick="resetAnalysis()">
-            🔄 다시 분석하기
-        </button>
-
         </div>
     </main>
 
@@ -812,7 +805,6 @@
                     "오늘 저녁에 뭐 먹을까? 🍕" 라고 입력해보세요.<br>
                     "괜찮아, 신경 쓰지 마" 라고 입력해보세요.
                 </div>
-<<<<<<< HEAD
             </div>
         `;
         
@@ -828,14 +820,6 @@
         if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
             analyzeBtn.click();
-=======
-            `;
-            
-            inputSection.style.display = 'flex';
-            saveBtn.style.display = 'none';
-            resetBtn.style.display = 'none';
-            messageInput.focus();
->>>>>>> branch 'main' of https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK.git
         }
     });
     
