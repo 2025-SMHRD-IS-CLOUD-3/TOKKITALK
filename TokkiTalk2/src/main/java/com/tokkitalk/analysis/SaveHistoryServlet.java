@@ -80,14 +80,26 @@ public class SaveHistoryServlet extends HttpServlet {
             System.out.println("User Message: " + saveRequest.input_text);
             System.out.println("Assistant Message: " + messageBuilder.toString());
             
-            // 파일로 저장 (DB 대신)
+            // 파일로 저장
             try {
                 saveToFile(userId, "user", saveRequest.input_text);
                 saveToFile(userId, "assistant", messageBuilder.toString());
                 System.out.println("파일 저장 성공!");
             } catch (Exception fileError) {
                 System.out.println("파일 저장 실패: " + fileError.getMessage());
-                System.out.println("하지만 테스트를 위해 성공으로 처리합니다.");
+                fileError.printStackTrace();
+            }
+            
+            // DB에도 저장 시도
+            try {
+                System.out.println("=== DB 저장 시도 ===");
+                saveToChatHistory(userId, "user", saveRequest.input_text);
+                saveToChatHistory(userId, "assistant", messageBuilder.toString());
+                System.out.println("DB 저장 성공!");
+            } catch (Exception dbError) {
+                System.out.println("DB 저장 실패: " + dbError.getMessage());
+                dbError.printStackTrace();
+                System.out.println("파일 저장은 성공했으므로 계속 진행합니다.");
             }
             
             // 성공 응답
