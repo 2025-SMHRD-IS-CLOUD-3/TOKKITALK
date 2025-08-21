@@ -5,7 +5,13 @@ const headerUserName = document.getElementById('headerUserName');
 const logoutBtn = document.getElementById('logoutBtn');
 
 
+const loginModal = document.getElementById('loginModal'); 
 
+function closeLoginModal() {
+    if (loginModal) {
+        loginModal.style.display = 'none';
+    }
+}
 
 // 로그인 상태에 따라 헤더 UI를 업데이트하는 함수
 function updateHeaderUI() {
