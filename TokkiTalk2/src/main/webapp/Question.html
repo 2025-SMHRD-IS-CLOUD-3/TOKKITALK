@@ -685,9 +685,9 @@
                 analysis = simulateAnalysis(message);
             } else {
                 analysis = {
-                    surface_meaning: analysisData.surface_meaning || analysisData.surface || "상대방의 메시지를 문자 그대로 해석한 의미예요.",
-                    hidden_meaning: analysisData.hidden_meaning || analysisData.hidden || "메시지 뒤에 숨겨진 의도나 감정을 분석했어요.",
-                    emotion: typeof analysisData.emotion === 'object' ? `감정: ${analysisData.emotion.label || '중립'}, 강도: ${analysisData.emotion.intensity || 3}/5` : analysisData.emotion,
+                    surface_meaning: (typeof analysisData.surface_meaning === 'object' ? analysisData.surface_meaning.one_line : analysisData.surface_meaning) || analysisData.surface || "상대방의 메시지를 문자 그대로 해석한 의미예요.",
+                    hidden_meaning: (typeof analysisData.hidden_meaning === 'object' ? analysisData.hidden_meaning.one_line : analysisData.hidden_meaning) || analysisData.hidden || "메시지 뒤에 숨겨진 의도나 감정을 분석했어요.",
+                    emotion: typeof analysisData.emotion === 'object' ? `감정: ${analysisData.emotion.label || '중립'}, 강도: ${analysisData.emotion.intensity || 3}/5` : (analysisData.emotion || "상대방의 현재 감정 상태를 파악했어요."),
                     advice: ''
                 };
                 

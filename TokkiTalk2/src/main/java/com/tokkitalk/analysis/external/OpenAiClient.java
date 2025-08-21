@@ -58,8 +58,8 @@ public class OpenAiClient {
             throw new IllegalStateException("OPENAI_API_KEY not set");
         }
 
-        final String SYSTEM = "너는 '여자어 번역기'야. 사용자가 보낸 문장을 여자의 관점에서 해석해\n"
-                + "남자가 이해하기 쉬운 '직설 번역'과 '상황별 대응'을 제시한다.\n\n"
+        final String SYSTEM = "너는 '여자어 번역기'다. 사용자가 보낸 문장을 여성 화자의 관점에서 해석해\n"
+                + "남성이 이해하기 쉬운 '직설 번역'과 '상황별 대응'을 제시한다.\n\n"
                 + "톤/스타일 지정:\n"
                 + "친근하고 유머러스한 톤으로 답변하고, 여자의 감성을 고려한다,성별 고정관념을 조장하지 않도록 주의한다.\n"
                 + "실제 상황에서 도움이 되는 실용적인 조언을 제공한다.\n\n"
