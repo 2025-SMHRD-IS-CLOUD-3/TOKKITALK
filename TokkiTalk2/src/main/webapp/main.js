@@ -115,7 +115,16 @@ function getApiBase() {
 
 // DOM이 로드된 후 이벤트 리스너 등록
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. URL에서 userid 파라미터가 있는지 확인
+    const urlParams = new URLSearchParams(window.location.search);
+    const modalType = urlParams.get('modal');
+
+    if (modalType === 'login') {
+        openLoginModal();
+    } else if (modalType === 'signup') {
+        openSignupModal();
+    }
+		
+	// 1. URL에서 userid 파라미터가 있는지 확인
     const useridFromUrl = getUrlParameter('userid');
     
     // 2. userid 파라미터가 있다면, sessionStorage에 저장
@@ -166,14 +175,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             const data = await res.json();
             if (data && data.success) {
-                const nameToUse = data.userName || data.userId || inputId;
-				sessionStorage.setItem('loggedIn', 'true');
-				sessionStorage.setItem('userId', data.userId); // ★ 아이디를 'userId' 키에 저장
-				sessionStorage.setItem('userName', data.userName); // ★ 이름을 'userName' 키에 저장
-                closeLoginModal();
-                updateHeaderUI(true, nameToUse);
-                alert(`${nameToUse}님, 환영합니다!`);
-                window.location.reload();
+				const nameToUse = data.userName || data.userId || inputId;
+				    sessionStorage.setItem('loggedIn', 'true');
+				    sessionStorage.setItem('userId', data.userId);
+				    sessionStorage.setItem('userName', data.userName);
+				    
+				    // 알림창을 먼저 띄우고 사용자가 확인을 누른 후 모든 동작을 수행
+				    alert(`${nameToUse}님, 환영합니다!`);
+				    updateHeaderUI(true, nameToUse);
+				    closeLoginModal(); // 모달을 닫음
+				    window.location.href = "main.html"; // ★ 이 코드로 변경합니다.
             } else {
                 alert('로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요.');
             }
@@ -261,8 +272,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await res.json();
             if (data && data.success) {
                 alert('회원가입이 완료되었습니다! 🎉');
-                closeSignupModal();
-                openLoginModal();
+				// ★ 이 부분에 입력 필드를 초기화하는 코드를 추가합니다.
+				const idInputEl = document.querySelector('#signupModal .signup-input-row .signup-input');
+				const pw1El = document.querySelector('#signupModal .signup-input[placeholder="비밀번호 입력(숫자 4자)"]');
+				const pw2El = document.querySelector('#signupModal .signup-input[placeholder="비밀번호 확인"]');
+				const nameEl = document.querySelector('#signupModal .signup-input[placeholder="이름을 입력해주세요"]');
+				const dateEl = document.querySelector('#signupModal .date-input');
+				const genderChecked = document.querySelector('#signupModal .gender-radio.checked');
+
+				// 입력창 비우기
+				if (idInputEl) idInputEl.value = '';
+				if (pw1El) pw1El.value = '';
+				if (pw2El) pw2El.value = '';
+				if (nameEl) nameEl.value = '';
+				if (dateEl) dateEl.value = '';
+
+				// 성별 선택 초기화
+				if (genderChecked) genderChecked.classList.remove('checked');
+
+				closeAllModals(); 
+				openLoginModal();
             } else if (data && data.reason === 'duplicate') {
                 alert('이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.');
             } else {

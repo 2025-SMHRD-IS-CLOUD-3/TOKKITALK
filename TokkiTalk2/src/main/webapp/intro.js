@@ -5,7 +5,13 @@ const headerUserName = document.getElementById('headerUserName');
 const logoutBtn = document.getElementById('logoutBtn');
 
 
+const loginModal = document.getElementById('loginModal'); 
 
+function closeLoginModal() {
+    if (loginModal) {
+        loginModal.style.display = 'none';
+    }
+}
 
 // 로그인 상태에 따라 헤더 UI를 업데이트하는 함수
 function updateHeaderUI() {
@@ -37,21 +43,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 네비게이션 링크 클릭 이벤트 (로그인 상태에 따라 이동 제어)
-    document.querySelectorAll('.nav-item').forEach(link => {
-        link.addEventListener('click', (e) => {
-            const href = e.target.getAttribute('href');
-            if (href === 'intro.html' || href === '/권동환/K메인페이지.html') {
-                return; // 소개, 메인 페이지는 로그인 없이 이동 가능
-            } else {
-                const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
-                if (!isLoggedIn) {
-                    e.preventDefault();
-                    alert('로그인이 필요한 서비스입니다.');
-                    window.location.href = 'main.html';
-                }
-            }
-        });
-    });
+	document.querySelectorAll('.nav-item').forEach(link => {
+	    link.addEventListener('click', (e) => {
+	        const href = e.target.getAttribute('href');
+	        
+	        // intro.html과 main.html은 로그인 없이 이동 가능하도록 처리
+	        if (href === 'intro.html' || href.includes('main.html')) {
+	            return; 
+	        } 
+	        
+	        const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
+	        if (!isLoggedIn) {
+	            e.preventDefault();
+	            alert('로그인이 필요한 서비스입니다.');
+	            window.location.href = 'main.html'; // 로그인 모달이 있는 메인 페이지로 이동
+	        }
+	    });
+	});
 });
 
 
