@@ -272,8 +272,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await res.json();
             if (data && data.success) {
                 alert('회원가입이 완료되었습니다! 🎉');
-                 closeAllModals();
-                openLoginModal();
+				// ★ 이 부분에 입력 필드를 초기화하는 코드를 추가합니다.
+				const idInputEl = document.querySelector('#signupModal .signup-input-row .signup-input');
+				const pw1El = document.querySelector('#signupModal .signup-input[placeholder="비밀번호 입력(숫자 4자)"]');
+				const pw2El = document.querySelector('#signupModal .signup-input[placeholder="비밀번호 확인"]');
+				const nameEl = document.querySelector('#signupModal .signup-input[placeholder="이름을 입력해주세요"]');
+				const dateEl = document.querySelector('#signupModal .date-input');
+				const genderChecked = document.querySelector('#signupModal .gender-radio.checked');
+
+				// 입력창 비우기
+				if (idInputEl) idInputEl.value = '';
+				if (pw1El) pw1El.value = '';
+				if (pw2El) pw2El.value = '';
+				if (nameEl) nameEl.value = '';
+				if (dateEl) dateEl.value = '';
+
+				// 성별 선택 초기화
+				if (genderChecked) genderChecked.classList.remove('checked');
+
+				closeAllModals(); 
+				openLoginModal();
             } else if (data && data.reason === 'duplicate') {
                 alert('이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요.');
             } else {
