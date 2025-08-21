@@ -96,7 +96,7 @@ const historyContainer = document.getElementById('historyContainer');
 async function renderHistory() {
     if (!historyContainer) return;
     
-    historyContainer.innerHTML = '<h1>TOKKI 대화 기록</h1>'; 
+    historyContainer.innerHTML = '<h1>TOKKI TALK 대화 기록</h1>'; 
     
     try {
         const historyData = await api.fetchHistory(); // ⭐ DB에서 데이터 가져오기
@@ -110,7 +110,7 @@ async function renderHistory() {
             const adviceHTML = `
                 <div class="advice-header">
                     <span class="icon">⏰</span>
-                    <strong class="advice-title">TOKKI의 제안들</strong>
+                    <strong class="advice-title">TOKKI TALK의 제안들</strong>
                 </div>
                 ${entry.result.advice.positive ? `<div class="advice-item"><strong>적극대응형:</strong><span>${entry.result.advice.positive}</span></div>` : ''}
                 ${entry.result.advice.empathetic ? `<div class="advice-item"><strong>공감근접형:</strong><span>${entry.result.advice.empathetic}</span></div>` : ''}
