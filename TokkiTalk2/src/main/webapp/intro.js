@@ -4,6 +4,9 @@ const userInfoArea = document.getElementById('user-info-area');
 const headerUserName = document.getElementById('headerUserName');
 const logoutBtn = document.getElementById('logoutBtn');
 
+
+
+
 // 로그인 상태에 따라 헤더 UI를 업데이트하는 함수
 function updateHeaderUI() {
     const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
@@ -50,3 +53,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+

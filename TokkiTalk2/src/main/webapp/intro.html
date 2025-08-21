@@ -71,6 +71,7 @@
         .nav-buttons {
             display: flex;
             gap: 15px;
+            
         }
 
         .btn-login {
@@ -84,6 +85,11 @@
             cursor: pointer;
             transition: background 0.3s;
         }
+        
+        .btn-login a{ 
+        	text-decoration: none; /* 밑줄 제거 */
+    		color: inherit; /* 부모 요소의 색상 상속 (노란색) */
+    }
 
         .btn-login:hover {
             background: #ff6b6b;
@@ -100,7 +106,10 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-
+		.btn-signup a{
+			text-decoration: none; /* 밑줄 제거 */
+    		color: inherit; /* 부모 요소의 색상 상속 (노란색) */
+		}
         .btn-signup:hover {
             background: #ff5252;
         }
@@ -129,7 +138,11 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-
+		
+		.btn-logout a{
+			text-decoration: none; /* 밑줄 제거 */
+    		color: inherit; /* 부모 요소의 색상 상속 (노란색) */
+  		}
         .btn-logout:hover {
             background: #ff6b6b;
             color: white;
@@ -608,8 +621,8 @@
                 <a href="MyPage.html" class="nav-item">마이페이지</a>
             </nav>
             <div class="nav-buttons" id="auth-buttons">
-                <button class="btn-login" onclick="window.location.href='/권동환/K메인페이지.html'">로그인</button>
-                <button class="btn-signup" onclick="window.location.href='/권동환/K메인페이지.html'">회원가입</button>
+                <button class="btn-login"><a href="main.html?modal-login-btn">로그인</a></button>
+                <button class="btn-signup"><a href="main.html?modal-overlay=signup">회원가입</a></button>
             </div>
             <div class="user-info" id="user-info-area">
                 <span class="welcome-text"><span id="headerUserName">사용자</span>님 환영합니다!</span>
