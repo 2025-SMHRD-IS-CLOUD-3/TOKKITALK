@@ -402,7 +402,7 @@
         </div>
         
         <div class="buttons-container">
-        <button class="save-btn" id="saveBtn" onclick="saveAnalysis()">히스토리에 저장하기</button>
+        <button class="save-btn" id="saveBtn" onclick="saveAnalysis()">📎 히스토리에 저장하기</button>
         <button class="reset-btn" id="resetBtn" onclick="resetAnalysis()">
             🔄 다시 분석하기
         </button>
@@ -726,6 +726,7 @@
             `;
             
             inputSection.style.display = 'flex';
+            saveBtn.style.display = 'none';
             resetBtn.style.display = 'none';
             messageInput.focus();
         }
