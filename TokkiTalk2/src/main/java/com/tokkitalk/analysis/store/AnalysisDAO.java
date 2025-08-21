@@ -13,6 +13,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.google.gson.Gson;
 import com.tokkitalk.analysis.dto.AnalysisResult;
+import com.tokkitalk.analysis.GetHistoryServlet;
  
 
 public class AnalysisDAO {
@@ -106,6 +107,14 @@ public class AnalysisDAO {
         
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             session.insert(MAPPER_NS + ".insertChatHistory", params);
+        }
+    }
+    
+    public java.util.List<GetHistoryServlet.HistoryItem> getChatHistory(Long userId) {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("userId", userId);
+            return session.selectList(MAPPER_NS + ".selectChatHistory", params);
         }
     }
 }

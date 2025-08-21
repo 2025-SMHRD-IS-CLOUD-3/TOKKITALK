@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <title>히스토리 - TOKKI TALK</title>
+    <link rel="stylesheet" href="History.css">
 </head>
 <body>
     <header class="header">
@@ -26,9 +27,10 @@
         </div>
     </header>
 
-        <h1 class="page-title">📚 분석 히스토리</h1>
+    <main class="mypage-container">
+        <h1 class="mypage-heading">📚 분석 히스토리</h1>
         <p class="page-subtitle">이전에 분석한 메시지들의 기록을 확인할 수 있어요!</p>
-
+        
         <div class="history-container" id="historyContainer">
             <div class="loading" id="loading">
                 <div class="loading-dots">
@@ -50,17 +52,13 @@
                 </button>
             </div>
         </div>
-=======
-    <main class="mypage-container">
-        <h1 class="mypage-heading">히스토리</h1>
-        
-        <div class="history-container" id="historyContainer">
-		    <h1>TOKKI TALK 대화 기록</h1>
-		</div>
-        
->>>>>>> branch 'main' of https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK.git
     </main>
-<<<<<<< HEAD
+
+    <footer class="footer">
+        <div class="footer-container">
+            <p class="footer-text">© 2025 TOKKI TALK. All Rights Reserved.</p>
+        </div>
+    </footer>
 
     <script>
     // DOM 요소 가져오기
@@ -104,10 +102,12 @@
     async function loadHistory() {
         try {
             const url = getApiBase() + '/getHistory';
+            console.log('히스토리 요청 URL:', url);
             const res = await fetch(url);
             
             if (res.ok) {
                 const historyItems = await res.json();
+                console.log('받은 히스토리 데이터:', historyItems);
                 displayHistory(historyItems);
             } else {
                 console.error('히스토리 로드 실패:', res.status);
@@ -237,16 +237,5 @@
         }
     });
     </script>
-=======
-    
-    
-    <footer class="footer">
-        <div class="footer-container">
-            <p class="footer-text">© 2025 TOKKI TALK. All Rights Reserved.</p>
-        </div>
-    </footer>
-    
-    <script src="History.js"></script>
->>>>>>> branch 'main' of https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK.git
 </body>
 </html>

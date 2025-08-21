@@ -86,6 +86,19 @@
     )
   </insert>
 
+  <!-- CHAT_HISTORY 조회 -->
+  <select id="selectChatHistory" parameterType="map" resultType="com.tokkitalk.analysis.GetHistoryServlet$HistoryItem">
+    SELECT
+      CHAT_ID AS id,
+      USER_ID AS userId,
+      ROLE AS role,
+      MESSAGE_TEXT AS content,
+      TO_CHAR(CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS createdAt
+    FROM CHAT_HISTORY
+    WHERE USER_ID = #{userId}
+    ORDER BY CREATED_AT DESC
+  </select>
+
 </mapper>
 
 

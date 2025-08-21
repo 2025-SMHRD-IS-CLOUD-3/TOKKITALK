@@ -130,6 +130,25 @@ body {
     min-height: 70vh;
 }
 
+/* 마이페이지 컨테이너 */
+.mypage-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    min-height: 70vh;
+}
+
+.mypage-heading {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
 .page-title {
     text-align: center;
     font-size: 28px;
