@@ -179,13 +179,29 @@
             gap: 10px;
         }
 
-        .btn-edit-profile, .btn-delete-account {
+        .btn-edit-profile, .btn-delete-account, .btn-history {
             padding: 10px 20px;
             border: 1px solid #ddd;
             border-radius: 25px;
             font-size: 14px;
             cursor: pointer;
             transition: all 0.3s;
+        }
+        .btn-history a{
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .btn-history{
+            background: #FFD200;
+            color: #333;
+            border: none;
+            
+        }
+
+        .btn-history:hover {
+            background: #ff5252;
+            color: white;
         }
 
         .btn-edit-profile {
@@ -489,13 +505,13 @@
             <div class="logo"><a href="main.html">TOKKI TALK</a></div>
             <nav class="nav-menu">
                 <a href="intro.html" class="nav-item">소개</a>
-                <a href="Question.html" class="nav-item" >대화하기</a>
+                <a href="Question.html" class="nav-item">대화하기</a>
                 <a href="SenseTest.html" class="nav-item">센스고사</a>
                 <a href="MyPage.html" class="nav-item">마이페이지</a>
             </nav>
             <div class="nav-buttons" id="auth-buttons">
-                <button class="btn-login" onclick="window.location.href='main.html'">로그인</button>
-                <button class="btn-signup" onclick="window.location.href='main.html'">회원가입</button>
+                <button class="btn-login" onclick="window.location.href='/권동환/K메인페이지.html'">로그인</button>
+                <button class="btn-signup" onclick="window.location.href='/권동환/K메인페이지.html'">회원가입</button>
             </div>
             <div class="user-info" id="user-info-area">
                 <span class="welcome-text"><span id="headerUserName">사용자</span>님 환영합니다!</span>
@@ -512,20 +528,14 @@
                 <h2 id="userName"></h2>
                 <br>
                 <div class="btn-group">
+                    <button class="btn-history"><a href="#">히스토리</a></button>
                     <button class="btn-edit-profile" id="openProfileModal">프로필 수정</button>
                     <button class="btn-delete-account" id="deleteAccountBtn">회원 탈퇴</button>
                 </div>
             </div>
         </div>
         
-        <div class="mypage-content">
-            <div class="content-card">
-                <h3>히스토리</h3>
-                <ul id="chatList">
-                    <li class="loading-message">대화 기록을 불러오는 중...</li>
-                </ul>
-            </div>
-        </div>
+        
     </main>
     
     <div id="chatModal" class="modal">

@@ -18,13 +18,11 @@
             min-height: 100vh;
         }
         
+         /* 헤더 */
         .header {
             background: white;
             padding: 20px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         .nav-container {
@@ -42,27 +40,99 @@
             color: #FFD200;
             letter-spacing: 2px;
             cursor: pointer;
+            transition: color 0.3s;
+            
+        }
+        .logo a{
+        	text-decoration: none; color: inherit;
+        }
+        .logo:hover {
+            color: #ff6b6b;
         }
         
-        .back-btn {
-            background: #f1f3f4;
+        .nav-menu {
+            display: flex;
+            gap: 40px;
+        }
+        
+        .nav-item {
             color: #666;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-item:hover {
+            color: #ff6b6b;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn-login {
+            background: #f1f3f4;
+            color: black;
             border: none;
             padding: 12px 24px;
             border-radius: 25px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            transition: background 0.3s;
         }
         
-        .back-btn:hover {
-            background: #e8eaed;
-            transform: translateY(-1px);
+        .btn-login:hover {
+            background: #ff6b6b;
         }
+           
+        .btn-signup {
+            background: #FFD200;
+            color: black;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn-signup:hover {
+            background: #ff5252;
+        }
+
+        .user-info {
+            display: none;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .welcome-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .btn-logout {
+            background: #f1f3f4;
+            color: black;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn-logout:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
         
         .main-container {
             max-width: 800px;
@@ -214,7 +284,14 @@
             40% { transform: scale(1.0); }
         }
         
-        .reset-btn {
+        .buttons-container {
+		    display: flex;
+		    gap: 10px; /* 버튼들 간의 간격을 조정 */
+		    margin-bottom: 20px; /* 버튼 위쪽에 여백 추가 */
+		    justify-content: center; /* 버튼들을 수평 중앙에 배치 */
+		}
+        
+        .save-btn, .reset-btn {
             background: #f1f3f4;
             color: #666;
             border: none;
@@ -257,16 +334,40 @@
                 max-width: 90%;
             }
         }
+        .nav-item {
+            color: #666;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            
+        }
+        
+        .nav-item:hover {
+            color: #ff6b6b;
+        }
+        
     </style>
 </head>
 <body>
     <header class="header">
         <div class="nav-container">
-            <div class="logo" onclick="goHome()">TOKKI TALK</div>
-            <button class="back-btn"><a href="History.html">히스토리</a></button>
-            <button class="back-btn" onclick="goHome()">
-                ← 홈으로 돌아가기
-            </button>
+            <div class="logo"><a href="main.html">TOKKI TALK</a></div>
+            <nav class="nav-menu">
+                <a href="intro.html" class="nav-item">소개</a>
+                <a href="Question.html" class="nav-item" >대화하기</a>
+                <a href="SenseTest.html" class="nav-item">센스고사</a>
+                <a href="MyPage.html" class="nav-item">마이페이지</a>
+            </nav>
+            <div class="nav-buttons" id="auth-buttons">
+                <button class="btn-login" onclick="window.location.href='main.html'">로그인</button>
+                <button class="btn-signup" onclick="window.location.href='main.html'">회원가입</button>
+            </div>
+            <div class="user-info" id="user-info-area">
+                <span class="welcome-text"><span id="headerUserName">사용자</span>님 환영합니다!</span>
+                <button class="btn-logout" id="logoutBtn">로그아웃</button>
+            </div>
         </div>
     </header>
 
@@ -300,17 +401,75 @@
             </button>
         </div>
         
+        <div class="buttons-container">
+        <button class="save-btn" id="saveBtn" onclick="saveAnalysis()">히스토리에 저장하기</button>
         <button class="reset-btn" id="resetBtn" onclick="resetAnalysis()">
             🔄 다시 분석하기
         </button>
+        </div>
     </main>
 
     <script>
+ // DOM 요소 가져오기
+    const authButtons = document.getElementById('auth-buttons');
+    const userInfoArea = document.getElementById('user-info-area');
+    const headerUserName = document.getElementById('headerUserName');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // 로그인 상태에 따라 헤더 UI를 업데이트하는 함수
+    function updateHeaderUI() {
+        const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
+        const userName = sessionStorage.getItem('userName');
+
+        if (isLoggedIn && userName) {
+            authButtons.style.display = 'none';
+            userInfoArea.style.display = 'flex';
+            headerUserName.textContent = userName;
+        } else {
+            authButtons.style.display = 'flex';
+            userInfoArea.style.display = 'none';
+        }
+    }
+
+    // 네비게이션 및 버튼 이벤트 리스너
+    document.addEventListener('DOMContentLoaded', () => {
+        updateHeaderUI();
+
+        // 로그아웃 버튼 이벤트
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                sessionStorage.removeItem('loggedIn');
+                sessionStorage.removeItem('userName');
+                alert('로그아웃되었습니다.');
+                window.location.href = 'main.html';
+            });
+        }
+
+        // 네비게이션 링크 클릭 이벤트 (로그인 상태에 따라 이동 제어)
+        document.querySelectorAll('.nav-item').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = e.target.getAttribute('href');
+                if (href === 'intro.html' || href === 'main.html') {
+                    return; // 소개, 메인 페이지는 로그인 없이 이동 가능
+                } else {
+                    const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
+                    if (!isLoggedIn) {
+                        e.preventDefault();
+                        alert('로그인이 필요한 서비스입니다.');
+                        window.location.href = 'main.html';
+                    }
+                }
+            });
+        });
+    });
+    
+    
         const messageInput = document.getElementById('messageInput');
         const analyzeBtn = document.getElementById('analyzeBtn');
         const chatArea = document.getElementById('chatArea');
         const resetBtn = document.getElementById('resetBtn');
         const inputSection = document.getElementById('inputSection');
+        const saveBtn = document.getElementById('saveBtn');
         
         const ANALYSES = {
             "surface": "💬 표면적 의미",
@@ -412,6 +571,7 @@
                             appendMessage(`<b>${title}</b><br>${analysis[key]}`, 'bot');
                             if (index === analysisKeys.length - 1) {
                                 inputSection.style.display = 'none';
+                                saveBtn.style.display = 'block';
                                 resetBtn.style.display = 'block';
                             }
                         }, 250 * (index));
@@ -424,6 +584,7 @@
                         appendMessage(`<b>${title}</b><br>${analysis[key]}`, 'bot');
                     });
                     inputSection.style.display = 'none';
+                    saveBtn.style.display = 'block';
                     resetBtn.style.display = 'block';
                 }
             }
