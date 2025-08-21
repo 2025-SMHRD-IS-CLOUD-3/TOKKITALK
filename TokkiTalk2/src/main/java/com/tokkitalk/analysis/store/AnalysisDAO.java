@@ -97,6 +97,17 @@ public class AnalysisDAO {
             return session.delete(MAPPER_NS + ".deleteAnalysis", analysisId);
         }
     }
+    
+    public void saveToChatHistory(Long userId, String role, String message) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("role", role);
+        params.put("message", message);
+        
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            session.insert(MAPPER_NS + ".insertChatHistory", params);
+        }
+    }
 }
 
 

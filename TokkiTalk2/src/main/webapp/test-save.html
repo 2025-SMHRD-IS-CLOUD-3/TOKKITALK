@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>저장 테스트</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>히스토리 저장 테스트</h1>
+    <button onclick="testSave()">저장 테스트</button>
+    <div id="result"></div>
+
+    <script>
+    async function testSave() {
+        const testData = {
+            input_text: "테스트 메시지",
+            result: {
+                surface_meaning: "테스트 표면적 의미",
+                hidden_meaning: "테스트 숨은 의도",
+                emotion: "테스트 감정",
+                advice: "테스트 제안"
+            }
+        };
+
+        try {
+            const res = await fetch('/TokkiTalk2/saveHistory', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(testData)
+            });
+            
+            const result = await res.text();
+            document.getElementById('result').innerHTML = 
+                `<p>상태: ${res.status}</p><p>응답: ${result}</p>`;
+        } catch (e) {
+            document.getElementById('result').innerHTML = 
+                `<p>오류: ${e.message}</p>`;
+        }
+    }
+    </script>
+</body>
+</html>

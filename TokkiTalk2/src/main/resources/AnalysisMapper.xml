@@ -73,6 +73,19 @@
     DELETE FROM ANALYSIS WHERE ANALYSIS_ID = #{value}
   </delete>
 
+  <!-- CHAT_HISTORY 저장 -->
+  <insert id="insertChatHistory" parameterType="map">
+    INSERT INTO CHAT_HISTORY (
+      USER_ID,
+      ROLE,
+      MESSAGE
+    ) VALUES (
+      #{userId},
+      #{role},
+      #{message}
+    )
+  </insert>
+
 </mapper>
 
 

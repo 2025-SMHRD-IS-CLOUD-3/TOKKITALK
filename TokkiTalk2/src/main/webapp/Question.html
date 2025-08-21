@@ -767,16 +767,25 @@
     async function sendToServerForSaving(data) {
         try {
             const url = getApiBase() + '/saveHistory';
+            console.log('저장 요청 데이터:', data);
+            
             const res = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
+            
+            console.log('저장 응답 상태:', res.status);
+            
             if (res.ok) {
+                const result = await res.json();
+                console.log('저장 성공:', result);
                 alert('분석 결과가 히스토리에 저장되었습니다.');
             } else {
-                console.error('Save API Error:', res.status, res.statusText);
-                alert('저장 중 오류가 발생했습니다.');
+                const errorText = await res.text();
+                console.error('Save API Error:', res.status, res.statusText, errorText);
+                console.error('전체 응답:', res);
+                alert('저장 중 오류가 발생했습니다.\n상태: ' + res.status + '\n오류: ' + errorText);
             }
         } catch (e) {
             console.error('Save Fetch Error:', e);

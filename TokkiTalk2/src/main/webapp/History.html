@@ -1,17 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet" href="History.css">
-</head>
-<body>
-
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="히스토리.css">
+    <title>TOKKI TALK - 히스토리</title>
+    <link rel="stylesheet" href="History.css">
 </head>
 <body>
     <header class="header">
@@ -24,8 +17,8 @@
                 <a href="MyPage.html" class="nav-item">마이페이지</a>
             </nav>
             <div class="nav-buttons" id="auth-buttons">
-                <button class="btn-login" onclick="window.location.href='/권동환/K메인페이지.html'">로그인</button>
-                <button class="btn-signup" onclick="window.location.href='/권동환/K메인페이지.html'">회원가입</button>
+                <button class="btn-login" onclick="window.location.href='main.html'">로그인</button>
+                <button class="btn-signup" onclick="window.location.href='main.html'">회원가입</button>
             </div>
             <div class="user-info" id="user-info-area">
                 <span class="welcome-text"><span id="headerUserName">사용자</span>님 환영합니다!</span>
@@ -33,21 +26,208 @@
             </div>
         </div>
     </header>
-    <main class="mypage-container">
-        <h1 class="mypage-heading">히스토리</h1>
-        
-        <div class="profile-section">
-             
+
+    <main class="main-container">
+        <h1 class="page-title">📚 분석 히스토리</h1>
+        <p class="page-subtitle">이전에 분석한 메시지들의 기록을 확인할 수 있어요!</p>
+
+        <div class="history-container" id="historyContainer">
+            <div class="loading" id="loading">
+                <div class="loading-dots">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <p>히스토리를 불러오는 중...</p>
+            </div>
         </div>
-        
-        
+
+        <div class="no-history" id="noHistory" style="display: none;">
+            <div class="empty-state">
+                <div class="empty-icon">📝</div>
+                <h3>아직 저장된 히스토리가 없어요</h3>
+                <p>분석 페이지에서 메시지를 분석하고 저장해보세요!</p>
+                <button class="btn-primary" onclick="window.location.href='Question.html'">
+                    분석하러 가기
+                </button>
+            </div>
+        </div>
     </main>
-    
-    
-    <footer class="footer">
-        <div class="footer-container">
-            <p class="footer-text">© 2025 TOKKI TALK. All Rights Reserved.</p>
-        </div>
-    </footer>
+
+    <script>
+    // DOM 요소 가져오기
+    const authButtons = document.getElementById('auth-buttons');
+    const userInfoArea = document.getElementById('user-info-area');
+    const headerUserName = document.getElementById('headerUserName');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const historyContainer = document.getElementById('historyContainer');
+    const loading = document.getElementById('loading');
+    const noHistory = document.getElementById('noHistory');
+
+    // 로그인 상태에 따라 헤더 UI를 업데이트하는 함수
+    function updateHeaderUI() {
+        const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
+        const userName = sessionStorage.getItem('userName');
+
+        if (isLoggedIn && userName) {
+            authButtons.style.display = 'none';
+            userInfoArea.style.display = 'flex';
+            headerUserName.textContent = userName;
+        } else {
+            authButtons.style.display = 'flex';
+            userInfoArea.style.display = 'none';
+        }
+    }
+
+    // API 베이스 계산
+    function getApiBase() {
+        const segs = window.location.pathname.split('/').filter(s => s.length > 0);
+        if (segs.length > 0 && segs[0].indexOf('.') === -1) {
+            return window.location.origin + '/' + segs[0];
+        }
+        const host = window.location.hostname;
+        if (host === '127.0.0.1' || host === 'localhost') {
+            return 'http://localhost:8081/TokkiTalk2';
+        }
+        return window.location.origin;
+    }
+
+    // 히스토리 로드 함수
+    async function loadHistory() {
+        try {
+            const url = getApiBase() + '/getHistory';
+            const res = await fetch(url);
+            
+            if (res.ok) {
+                const historyItems = await res.json();
+                displayHistory(historyItems);
+            } else {
+                console.error('히스토리 로드 실패:', res.status);
+                showError('히스토리를 불러오는데 실패했습니다.');
+            }
+        } catch (e) {
+            console.error('히스토리 로드 오류:', e);
+            showError('히스토리를 불러오는데 실패했습니다.');
+        }
+    }
+
+    // 히스토리 표시 함수
+    function displayHistory(historyItems) {
+        loading.style.display = 'none';
+        
+        if (historyItems.length === 0) {
+            noHistory.style.display = 'block';
+            return;
+        }
+
+        // 대화별로 그룹화
+        const conversations = groupByConversation(historyItems);
+        
+        conversations.forEach((conversation, index) => {
+            const conversationDiv = document.createElement('div');
+            conversationDiv.className = 'conversation-item';
+            
+            const date = conversation.date;
+            const time = conversation.time;
+            
+            conversationDiv.innerHTML = `
+                <div class="conversation-header">
+                    <div class="conversation-info">
+                        <span class="conversation-date">${date}</span>
+                        <span class="conversation-time">${time}</span>
+                    </div>
+                    <button class="btn-toggle" onclick="toggleConversation(this)">
+                        <span class="toggle-icon">▼</span>
+                    </button>
+                </div>
+                <div class="conversation-content">
+                    ${conversation.messages.map(msg => `
+                        <div class="message-item ${msg.role}">
+                            <div class="message-header">
+                                <span class="message-role">${msg.role === 'user' ? '사용자' : 'TOKKI'}</span>
+                            </div>
+                            <div class="message-content">
+                                <pre>${msg.content}</pre>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            historyContainer.appendChild(conversationDiv);
+        });
+    }
+
+    // 대화별로 그룹화
+    function groupByConversation(historyItems) {
+        const conversations = {};
+        
+        historyItems.forEach(item => {
+            // 파일명에서 타임스탬프 추출 (예: 20241201_143022_1_user.txt)
+            const timestamp = item.id.split('_').slice(0, 2).join('_');
+            
+            if (!conversations[timestamp]) {
+                conversations[timestamp] = {
+                    date: item.date,
+                    time: item.time,
+                    messages: []
+                };
+            }
+            
+            conversations[timestamp].messages.push({
+                role: item.role,
+                content: item.content
+            });
+        });
+        
+        // 시간순 정렬
+        return Object.values(conversations).sort((a, b) => {
+            return new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time);
+        });
+    }
+
+    // 대화 토글 함수
+    function toggleConversation(button) {
+        const conversation = button.closest('.conversation-item');
+        const content = conversation.querySelector('.conversation-content');
+        const icon = button.querySelector('.toggle-icon');
+        
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            icon.textContent = '▼';
+        } else {
+            content.style.display = 'none';
+            icon.textContent = '▶';
+        }
+    }
+
+    // 오류 표시 함수
+    function showError(message) {
+        loading.style.display = 'none';
+        historyContainer.innerHTML = `
+            <div class="error-message">
+                <div class="error-icon">⚠️</div>
+                <h3>오류가 발생했습니다</h3>
+                <p>${message}</p>
+                <button class="btn-primary" onclick="location.reload()">다시 시도</button>
+            </div>
+        `;
+    }
+
+    // 페이지 로드 시 실행
+    document.addEventListener('DOMContentLoaded', () => {
+        updateHeaderUI();
+        loadHistory();
+
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                sessionStorage.removeItem('loggedIn');
+                sessionStorage.removeItem('userName');
+                alert('로그아웃되었습니다.');
+                window.location.href = 'main.html';
+            });
+        }
+    });
+    </script>
 </body>
 </html>
