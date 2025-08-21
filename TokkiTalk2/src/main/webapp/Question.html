@@ -312,6 +312,9 @@
         const inputSection = document.getElementById('inputSection');
         
         const ANALYSES = {
+            "surface_meaning": "🔍 표면적 의미",
+            "hidden_meaning": "💡 숨은 의도", 
+            "emotion": "❤️ 감정 상태",
             "advice": "🎯 TOKKI의 제안들"
         };
 
@@ -330,11 +333,17 @@
 
         function simulateAnalysis(message) {
             let analysis = {
+                surface_meaning: "분석 중...",
+                hidden_meaning: "분석 중...",
+                emotion: "분석 중...",
                 advice: "분석 중..."
             };
 
             // 예시 1: "응... 좀 피곤해"
             if (message.includes("피곤") && message.includes("...")) {
+                analysis.surface_meaning = "상대방이 피곤함을 표현하고 있어요.";
+                analysis.hidden_meaning = "실제로는 위로와 관심을 받고 싶어하는 마음이 담겨있어요.";
+                analysis.emotion = "피곤함과 함께 약간의 서운함을 느끼고 있어요.";
                 analysis.advice = `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;">
                     <strong>위로·공감형:</strong> 오늘은 푹 쉬고 내일 다시 얘기할까? 많이 힘들었구나 😞
                 </div>
@@ -347,6 +356,9 @@
             }
             // 예시 2: "오늘 저녁에 뭐 먹을까? 🍕"
             else if (message.includes("저녁") && message.includes("?")) {
+                analysis.surface_meaning = "저녁 메뉴에 대한 질문을 하고 있어요.";
+                analysis.hidden_meaning = "같이 시간을 보내고 싶어하는 마음이 담겨있어요.";
+                analysis.emotion = "기대감과 함께 약간의 설렘을 느끼고 있어요.";
                 analysis.advice = `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;">
                     <strong>관심표현형:</strong> 그래! 어디 맛있는 곳 알아봐? 🍕
                 </div>
@@ -359,6 +371,9 @@
             }
             // 예시 3: "괜찮아, 신경 쓰지 마"
             else if (message.includes("괜찮아") && message.includes("신경")) {
+                analysis.surface_meaning = "괜찮다고 말하면서 신경 쓰지 말라고 하고 있어요.";
+                analysis.hidden_meaning = "실제로는 신경 써주길 바라는 마음이 담겨있어요.";
+                analysis.emotion = "속상함과 함께 약간의 서운함을 느끼고 있어요.";
                 analysis.advice = `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;">
                     <strong>위로·공감형:</strong> 정말 괜찮아? 내가 뭔가 도와줄 수 있는 일은 없어? 💕
                 </div>
@@ -371,6 +386,9 @@
             }
             // 기본 분석
             else {
+                analysis.surface_meaning = "상대방의 메시지를 문자 그대로 해석한 의미예요.";
+                analysis.hidden_meaning = "메시지 뒤에 숨겨진 의도나 감정을 분석했어요.";
+                analysis.emotion = "상대방의 현재 감정 상태를 파악했어요.";
                 analysis.advice = `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;">
                     <strong>관심표현형:</strong> 그렇구나, 더 자세히 얘기해줘 👂
                 </div>
@@ -413,27 +431,42 @@
                         const data = await res.json();
                         console.log('API Response:', data); // 디버깅용
                         
-                        // TOKKI의 제안들만 처리
-                        let adviceText = '분석 중...';
+                        // 4가지 분석 결과 모두 처리
+                        analysis = {};
                         
-                        // Response suggestion 처리 - 모든 제안을 스타일별로 표시
-                        if (data.response_suggestion) {
-                            if (data.response_suggestion.primary) {
-                                adviceText = `<strong>💡 주요 제안:</strong><br>${data.response_suggestion.primary}`;
-                            }
-                            
-                            // alternatives 추가
-                            if (data.response_suggestion.alternatives && data.response_suggestion.alternatives.length > 0) {
-                                adviceText += '<br><br><strong>🎯 다른 제안들:</strong><br>';
-                                data.response_suggestion.alternatives.forEach((alt, index) => {
-                                    adviceText += `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;">
-                                        <strong>${index + 1}.</strong> ${alt}
-                                    </div>`;
-                                });
-                            }
+                        // 1. 표면적 의미
+                        if (data.surface_meaning) {
+                            analysis.surface_meaning = data.surface_meaning.one_line || data.surface_meaning;
+                        } else if (data.surface) {
+                            analysis.surface_meaning = data.surface;
+                        } else {
+                            analysis.surface_meaning = "상대방의 메시지를 문자 그대로 해석한 의미예요.";
                         }
                         
-                        // 만약 advice 배열이 직접 있다면 그것을 사용 (API 응답 구조에 따라)
+                        // 2. 숨은 의도
+                        if (data.hidden_meaning) {
+                            analysis.hidden_meaning = data.hidden_meaning.one_line || data.hidden_meaning;
+                        } else if (data.hidden) {
+                            analysis.hidden_meaning = data.hidden;
+                        } else {
+                            analysis.hidden_meaning = "메시지 뒤에 숨겨진 의도나 감정을 분석했어요.";
+                        }
+                        
+                        // 3. 감정 상태
+                        if (data.emotion) {
+                            if (typeof data.emotion === 'object') {
+                                analysis.emotion = `감정: ${data.emotion.label || '중립'}, 강도: ${data.emotion.intensity || 3}/5`;
+                            } else {
+                                analysis.emotion = data.emotion;
+                            }
+                        } else {
+                            analysis.emotion = "상대방의 현재 감정 상태를 파악했어요.";
+                        }
+                        
+                        // 4. TOKKI의 제안들
+                        let adviceText = '분석 중...';
+                        
+                        // advice 배열이 직접 있다면 그것을 사용 (우선순위)
                         if (data.advice && Array.isArray(data.advice) && data.advice.length > 0) {
                             adviceText = '';
                             data.advice.forEach((advice, index) => {
@@ -444,16 +477,33 @@
                                 </div>`;
                             });
                         }
+                        // Response suggestion 처리 - 모든 제안을 스타일별로 표시
+                        else if (data.response_suggestion) {
+                            if (data.response_suggestion.primary) {
+                                adviceText = `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;">
+                                    <strong>💡 주요 제안:</strong> ${data.response_suggestion.primary}
+                                </div>`;
+                            }
+                            
+                            // alternatives 추가
+                            if (data.response_suggestion.alternatives && data.response_suggestion.alternatives.length > 0) {
+                                data.response_suggestion.alternatives.forEach((alt, index) => {
+                                    adviceText += `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;">
+                                        <strong>제안 ${index + 2}:</strong> ${alt}
+                                    </div>`;
+                                });
+                            }
+                        }
                         
-                        analysis = {
-                            advice: adviceText
-                        };
+                        analysis.advice = adviceText;
                     } else {
                         console.error('API Error:', res.status, res.statusText);
                         analysis = simulateAnalysis(message);
                     }
 
                     chatArea.removeChild(loadingMessage);
+                    
+                    // 모든 분석 결과 표시
                     const analysisKeys = Object.keys(analysis);
                     analysisKeys.forEach((key, index) => {
                         setTimeout(() => {
@@ -463,8 +513,9 @@
                                 inputSection.style.display = 'none';
                                 resetBtn.style.display = 'block';
                             }
-                        }, 250 * (index));
+                        }, 250 * (index + 1));
                     });
+                    
                 } catch (e) {
                     console.error('Fetch Error:', e);
                     chatArea.removeChild(loadingMessage);
