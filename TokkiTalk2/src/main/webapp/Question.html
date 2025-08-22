@@ -617,128 +617,144 @@
 
     // 분석 버튼 클릭 로직
     analyzeBtn.addEventListener('click', async () => {
-        const message = messageInput.value.trim();
-        const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
-        if (!isLoggedIn) {
-             alert('로그인이 필요한 서비스입니다.');
-             return;
+    const message = messageInput.value.trim();
+    const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
+    
+    if (!isLoggedIn) {
+         alert('로그인이 필요한 서비스입니다.');
+         return;
+    }
+
+    if (message.length === 0 && !uploadedImageFile) {
+        alert("분석할 텍스트를 입력하거나 이미지를 첨부해주세요.");
+        return;
+    }
+    
+    // 사용자가 입력한 메시지 또는 이미지를 화면에 표시
+    if (message.length > 0) {
+        appendMessage(message, 'user');
+    } else if (uploadedImageFile) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            appendMessage(`<img src="${e.target.result}" alt="업로드 이미지" style="max-width: 100%; border-radius: 10px;">`, 'user');
+        };
+        reader.readAsDataURL(uploadedImageFile);
+    }
+    
+    const loadingMessage = appendMessage('<div class="loading-dots"><div></div><div></div><div></div></div>', 'bot');
+    messageInput.disabled = true;
+    analyzeBtn.disabled = true;
+
+    try {
+        let analysisData;
+        let ocrText = '';
+
+        if (uploadedImageFile) {
+            // 1단계: OCR 서블릿으로 이미지를 보내 텍스트 추출
+            const ocrUrl = getApiBase() + '/ocr-process';
+            const formData = new FormData();
+            formData.append('image', uploadedImageFile);
+            
+            const ocrRes = await fetch(ocrUrl, { method: 'POST', body: formData });
+            
+            if (ocrRes.ok) {
+                const ocrResult = await ocrRes.json();
+                if (ocrResult.success) {
+                    ocrText = ocrResult.detected_text;
+                    console.log("OCR 분석 성공:", ocrText);
+                } else {
+                    throw new Error(ocrResult.error || '이미지에서 텍스트를 찾을 수 없습니다.');
+                }
+            } else {
+                throw new Error('OCR 서버 응답 오류: ' + ocrRes.status);
+            }
+        } else {
+            // 이미지가 없으면 입력된 텍스트 사용
+            ocrText = message;
         }
 
-        if (message.length === 0 && !uploadedImageFile) {
-            alert("분석할 텍스트를 입력하거나 이미지를 첨부해주세요.");
-            return;
+        // 2단계: 추출된 텍스트를 분석 서블릿으로 보내 의미 분석
+        const analyzeUrl = getApiBase() + '/analyze';
+        const analyzeRes = await fetch(analyzeUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                input_type: 'text',
+                text: ocrText,
+                options: { tone: '상큼' }
+            })
+        });
+
+        if (analyzeRes.ok) {
+            analysisData = await analyzeRes.json();
+        } else {
+            throw new Error('텍스트 분석 서버 응답 오류: ' + analyzeRes.status);
         }
-        
-        if (message.length > 0) {
-            appendMessage(message, 'user');
-        } else if (uploadedImageFile) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                appendMessage(`<img src="${e.target.result}" alt="업로드 이미지" style="max-width: 100%; border-radius: 10px;">`, 'user');
+
+        chatArea.removeChild(loadingMessage);
+
+        // ... (나머지 분석 결과 처리 및 화면 표시 로직)
+
+        let analysis;
+        if (analysisData.error) {
+            appendMessage(`<b>⚠️ 분석 중 오류가 발생했습니다</b><br>${analysisData.error}`, 'bot');
+            analysis = simulateAnalysis(ocrText);
+        } else {
+            analysis = {
+                surface_meaning: (typeof analysisData.surface_meaning === 'object' ? analysisData.surface_meaning.one_line : analysisData.surface_meaning) || analysisData.surface || "상대방의 메시지를 문자 그대로 해석한 의미예요.",
+                hidden_meaning: (typeof analysisData.hidden_meaning === 'object' ? analysisData.hidden_meaning.one_line : analysisData.hidden_meaning) || analysisData.hidden || "메시지 뒤에 숨겨진 의도나 감정을 분석했어요.",
+                emotion: typeof analysisData.emotion === 'object' ? `감정: ${analysisData.emotion.label || '중립'}, 강도: ${analysisData.emotion.intensity || 3}/5` : (analysisData.emotion || "상대방의 현재 감정 상태를 파악했어요."),
+                advice: ''
             };
-            reader.readAsDataURL(uploadedImageFile);
-        }
-        
-        const loadingMessage = appendMessage('<div class="loading-dots"><div></div><div></div><div></div></div>', 'bot');
-        messageInput.disabled = true;
-        analyzeBtn.disabled = true;
-
-        try {
-            const url = getApiBase() + '/analyze';
-            let analysisData;
-
-            if (uploadedImageFile) {
-                const formData = new FormData();
-                formData.append('input_type', 'image');
-                formData.append('image', uploadedImageFile);
-                
-                const res = await fetch(url, { method: 'POST', body: formData });
-                if (res.ok) {
-                    analysisData = await res.json();
-                } else {
-                    console.error('Image API Error:', res.status, res.statusText);
-                    analysisData = { error: '이미지 분석에 실패했습니다.' };
-                }
-            } else {
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        input_type: 'text',
-                        text: message,
-                        options: { tone: '상큼' }
-                    })
+            
+            let adviceText = '';
+            if (analysisData.advice && Array.isArray(analysisData.advice)) {
+                analysisData.advice.forEach(adv => {
+                    adviceText += `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;"><strong>${adv.style || '제안'}:</strong> ${adv.text || adv}</div>`;
                 });
-                if (res.ok) {
-                    analysisData = await res.json();
-                } else {
-                    console.error('Text API Error:', res.status, res.statusText);
-                    analysisData = { error: '텍스트 분석에 실패했습니다.' };
+            } else if (analysisData.response_suggestion) {
+                if (analysisData.response_suggestion.primary) {
+                    adviceText += `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;"><strong>💡 주요 제안:</strong> ${analysisData.response_suggestion.primary}</div>`;
                 }
-            }
-
-            chatArea.removeChild(loadingMessage);
-            
-            let analysis;
-            if (analysisData.error) {
-                appendMessage(`<b>⚠️ 분석 중 오류가 발생했습니다</b><br>${analysisData.error}`, 'bot');
-                analysis = simulateAnalysis(message);
-            } else {
-                analysis = {
-                    surface_meaning: (typeof analysisData.surface_meaning === 'object' ? analysisData.surface_meaning.one_line : analysisData.surface_meaning) || analysisData.surface || "상대방의 메시지를 문자 그대로 해석한 의미예요.",
-                    hidden_meaning: (typeof analysisData.hidden_meaning === 'object' ? analysisData.hidden_meaning.one_line : analysisData.hidden_meaning) || analysisData.hidden || "메시지 뒤에 숨겨진 의도나 감정을 분석했어요.",
-                    emotion: typeof analysisData.emotion === 'object' ? `감정: ${analysisData.emotion.label || '중립'}, 강도: ${analysisData.emotion.intensity || 3}/5` : (analysisData.emotion || "상대방의 현재 감정 상태를 파악했어요."),
-                    advice: ''
-                };
-                
-                let adviceText = '';
-                if (analysisData.advice && Array.isArray(analysisData.advice)) {
-                    analysisData.advice.forEach(adv => {
-                        adviceText += `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;"><strong>${adv.style || '제안'}:</strong> ${adv.text || adv}</div>`;
+                if (analysisData.response_suggestion.alternatives && analysisData.response_suggestion.alternatives.length > 0) {
+                    analysisData.response_suggestion.alternatives.forEach((alt, index) => {
+                        adviceText += `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;"><strong>제안 ${index + 2}:</strong> ${alt}</div>`;
                     });
-                } else if (analysisData.response_suggestion) {
-                    if (analysisData.response_suggestion.primary) {
-                        adviceText += `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;"><strong>💡 주요 제안:</strong> ${analysisData.response_suggestion.primary}</div>`;
-                    }
-                    if (analysisData.response_suggestion.alternatives && analysisData.response_suggestion.alternatives.length > 0) {
-                        analysisData.response_suggestion.alternatives.forEach((alt, index) => {
-                            adviceText += `<div style="margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #FFD200;"><strong>제안 ${index + 2}:</strong> ${alt}</div>`;
-                        });
-                    }
                 }
-                analysis.advice = adviceText || '분석 중...';
             }
+            analysis.advice = adviceText || '분석 중...';
+        }
 
-            lastAnalysisResult = analysis;
-            const analysisKeys = Object.keys(ANALYSES);
-            analysisKeys.forEach((key, index) => {
-                setTimeout(() => {
-                    const title = ANALYSES[key];
-                    appendMessage(`<b>${title}</b><br>${analysis[key]}`, 'bot');
-                    if (index === analysisKeys.length - 1) {
-                        inputSection.style.display = 'none';
-                        imagePreviewContainer.style.display = 'none';
-                        saveBtn.style.display = 'block';
-                        resetBtn.style.display = 'block';
-                    }
-                }, 250 * (index + 1));
-            });
-            
-        } catch (e) {
-            console.error('Fetch Error:', e);
-            chatArea.removeChild(loadingMessage);
-            appendMessage(`<b>⚠️ 분석 중 오류가 발생했습니다</b><br>서버 연결을 확인해주세요.`, 'bot');
-            const analysis = simulateAnalysis(message);
-            Object.keys(analysis).forEach((key) => {
+        lastAnalysisResult = analysis;
+        const analysisKeys = Object.keys(ANALYSES);
+        analysisKeys.forEach((key, index) => {
+            setTimeout(() => {
                 const title = ANALYSES[key];
                 appendMessage(`<b>${title}</b><br>${analysis[key]}`, 'bot');
-            });
-            inputSection.style.display = 'none';
-            imagePreviewContainer.style.display = 'none';
-            saveBtn.style.display = 'block';
-            resetBtn.style.display = 'block';
-        }
-    });
+                if (index === analysisKeys.length - 1) {
+                    inputSection.style.display = 'none';
+                    imagePreviewContainer.style.display = 'none';
+                    saveBtn.style.display = 'block';
+                    resetBtn.style.display = 'block';
+                }
+            }, 250 * (index + 1));
+        });
+        
+    } catch (e) {
+        console.error('Fetch Error:', e);
+        chatArea.removeChild(loadingMessage);
+        appendMessage(`<b>⚠️ 분석 중 오류가 발생했습니다</b><br>서버 연결을 확인해주세요.`, 'bot');
+        const analysis = simulateAnalysis(message);
+        Object.keys(analysis).forEach((key) => {
+            const title = ANALYSES[key];
+            appendMessage(`<b>${title}</b><br>${analysis[key]}`, 'bot');
+        });
+        inputSection.style.display = 'none';
+        imagePreviewContainer.style.display = 'none';
+        saveBtn.style.display = 'block';
+        resetBtn.style.display = 'block';
+    }
+});
     
     // 히스토리 저장 함수
     async function saveAnalysis() {
