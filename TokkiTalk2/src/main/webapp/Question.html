@@ -292,7 +292,7 @@
 		    justify-content: center;
 		}
         
-        .save-btn, .reset-btn {
+       .goHis-btn, .save-btn, .reset-btn {
             background: #f1f3f4;
             color: #666;
             border: none;
@@ -305,6 +305,11 @@
             display: none;
             margin-top: 20px;
             align-self: center;
+        }
+        
+        .goHis-btn:hover{
+        	background: #e8eaed;
+            transform: translateY(-1px);
         }
         
         .reset-btn:hover {
@@ -462,6 +467,7 @@
             <button class="reset-btn" id="resetBtn" onclick="resetAnalysis()">
                 🔄 다시 분석하기
             </button>
+            <button class="goHis-btn" id="goHis" onclick="window.location.href='History.html'">히스토리 바로가기</button> 
         </div>
     </main>
 
@@ -475,6 +481,7 @@
     const analyzeBtn = document.getElementById('analyzeBtn');
     const chatArea = document.getElementById('chatArea');
     const resetBtn = document.getElementById('resetBtn');
+    const goHis = document.getElementById('goHis');
     const inputSection = document.getElementById('inputSection');
     const saveBtn = document.getElementById('saveBtn');
     const imageUpload = document.getElementById('imageUpload');
@@ -720,6 +727,7 @@
                         imagePreviewContainer.style.display = 'none';
                         saveBtn.style.display = 'block';
                         resetBtn.style.display = 'block';
+                        goHis.style.display = 'block';
                     }
                 }, 250 * (index + 1));
             });
@@ -737,6 +745,7 @@
             imagePreviewContainer.style.display = 'none';
             saveBtn.style.display = 'block';
             resetBtn.style.display = 'block';
+            goHis.style.display = 'block';
         }
     });
     
@@ -821,6 +830,7 @@
         imagePreviewContainer.style.display = 'flex';
         saveBtn.style.display = 'none';
         resetBtn.style.display = 'none';
+        goHis.style.display = 'none';
         messageInput.focus();
     }
     
