@@ -10,6 +10,7 @@ public class AnalysisOut {
     public List<Suggestion> advice;         // [{style, text}, ...]
     public Integer confidence;              // 0~100 (선택)
     public List<String> risk_flags;         // (선택)
+    public String similar_pattern;          // 학습 데이터에서 참고한 유사 패턴
     
     public static class Emotion {
         public String label;

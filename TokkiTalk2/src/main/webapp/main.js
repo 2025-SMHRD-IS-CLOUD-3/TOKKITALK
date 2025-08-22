@@ -114,6 +114,10 @@ function getApiBase() {
 }
 
 // DOM이 로드된 후 이벤트 리스너 등록
+/**
+ * @description DOM 로드 완료 시 실행되는 초기화 함수
+ * @async
+ */
 document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     const modalType = urlParams.get('modal');
@@ -150,7 +154,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 로그인 모달 버튼 이벤트
     const loginSubmitBtn = document.querySelector('.modal-login-btn');
-    loginSubmitBtn.addEventListener('click', async () => {
+    if (loginSubmitBtn) {
+        /**
+         * @description 로그인 버튼 클릭 이벤트 핸들러
+         * @async
+         */
+        loginSubmitBtn.addEventListener('click', async () => {
         const idInputEl = document.querySelector('#loginModal .modal-input[placeholder="아이디를 입력하세요"]');
         const pwInputEl = document.querySelector('#loginModal .modal-input[placeholder="비밀번호를 입력하세요"]');
         const inputId = idInputEl ? idInputEl.value.trim() : '';
@@ -192,17 +201,21 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('네트워크 오류가 발생했습니다.');
         }
     });
+    }
 
     // 회원가입 모달에서 로그인 버튼 클릭 시
     const signupModalBtn = document.querySelector('#loginModal .modal-signup-btn');
-    signupModalBtn.addEventListener('click', function() {
-        closeLoginModal();
-        openSignupModal();
-    });
+    if (signupModalBtn) {
+        signupModalBtn.addEventListener('click', function() {
+            closeLoginModal();
+            openSignupModal();
+        });
+    }
     
     // 회원가입 모달에서 회원가입 완료 버튼
     const signupConfirmBtn = document.querySelector('.signup-confirm-btn');
-    signupConfirmBtn.addEventListener('click', async function() {
+    if (signupConfirmBtn) {
+        signupConfirmBtn.addEventListener('click', async function() {
         const idInputEl = document.querySelector('#signupModal .signup-input-row .signup-input');
         const pw1El = document.querySelector('#signupModal .signup-input[placeholder="비밀번호 입력(숫자 4자)"]');
         const pw2El = document.querySelector('#signupModal .signup-input[placeholder="비밀번호 확인"]');
@@ -301,6 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('네트워크 오류가 발생했습니다.');
         }
     });
+    }
 
     // 아이디 중복 확인 버튼
     const duplicateCheckBtn = document.querySelector('.duplicate-check-btn');

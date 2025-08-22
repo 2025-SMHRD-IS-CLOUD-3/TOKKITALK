@@ -52,24 +52,34 @@ function getApiBase() {
     return window.location.origin;
 }
 
+/**
+ * @description 사용자의 채팅 히스토리 목록을 가져오는 함수
+ * @async
+ * @returns {Promise<void>}
+ */
 async function fetchChatList() {
     try {
         // 서버가 세션으로 사용자 식별 → 파라미터 없이 호출
-        const url = getApiBase() + '/history?limit=20';
+        const url = getApiBase() + '/getHistory';
         const res = await fetch(url);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const list = await res.json();
         const chats = list.map(r => ({
-            id: r.analysisId,
-            title: r.text ? (r.text.length>40 ? r.text.substring(0,40)+'…' : r.text) : '(무제)',
+            id: r.id,
+            title: r.inputText ? (r.inputText.length>40 ? r.inputText.substring(0,40)+'…' : r.inputText) : '(무제)',
             date: r.createdAt ? new Date(r.createdAt).toLocaleString() : ''
         }));
         renderChatList(chats);
     } catch (e) {
+        console.error('Error fetching chat list:', e);
         chatListElement.innerHTML = '<li class="loading-message">불러오기 실패</li>';
     }
 }
 
+/**
+ * @description 채팅 목록을 DOM에 렌더링하는 함수
+ * @param {Array} chats - 채팅 데이터 배열
+ */
 function renderChatList(chats) {
     chatListElement.innerHTML = '';
     if (chats.length === 0) {
@@ -101,39 +111,49 @@ async function fetchChatDetails(chatId) {
         modalContentArea.innerHTML = '<div class="loading-message">불러오는 중...</div>';
         chatModal.style.display = "flex";
         
-        const url = getApiBase() + '/analysis/' + chatId;
+        // getHistory에서 전체 목록을 가져와서 해당 ID의 항목을 찾기
+        const url = getApiBase() + '/getHistory';
         const res = await fetch(url);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         
-        const data = await res.json();
+        const list = await res.json();
+        const chatData = list.find(item => item.id == chatId);
         
-                 // 새로운 구조 지원: advice 배열을 렌더링
-         let adviceHtml = '';
-         if (data.response_suggestion && data.response_suggestion.alternatives) {
-             const allAdvice = [data.response_suggestion.primary, ...data.response_suggestion.alternatives];
-             const styleNames = ['무난·호감형', '구체 포인트형', '선택권 존중형', '장난·플러팅형', '응원형', '위로형'];
-             
-             adviceHtml = allAdvice.map((advice, index) => {
-                 const style = index === 0 ? data.response_suggestion.tone : 
-                              (index < styleNames.length ? styleNames[index] : `제안 ${index + 1}`);
-                 return `<li><b>${style}</b> ${advice}</li>`;
-             }).join('');
-         }
+        if (!chatData) {
+            modalContentArea.innerHTML = '<div class="error-message">해당 대화를 찾을 수 없습니다.</div>';
+            return;
+        }
+        
+        // advice 배열을 렌더링
+        let adviceHtml = '';
+        if (chatData.advice && Array.isArray(chatData.advice)) {
+            adviceHtml = chatData.advice.map(advice => {
+                return `<li><b>${advice.style || '제안'}</b> ${advice.text || ''}</li>`;
+            }).join('');
+        }
         
         modalContentArea.innerHTML = `
             <div class="chat-detail">
                 <h3>분석 결과</h3>
                 <div class="analysis-section">
+                    <h4>입력 문장</h4>
+                    <p>${chatData.inputText || '분석 없음'}</p>
+                </div>
+                <div class="analysis-section">
                     <h4>표면적 의미</h4>
-                    <p>${data.surface_meaning ? data.surface_meaning.one_line : '분석 없음'}</p>
+                    <p>${chatData.surfaceMeaning || '분석 없음'}</p>
                 </div>
                 <div class="analysis-section">
                     <h4>숨은 의도</h4>
-                    <p>${data.hidden_meaning ? data.hidden_meaning.one_line : '분석 없음'}</p>
+                    <p>${chatData.hiddenMeaning || '분석 없음'}</p>
                 </div>
                 <div class="analysis-section">
                     <h4>감정 상태</h4>
-                    <p>${data.emotion ? data.emotion.label : '분석 없음'}</p>
+                    <p>${chatData.emotionLabel || '분석 없음'} (강도: ${chatData.emotionIntensity || 'N/A'})</p>
+                </div>
+                <div class="analysis-section">
+                    <h4>직설 번역</h4>
+                    <p>${chatData.translation || '분석 없음'}</p>
                 </div>
                 <div class="analysis-section">
                     <h4>TOKKI의 제안</h4>
@@ -333,5 +353,7 @@ document.querySelectorAll('.nav-item').forEach(link => {
             }
         }
     });
-    fetchChatList();
 });
+
+// 페이지 로드 시 채팅 목록 가져오기
+fetchChatList();
