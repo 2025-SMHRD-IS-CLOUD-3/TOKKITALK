@@ -149,10 +149,14 @@
                     </button>
                 </div>
                 <div class="conversation-content">
-                    ${conversation.messages.map(msg => `
+              		
+                    ${conversation.messages
+                    	.slice()
+                    	.reverse()
+                    	.map(msg => `
                         <div class="message-item ${msg.role}">
                             <div class="message-header">
-                                <span class="message-role">${msg.role === 'user' ? '사용자' : 'TOKKI'}</span>
+                                <span class="message-role">${msg.role === 'user' ? '사용자' : 'TOKKITALK'}</span>
                             </div>
                             <div class="message-content">
                                 <pre>${msg.content}</pre>
@@ -165,34 +169,39 @@
             historyContainer.appendChild(conversationDiv);
         });
     }
+    
 
+    
+	
     // 대화별로 그룹화
     function groupByConversation(historyItems) {
-        const conversations = {};
+    const conversations = {};
+    
+    historyItems.forEach(item => {
+        // 날짜와 시간으로 그룹화
+        const timestamp = item.date + '_' + item.time;
+
+        if (!conversations[timestamp]) {
+            conversations[timestamp] = {
+                date: item.date,
+                time: item.time,
+                messages: []
+            };
+        }
         
-        historyItems.forEach(item => {
-            // 파일명에서 타임스탬프 추출 (예: 20241201_143022_1_user.txt)
-            const timestamp = item.id.split('_').slice(0, 2).join('_');
-            
-            if (!conversations[timestamp]) {
-                conversations[timestamp] = {
-                    date: item.date,
-                    time: item.time,
-                    messages: []
-                };
-            }
-            
-            conversations[timestamp].messages.push({
-                role: item.role,
-                content: item.content
-            });
+        conversations[timestamp].messages.push({
+        	id: item.id,
+            role: item.role,
+            content: item.content
         });
-        
-        // 시간순 정렬
-        return Object.values(conversations).sort((a, b) => {
-            return new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time);
-        });
-    }
+    });
+    
+    // 최신 순 정렬
+    return Object.values(conversations).sort((a,b) => {
+        return new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time);
+    });
+}
+    
 
     // 대화 토글 함수
     function toggleConversation(button) {
