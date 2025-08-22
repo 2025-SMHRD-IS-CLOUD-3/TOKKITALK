@@ -99,7 +99,7 @@ public class AnalysisDAO {
         }
     }
     
-    public void saveToChatHistory(Long userId, String role, String message) {
+    public void saveToChatHistory(String userId, String role, String message) {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
         params.put("role", role);
@@ -110,7 +110,7 @@ public class AnalysisDAO {
         }
     }
     
-    public java.util.List<GetHistoryServlet.HistoryItem> getChatHistory(Long userId) {
+    public java.util.List<GetHistoryServlet.HistoryItem> getChatHistory(String userId) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             Map<String, Object> params = new HashMap<>();
             params.put("userId", userId);

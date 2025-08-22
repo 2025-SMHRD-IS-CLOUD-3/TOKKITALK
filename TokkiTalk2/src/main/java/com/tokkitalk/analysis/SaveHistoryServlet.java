@@ -29,15 +29,36 @@ public class SaveHistoryServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         
         try {
-            // 세션에서 사용자 ID 가져오기
+            // 세션에서 사용자 정보 가져오기
             HttpSession session = request.getSession();
-            Long userId = (Long) session.getAttribute("userId");
+            com.tokkitalk.model.MevenMember member = (com.tokkitalk.model.MevenMember) session.getAttribute("member");
             
-            // 테스트용: 로그인 안 되어 있으면 임시 userId 사용
-            if (userId == null) {
-                userId = 1L; // 테스트용 임시 사용자 ID
-                System.out.println("테스트용 userId 사용: " + userId);
+            // 디버깅: 세션 정보 출력
+            System.out.println("=== 세션 디버깅 ===");
+            System.out.println("세션 ID: " + session.getId());
+            System.out.println("세션 생성 시간: " + session.getCreationTime());
+            System.out.println("세션 마지막 접근 시간: " + session.getLastAccessedTime());
+            System.out.println("세션에서 가져온 member: " + member);
+            
+            // 세션의 모든 속성 출력
+            java.util.Enumeration<String> attributeNames = session.getAttributeNames();
+            System.out.println("세션의 모든 속성:");
+            while (attributeNames.hasMoreElements()) {
+                String name = attributeNames.nextElement();
+                Object value = session.getAttribute(name);
+                System.out.println("  " + name + " = " + value);
             }
+            System.out.println("=== 세션 디버깅 끝 ===");
+            
+            // 로그인 안 되어 있으면 에러 처리
+            if (member == null) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                out.println("{\"error\": \"로그인이 필요합니다.\"}");
+                return;
+            }
+            
+            String userId = member.getUser_id();
+            System.out.println("로그인된 사용자 ID: " + userId);
             
             // 요청 데이터 파싱
             SaveHistoryRequest saveRequest = gson.fromJson(
@@ -97,8 +118,10 @@ public class SaveHistoryServlet extends HttpServlet {
                 saveToChatHistory(userId, "assistant", messageBuilder.toString());
                 System.out.println("DB 저장 성공!");
             } catch (Exception dbError) {
-                System.out.println("DB 저장 실패: " + dbError.getMessage());
+                System.out.println("❌ DB 저장 실패: " + dbError.getMessage());
+                System.out.println("=== 상세 에러 정보 ===");
                 dbError.printStackTrace();
+                System.out.println("=== 에러 정보 끝 ===");
                 System.out.println("파일 저장은 성공했으므로 계속 진행합니다.");
             }
             
@@ -112,7 +135,7 @@ public class SaveHistoryServlet extends HttpServlet {
         }
     }
     
-    private void saveToFile(Long userId, String role, String message) {
+    private void saveToFile(String userId, String role, String message) {
         try {
             // 절대 경로로 저장할 디렉토리 생성
             String projectRoot = System.getProperty("user.dir");
@@ -123,7 +146,7 @@ public class SaveHistoryServlet extends HttpServlet {
             
             // 파일명 생성 (날짜_시간_userId_role.txt)
             String timestamp = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-            String filename = String.format("%s/history_logs/%s_%d_%s.txt", projectRoot, timestamp, userId, role);
+            String filename = String.format("%s/history_logs/%s_%s_%s.txt", projectRoot, timestamp, userId, role);
             
             // 파일에 저장
             java.io.File file = new java.io.File(filename);
@@ -143,7 +166,7 @@ public class SaveHistoryServlet extends HttpServlet {
         }
     }
     
-    private void saveToChatHistory(Long userId, String role, String message) {
+    private void saveToChatHistory(String userId, String role, String message) {
         try {
             analysisDAO.saveToChatHistory(userId, role, message);
         } catch (Exception e) {

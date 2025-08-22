@@ -80,9 +80,9 @@
       ROLE,
       MESSAGE_TEXT
     ) VALUES (
-      #{userId},
-      #{role},
-      #{message}
+      #{userId, jdbcType=VARCHAR},
+      #{role, jdbcType=VARCHAR},
+      #{message, jdbcType=CLOB}
     )
   </insert>
 
