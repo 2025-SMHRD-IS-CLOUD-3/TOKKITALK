@@ -292,7 +292,7 @@
 		    justify-content: center;
 		}
         
-        .save-btn, .reset-btn {
+       .goHis-btn, .save-btn, .reset-btn {
             background: #f1f3f4;
             color: #666;
             border: none;
@@ -305,6 +305,11 @@
             display: none;
             margin-top: 20px;
             align-self: center;
+        }
+        
+        .goHis-btn:hover{
+        	background: #e8eaed;
+            transform: translateY(-1px);
         }
         
         .reset-btn:hover {
@@ -462,6 +467,7 @@
             <button class="reset-btn" id="resetBtn" onclick="resetAnalysis()">
                 🔄 다시 분석하기
             </button>
+            <button class="goHis-btn" id="goHis" onclick="window.location.href='History.html'">히스토리 바로가기</button> 
         </div>
     </main>
 
@@ -475,6 +481,7 @@
     const analyzeBtn = document.getElementById('analyzeBtn');
     const chatArea = document.getElementById('chatArea');
     const resetBtn = document.getElementById('resetBtn');
+    const goHis = document.getElementById('goHis');
     const inputSection = document.getElementById('inputSection');
     const saveBtn = document.getElementById('saveBtn');
     const imageUpload = document.getElementById('imageUpload');
@@ -729,8 +736,33 @@
         const analysisKeys = Object.keys(ANALYSES);
         analysisKeys.forEach((key, index) => {
             setTimeout(() => {
+            	
+            lastAnalysisResult = analysis;
+            const analysisKeys = Object.keys(ANALYSES);
+            analysisKeys.forEach((key, index) => {
+                setTimeout(() => {
+                    const title = ANALYSES[key];
+                    appendMessage(`<b>${title}</b><br>${analysis[key]}`, 'bot');
+                    if (index === analysisKeys.length - 1) {
+                        inputSection.style.display = 'none';
+                        imagePreviewContainer.style.display = 'none';
+                        saveBtn.style.display = 'block';
+                        resetBtn.style.display = 'block';
+                        goHis.style.display = 'block';
+                    }
+                }, 250 * (index + 1));
+            });
+            
+        } catch (e) {
+            console.error('Fetch Error:', e);
+            chatArea.removeChild(loadingMessage);
+            appendMessage(`<b>⚠️ 분석 중 오류가 발생했습니다</b><br>서버 연결을 확인해주세요.`, 'bot');
+            const analysis = simulateAnalysis(message);
+            Object.keys(analysis).forEach((key) => {
+
                 const title = ANALYSES[key];
                 appendMessage(`<b>${title}</b><br>${analysis[key]}`, 'bot');
+
                 if (index === analysisKeys.length - 1) {
                     inputSection.style.display = 'none';
                     imagePreviewContainer.style.display = 'none';
@@ -755,6 +787,15 @@
         resetBtn.style.display = 'block';
     }
 });
+=======
+            });
+            inputSection.style.display = 'none';
+            imagePreviewContainer.style.display = 'none';
+            saveBtn.style.display = 'block';
+            resetBtn.style.display = 'block';
+            goHis.style.display = 'block';
+        }
+    });
     
     // 히스토리 저장 함수
     async function saveAnalysis() {
@@ -837,6 +878,7 @@
         imagePreviewContainer.style.display = 'flex';
         saveBtn.style.display = 'none';
         resetBtn.style.display = 'none';
+        goHis.style.display = 'none';
         messageInput.focus();
     }
     
