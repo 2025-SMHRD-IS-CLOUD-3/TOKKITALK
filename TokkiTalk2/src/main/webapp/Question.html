@@ -623,6 +623,7 @@
     });
 
     // 분석 버튼 클릭 로직
+    // 분석 버튼 클릭 로직
     analyzeBtn.addEventListener('click', async () => {
     const message = messageInput.value.trim();
     const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
@@ -700,8 +701,6 @@
 
         chatArea.removeChild(loadingMessage);
 
-        // ... (나머지 분석 결과 처리 및 화면 표시 로직)
-
         let analysis;
         if (analysisData.error) {
             appendMessage(`<b>⚠️ 분석 중 오류가 발생했습니다</b><br>${analysisData.error}`, 'bot');
@@ -734,44 +733,23 @@
 
         lastAnalysisResult = analysis;
         const analysisKeys = Object.keys(ANALYSES);
+        
+        // 딜레이를 두고 메시지 순차적으로 표시
         analysisKeys.forEach((key, index) => {
             setTimeout(() => {
-            	
-            lastAnalysisResult = analysis;
-            const analysisKeys = Object.keys(ANALYSES);
-            analysisKeys.forEach((key, index) => {
-                setTimeout(() => {
-                    const title = ANALYSES[key];
-                    appendMessage(`<b>${title}</b><br>${analysis[key]}`, 'bot');
-                    if (index === analysisKeys.length - 1) {
-                        inputSection.style.display = 'none';
-                        imagePreviewContainer.style.display = 'none';
-                        saveBtn.style.display = 'block';
-                        resetBtn.style.display = 'block';
-                        goHis.style.display = 'block';
-                    }
-                }, 250 * (index + 1));
-            });
-            
-        } catch (e) {
-            console.error('Fetch Error:', e);
-            chatArea.removeChild(loadingMessage);
-            appendMessage(`<b>⚠️ 분석 중 오류가 발생했습니다</b><br>서버 연결을 확인해주세요.`, 'bot');
-            const analysis = simulateAnalysis(message);
-            Object.keys(analysis).forEach((key) => {
-
                 const title = ANALYSES[key];
                 appendMessage(`<b>${title}</b><br>${analysis[key]}`, 'bot');
-
                 if (index === analysisKeys.length - 1) {
+                    // 마지막 메시지 출력 후 버튼 UI 업데이트
                     inputSection.style.display = 'none';
                     imagePreviewContainer.style.display = 'none';
                     saveBtn.style.display = 'block';
                     resetBtn.style.display = 'block';
+                    goHis.style.display = 'block';
                 }
             }, 250 * (index + 1));
         });
-        
+
     } catch (e) {
         console.error('Fetch Error:', e);
         chatArea.removeChild(loadingMessage);
@@ -785,17 +763,9 @@
         imagePreviewContainer.style.display = 'none';
         saveBtn.style.display = 'block';
         resetBtn.style.display = 'block';
+        goHis.style.display = 'block';
     }
 });
-=======
-            });
-            inputSection.style.display = 'none';
-            imagePreviewContainer.style.display = 'none';
-            saveBtn.style.display = 'block';
-            resetBtn.style.display = 'block';
-            goHis.style.display = 'block';
-        }
-    });
     
     // 히스토리 저장 함수
     async function saveAnalysis() {
