@@ -1,78 +1,76 @@
 package com.tokkitalk.analysis;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
+import java.io.BufferedReader;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.tokkitalk.analysis.dto.AnalyzeRequest;
 import com.tokkitalk.analysis.dto.AnalysisResult;
+import com.tokkitalk.analysis.external.OpenAiClient;
 
-@WebServlet(name = "AnalysisServlet", urlPatterns = {"/analyze"})
+@WebServlet("/AnalysisServlet")
+//이 어노테이션을 추가하여 이미지 파일 업로드 크기를 설정합니다.
+@MultipartConfig(
+ fileSizeThreshold = 1024 * 1024, // 1MB
+ maxFileSize = 1024 * 1024 * 10, // 10MB
+ maxRequestSize = 1024 * 1024 * 50 // 50MB
+)
 public class AnalysisServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
-    private final transient Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-    private final transient AnalysisService analysisService = new AnalysisService();
-
+    private static final Gson GSON = new Gson();
+    private final OpenAiClient openAiClient = new OpenAiClient();
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json; charset=UTF-8");
-
-        StringBuilder bodyBuilder = new StringBuilder();
-        try (BufferedReader reader = request.getReader()) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                bodyBuilder.append(line);
-            }
-        }
-
-        AnalyzeRequest analyzeRequest = gson.fromJson(bodyBuilder.toString(), AnalyzeRequest.class);
-        if (analyzeRequest == null || analyzeRequest.input_type == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            try (PrintWriter out = response.getWriter()) {
-                out.write("{\"error\":\"invalid_request\"}");
-            }
-            return;
-        }
-
-        // Mask PII first
-        AnalyzeRequest masked = PiiMasker.mask(analyzeRequest);
-
-        // Generate ID early
-        String analysisId = UUID.randomUUID().toString();
-
-        // 세션 사용자 숫자 ID를 읽어 저장에 넘김 (로그인 시 저장되어 있다고 가정)
-        Long userNumericId = null;
+        response.setContentType("application/json;charset=UTF-8");
+        
+        PrintWriter out = response.getWriter();
+        AnalyzeRequest analyzeRequest = null;
+        
         try {
-            if (request.getSession(false) != null) {
-                Object v = request.getSession(false).getAttribute("userNumericId");
-                if (v instanceof Number) userNumericId = ((Number) v).longValue();
-                else if (v instanceof String) userNumericId = Long.parseLong((String) v);
+            // JSON 요청 본문을 문자열로 읽어들임
+            String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            
+            if (requestBody == null || requestBody.trim().isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                JsonObject error = new JsonObject();
+                error.addProperty("error", "요청 데이터가 비어 있습니다.");
+                out.print(error.toString());
+                return;
             }
-        } catch (Exception ignore) {}
+            
+            // JSON 문자열을 객체로 파싱
+            analyzeRequest = GSON.fromJson(requestBody, AnalyzeRequest.class);
 
-        AnalysisResult result = analysisService.analyze(analysisId, masked, userNumericId);
+            if (analyzeRequest == null) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                JsonObject error = new JsonObject();
+                error.addProperty("error", "요청 데이터 형식이 올바르지 않습니다.");
+                out.print(error.toString());
+                return;
+            }
 
-        String json = gson.toJson(result);
-        try (PrintWriter out = response.getWriter()) {
-            out.write(new String(json.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8));
+            // analyzeWithLLM 메서드에 맞게 두 개의 인자를 명확하게 전달
+            AnalysisResult result = openAiClient.analyzeWithLLM(analyzeRequest.getText(), analyzeRequest.getImageBase64());            
+            out.print(GSON.toJson(result));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JsonObject error = new JsonObject();
+            error.addProperty("error", "분석 중 오류가 발생했습니다: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.print(error.toString());
         }
     }
 }
-
-
-
-
-

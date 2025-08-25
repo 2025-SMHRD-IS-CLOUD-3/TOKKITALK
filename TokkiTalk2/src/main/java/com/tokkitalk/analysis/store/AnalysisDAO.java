@@ -3,7 +3,6 @@ package com.tokkitalk.analysis.store;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
- 
 import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
@@ -13,8 +12,8 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.google.gson.Gson;
 import com.tokkitalk.analysis.dto.AnalysisResult;
+import com.tokkitalk.analysis.dto.FeedbackRequest;
 import com.tokkitalk.analysis.GetHistoryServlet;
- 
 
 public class AnalysisDAO {
 
@@ -52,8 +51,8 @@ public class AnalysisDAO {
     public AnalysisResult findById(String analysisId) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             AnalysisRecord row = session.selectOne(MAPPER_NS + ".selectAnalysis", analysisId);
-            if (row == null) return null;
-            // 최소한의 복원: 저장된 전체 JSON을 우선 사용
+            if (row == null)
+                return null;
             if (row.analysisResult != null) {
                 return gson.fromJson(row.analysisResult, AnalysisResult.class);
             }
@@ -77,28 +76,31 @@ public class AnalysisDAO {
         if (updated == null || updated.response_suggestion == null) {
             return;
         }
-        // 간단히 새 전체 JSON으로 덮어쓰기: userId는 보존 불가라 0L로 저장되니, 실제 서비스에 맞게 UPDATE로 교체 권장
         saveResult(updated, 0L);
     }
 
-    public void insertFeedback(String analysisId, int liked, String partnerReaction) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("analysis_id", analysisId);
-        params.put("liked", liked);
-        params.put("partner_reaction", partnerReaction);
-        params.put("user_comment", null);
-
+    // 1. DeleteAnalysisServlet에서 호출할 메서드 추가 (기존 deleteById를 활용)
+    public void delete(String analysisId) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            session.insert(MAPPER_NS + ".insertFeedback", params);
+            session.delete(MAPPER_NS + ".deleteAnalysis", analysisId);
         }
     }
 
-    public int deleteById(String analysisId) {
+    // 2. FeedbackServlet에서 호출할 메서드 추가
+    public void saveFeedback(FeedbackRequest feedbackRequest) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            return session.delete(MAPPER_NS + ".deleteAnalysis", analysisId);
+            Map<String, Object> params = new HashMap<>();
+            params.put("analysis_id", feedbackRequest.analysis_id);
+            
+            // Boolean 'like' 값을 정수(int)로 변환하여 'feedback_rating'에 저장
+            int rating = feedbackRequest.like != null && feedbackRequest.like ? 1 : 0;
+            params.put("feedback_rating", rating);
+            
+            params.put("feedback_comment", feedbackRequest.partner_reaction);
+            session.update(MAPPER_NS + ".updateFeedback", params);
         }
     }
-    
+
     public void saveToChatHistory(String userId, String role, String message) {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
@@ -109,7 +111,7 @@ public class AnalysisDAO {
             session.insert(MAPPER_NS + ".insertChatHistory", params);
         }
     }
-    
+
     public java.util.List<GetHistoryServlet.HistoryItem> getChatHistory(String userId) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             Map<String, Object> params = new HashMap<>();
@@ -118,5 +120,3 @@ public class AnalysisDAO {
         }
     }
 }
-
-

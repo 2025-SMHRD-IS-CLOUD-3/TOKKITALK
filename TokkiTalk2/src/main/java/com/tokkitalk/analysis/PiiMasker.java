@@ -22,7 +22,7 @@ public class PiiMasker {
             masked = SNS.matcher(masked).replaceAll("[HANDLE]");
             out.text = masked;
         }
-        out.image_base64 = in.image_base64; // image not persisted; masking N/A here
+        out.imageBase64 = in.imageBase64; // image not persisted; masking N/A here
         return out;
     }
 }
