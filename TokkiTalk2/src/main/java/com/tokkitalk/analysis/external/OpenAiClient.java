@@ -45,16 +45,31 @@ public class OpenAiClient {
     private static final int MAX_RETRIES = 5; // 재시도 횟수 3 -> 5로 증가
     private static final long INITIAL_DELAY_SECONDS = 5;
 
+ // OpenAiClient.java 파일 내부
     public OpenAiClient() {
         this.http = new OkHttpClient.Builder()
-                .callTimeout(Duration.ofSeconds(60))
-                .readTimeout(Duration.ofSeconds(60))
-                .build();
+            .callTimeout(Duration.ofSeconds(60))
+            .readTimeout(Duration.ofSeconds(60))
+            .build();
+
         String key = System.getenv("OPENAI_API_KEY");
-        if (key == null || key.isEmpty()) {
+        if (key != null && !key.isEmpty()) {
+            System.out.println("[DEBUG] API 키가 환경변수(OPENAI_API_KEY)에서 로드되었습니다.");
+        } else {
             key = System.getProperty("openai.api.key");
+            if (key != null && !key.isEmpty()) {
+                System.out.println("[DEBUG] API 키가 시스템 속성(openai.api.key)에서 로드되었습니다.");
+            } else {
+                System.out.println("[DEBUG] API 키가 설정되지 않았습니다.");
+            }
         }
+        
         this.apiKey = key;
+
+        // 최종 로드된 키 값 확인 (보안을 위해 일부만 출력)
+        if (this.apiKey != null && this.apiKey.length() > 4) {
+            System.out.println("[DEBUG] 최종 로드된 API Key: " + this.apiKey.substring(0, 4) + "...");
+        }
         this.model = System.getProperty("openai.model", "gpt-4o");
     }
 
