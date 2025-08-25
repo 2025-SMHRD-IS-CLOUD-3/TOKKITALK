@@ -747,8 +747,7 @@
                 console.error('Fetch Error:', e);
                 chatArea.removeChild(loadingMessage);
                 appendMessage(`<b>⚠️ 분석 중 오류가 발생했습니다</b><br>서버 연결 또는 API 키를 확인해주세요.`, 'bot');
-            } finally {
-                // 이 부분은 초기화 함수에서 다루므로 필요 없음
+                initialInputArea.style.display = 'flex';
             }
         }
 
@@ -761,15 +760,8 @@
 
             const dataToSave = {
                 input_text: messageInput.value.trim(),
-                result: JSON.parse(JSON.stringify(lastAnalysisResult)),
+                result: lastAnalysisResult,
             };
-
-            if (dataToSave.result && dataToSave.result.surface_meaning) {
-                dataToSave.result.surface_meaning = dataToSave.result.surface_meaning.one_line;
-            }
-            if (dataToSave.result && dataToSave.result.hidden_meaning) {
-                dataToSave.result.hidden_meaning = dataToSave.result.hidden_meaning.one_line;
-            }
 
             if (uploadedImageFile) {
                 const reader = new FileReader();
@@ -817,6 +809,7 @@
         function resetAnalysis(includeInitialMessage = true) {
             messageInput.value = '';
             uploadedImageFile = null;
+            imageUpload.value = ''; // 이미지 입력 필드 초기화
             imagePreview.style.display = 'none';
             imagePreview.innerHTML = '';
             lastAnalysisResult = null;
@@ -843,7 +836,7 @@
 
             // 입력 영역 다시 표시
             initialInputArea.style.display = 'flex';
-            
+
             // 버튼 가시성 제어
             saveBtn.style.display = 'none';
             resetBtn.style.display = 'none';
