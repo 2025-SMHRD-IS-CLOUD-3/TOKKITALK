@@ -679,15 +679,24 @@
                 resultHtml += `<p><strong>💡 숨은 의도:</strong> ${analysisData.hidden_meaning.one_line}</p>`;
             }
             if (analysisData.emotion) {
-                resultHtml += `<p><strong>❤️ 감정 상태:</strong> ${analysisData.emotion.label} (강도 ${analysisData.emotion.valence})</p>`;
+                resultHtml += `<p><strong>❤️ 감정 상태:</strong> ${analysisData.emotion.label}</p>`;
             }
             if (analysisData.advice && analysisData.advice.length > 0) {
-                resultHtml += `<p><strong>🎯 추천 대응:</strong></p>`;
-                resultHtml += `<ul>`;
-                for(const advice of analysisData.advice) {
-                    resultHtml += `<li><strong>${advice.style}:</strong> ${advice.text}</li>`;
+                // "없음" 항목을 필터링
+                const validAdvice = analysisData.advice.filter(advice => 
+                    advice.style && advice.style !== "없음" && 
+                    advice.text && advice.text !== "없음" && 
+                    advice.text.trim() !== ""
+                );
+                
+                if (validAdvice.length > 0) {
+                    resultHtml += `<p><strong>🎯 추천 대응:</strong></p>`;
+                    resultHtml += `<ul>`;
+                    for(const advice of validAdvice) {
+                        resultHtml += `<li><strong>${advice.style}:</strong> ${advice.text}</li>`;
+                    }
+                    resultHtml += `</ul>`;
                 }
-                resultHtml += `</ul>`;
             }
 
             resultHtml += `</div>`;
