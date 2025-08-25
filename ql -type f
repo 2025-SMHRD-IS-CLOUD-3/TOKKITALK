@@ -1,0 +1,129 @@
+[1mdiff --git a/TokkiTalk2/src/main/java/com/tokkitalk/analysis/external/OpenAiClient.java b/TokkiTalk2/src/main/java/com/tokkitalk/analysis/external/OpenAiClient.java[m
+[1mindex c4b26a2..47317e7 100644[m
+[1m--- a/TokkiTalk2/src/main/java/com/tokkitalk/analysis/external/OpenAiClient.java[m
+[1m+++ b/TokkiTalk2/src/main/java/com/tokkitalk/analysis/external/OpenAiClient.java[m
+[36m@@ -45,33 +45,19 @@[m [mpublic class OpenAiClient {[m
+     private static final int MAX_RETRIES = 5; // 재시도 횟수 3 -> 5로 증가[m
+     private static final long INITIAL_DELAY_SECONDS = 5;[m
+ [m
+[31m- // OpenAiClient.java 파일 내부[m
+     public OpenAiClient() {[m
+         this.http = new OkHttpClient.Builder()[m
+[31m-            .callTimeout(Duration.ofSeconds(60))[m
+[31m-            .readTimeout(Duration.ofSeconds(60))[m
+[31m-            .build();[m
+[31m-[m
+[32m+[m[32m                .callTimeout(Duration.ofSeconds(60))[m
+[32m+[m[32m                .readTimeout(Duration.ofSeconds(60))[m
+[32m+[m[32m                .build();[m
+         String key = System.getenv("OPENAI_API_KEY");[m
+[31m-        if (key != null && !key.isEmpty()) {[m
+[31m-            System.out.println("[DEBUG] API 키가 환경변수(OPENAI_API_KEY)에서 로드되었습니다.");[m
+[31m-        } else {[m
+[32m+[m[32m        if (key == null || key.isEmpty()) {[m
+             key = System.getProperty("openai.api.key");[m
+[31m-            if (key != null && !key.isEmpty()) {[m
+[31m-                System.out.println("[DEBUG] API 키가 시스템 속성(openai.api.key)에서 로드되었습니다.");[m
+[31m-            } else {[m
+[31m-                System.out.println("[DEBUG] API 키가 설정되지 않았습니다.");[m
+[31m-            }[m
+         }[m
+[31m-        [m
+         this.apiKey = key;[m
+[31m-[m
+[31m-        // 최종 로드된 키 값 확인 (보안을 위해 일부만 출력)[m
+[31m-        if (this.apiKey != null && this.apiKey.length() > 4) {[m
+[31m-            System.out.println("[DEBUG] 최종 로드된 API Key: " + this.apiKey.substring(0, 4) + "...");[m
+[31m-        }[m
+         this.model = System.getProperty("openai.model", "gpt-4o");[m
+     }[m
+[32m+[m
+     public boolean isConfigured() {[m
+         // YOUR_API_KEY_HERE 문자열 비교 제거[m
+         return apiKey != null && !apiKey.isEmpty();[m
+[36m@@ -167,85 +153,9 @@[m [mpublic class OpenAiClient {[m
+             shotMsg.addProperty("content", FEWSHOTS);[m
+             messages.add(shotMsg);[m
+ [m
+[31m-<<<<<<< HEAD[m
+[31m-            // Parse flat JSON response into AnalysisOut DTO[m
+[31m-            AnalysisOut out = GSON.fromJson(content, AnalysisOut.class);[m
+[31m-            if (out == null) {[m
+[31m-                throw new IOException("Failed to parse OpenAI response");[m
+[31m-            }[m
+[31m-[m
+[31m-            // Post-process and validate[m
+[31m-            AnalysisPostProcessor.validateAndFix(out);[m
+[31m-[m
+[31m-            // Convert AnalysisOut to AnalysisResult DTO[m
+[31m-            AnalysisResult result = new AnalysisResult();[m
+[31m-            result.analysis_id = analysisId;[m
+[31m-[m
+[31m-            // Surface meaning[m
+[31m-            AnalysisResult.SurfaceMeaning sm = new AnalysisResult.SurfaceMeaning();[m
+[31m-            sm.one_line = out.surface != null ? out.surface : "";[m
+[31m-            sm.confidence = out.confidence != null ? out.confidence / 100.0 : 0.85;[m
+[31m-            sm.evidence = Arrays.asList("GPT 분석");[m
+[31m-            result.surface_meaning = sm;[m
+[31m-[m
+[31m-            // Hidden meaning[m
+[31m-            AnalysisResult.HiddenMeaning hm = new AnalysisResult.HiddenMeaning();[m
+[31m-            hm.one_line = out.hidden != null ? out.hidden : "";[m
+[31m-            // translation 필드를 hidden meaning에 포함[m
+[31m-            if (out.translation != null && !out.translation.isEmpty()) {[m
+[31m-                hm.one_line += " (" + out.translation + ")";[m
+[31m-            }[m
+[31m-            // similar_pattern 정보를 hidden meaning에 포함[m
+[31m-//            if (out.similar_pattern != null && !out.similar_pattern.isEmpty()) {[m
+[31m-//                hm.one_line += " [참고패턴: " + out.similar_pattern + "]";[m
+[31m-//            }[m
+[31m-            hm.intent_labels = Arrays.asList(new AnalysisResult.LabelScore("GPT 분석", 0.8));[m
+[31m-            hm.risk_flags = new ArrayList<>();[m
+[31m-            if (out.risk_flags != null) {[m
+[31m-                for (String flag : out.risk_flags) {[m
+[31m-                    AnalysisResult.Flag f = new AnalysisResult.Flag();[m
+[31m-                    f.flag = flag;[m
+[31m-                    f.reason = "";[m
+[31m-                    hm.risk_flags.add(f);[m
+[31m-                }[m
+[31m-            }[m
+[31m-            hm.confidence = sm.confidence;[m
+[31m-            result.hidden_meaning = hm;[m
+[31m-[m
+[31m-            // Emotion[m
+[31m-            com.tokkitalk.analysis.dto.Emotion emo = new com.tokkitalk.analysis.dto.Emotion();[m
+[31m-            if (out.emotion != null) {[m
+[31m-                emo.label = out.emotion.label != null ? out.emotion.label : "중립";[m
+[31m-                int intensity = out.emotion.intensity != null ? out.emotion.intensity : 3;[m
+[31m-                emo.valence = intensity - 3;[m
+[31m-                emo.arousal = intensity / 5.0;[m
+[31m-            } else {[m
+[31m-                emo.label = "중립";[m
+[31m-                emo.valence = 0; emo.arousal = 0.0;[m
+[31m-            }[m
+[31m-            emo.politeness_level = "해요체";[m
+[31m-            emo.cues = new java.util.HashMap<>();[m
+[31m-            emo.confidence = sm.confidence;[m
+[31m-            result.emotion = emo;[m
+[31m-[m
+[31m-            // Response suggestion - Convert advice to ResponseSuggestion[m
+[31m-            ResponseSuggestion rs = new ResponseSuggestion();[m
+[31m-            rs.tone = "상큼";[m
+[31m-            rs.primary = out.advice != null && !out.advice.isEmpty() ? out.advice.get(0).text : "GPT 분석 결과";[m
+[31m-            rs.alternatives = new ArrayList<>();[m
+[31m-            if (out.advice != null && out.advice.size() > 1) {[m
+[31m-                for (int i = 1; i < out.advice.size(); i++) {[m
+[31m-                    rs.alternatives.add(out.advice.get(i).text);[m
+[31m-                }[m
+[31m-            }[m
+[31m-            rs.rationale = "GPT 분석";[m
+[31m-            rs.confidence = sm.confidence;[m
+[31m-            result.response_suggestion = rs;[m
+[31m-=======[m
+             JsonObject userMsg = new JsonObject();[m
+             userMsg.addProperty("role", "user");[m
+             JsonArray contentArray = new JsonArray();[m
+[31m->>>>>>> branch 'main' of https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK.git[m
+             [m
+             String combinedPrompt = "분석할 텍스트: " + (text != null && !text.isEmpty() ? text : "없음") + "\n";[m
+             if (resizedImageBase64 != null && !resizedImageBase64.isEmpty()) {[m
