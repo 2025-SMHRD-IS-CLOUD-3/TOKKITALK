@@ -647,9 +647,7 @@
         resetAnalysis(false);
 
         // 1. 사용자 메시지 또는 이미지 미리보기 먼저 표시
-        if (message.length > 0) {
-            appendMessage(message, 'user');
-        }
+        
         if (file) {
             appendMessage(`<img src="${URL.createObjectURL(file)}" alt="업로드 이미지" style="max-width: 100%; border-radius: 10px;">`, 'user');
         }
