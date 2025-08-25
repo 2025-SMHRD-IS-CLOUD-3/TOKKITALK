@@ -286,11 +286,11 @@
         }
 
         .buttons-container {
-		    display: flex;
-		    gap: 10px;
-		    margin-bottom: 20px;
-		    justify-content: center;
-		}
+          display: flex;
+          gap: 10px;
+          margin-bottom: 20px;
+          justify-content: center;
+      }
 
        .goHis-btn, .save-btn, .reset-btn {
             background: #f1f3f4;
@@ -308,7 +308,7 @@
         }
 
         .goHis-btn:hover{
-        	background: #e8eaed;
+           background: #e8eaed;
             transform: translateY(-1px);
         }
 
@@ -675,101 +675,9 @@
                 reader.onerror = (error) => reject(error);
             });
 
-<<<<<<< HEAD
-            if (!response.ok) {
-                throw new Error('네트워크 응답이 올바르지 않습니다: ' + response.status);
-            }
-
-            const analysisData = await response.json();
-            
-            chatArea.removeChild(loadingMessage);
-
-            // 분석 결과를 전역 변수에 저장하여 히스토리 저장에 사용
-            lastAnalysisResult = analysisData;
-
-            // 결과 화면에 표시
-            let resultHtml = `<div class="message-title">TOKKI 분석 결과</div>`;
-            resultHtml += `<div class="analysis-result">`;
-            
-            // 텍스트 분석 결과 표시
-            if (analysisData.surface_meaning) {
-                resultHtml += `<p><strong>🔍 표면적 의미:</strong> ${analysisData.surface_meaning.one_line}</p>`;
-            }
-            if (analysisData.hidden_meaning) {
-                resultHtml += `<p><strong>💡 숨은 의도:</strong> ${analysisData.hidden_meaning.one_line}</p>`;
-            }
-            if (analysisData.emotion) {
-                resultHtml += `<p><strong>❤️ 감정 상태:</strong> ${analysisData.emotion.label}</p>`;
-            }
-            if (analysisData.advice && analysisData.advice.length > 0) {
-                // "없음" 항목을 필터링
-                const validAdvice = analysisData.advice.filter(advice => 
-                    advice.style && advice.style !== "없음" && 
-                    advice.text && advice.text !== "없음" && 
-                    advice.text.trim() !== ""
-                );
-                
-                if (validAdvice.length > 0) {
-                    resultHtml += `<p><strong>🎯 추천 대응:</strong></p>`;
-                    resultHtml += `<ul>`;
-                    for(const advice of validAdvice) {
-                        resultHtml += `<li><strong>${advice.style}:</strong> ${advice.text}</li>`;
-                    }
-                    resultHtml += `</ul>`;
-                }
-            }
-
-            resultHtml += `</div>`;
-            appendMessage(resultHtml, 'bot');
-
-            // 분석 완료 후 버튼 상태 변경
-            messageInput.disabled = false;
-            analyzeBtn.disabled = false;
-            saveBtn.style.display = 'inline-block';
-            resetBtn.style.display = 'inline-block';
-            goHis.style.display = 'inline-block';
-            
-        } catch (e) {
-            console.error('Fetch Error:', e);
-            chatArea.removeChild(loadingMessage);
-            appendMessage(`<b>⚠️ 분석 중 오류가 발생했습니다</b><br>서버 연결 또는 API 키를 확인해주세요.`, 'bot');
-        } finally {
-            messageInput.disabled = false;
-            analyzeBtn.disabled = false;
-        }
-    }
-
-    // 히스토리 저장 함수
-    async function saveAnalysis() {
-        if (!lastAnalysisResult) {
-            alert("저장할 분석 결과가 없습니다.");
-            return;
-        }
-
-        // ⭐ 서버에 보낼 데이터를 새로운 변수에 복사하고 가공
-        const dataToSave = {
-            input_text: messageInput.value.trim(),
-            result: JSON.parse(JSON.stringify(lastAnalysisResult)), // 객체 복사
-        };
-        
-        // ⭐ 서버가 기대하는 형식(문자열)으로 변경
-        if (dataToSave.result && dataToSave.result.surface_meaning) {
-            dataToSave.result.surface_meaning = dataToSave.result.surface_meaning.one_line;
-        }
-        if (dataToSave.result && dataToSave.result.hidden_meaning) {
-            dataToSave.result.hidden_meaning = dataToSave.result.hidden_meaning.one_line;
-        }
-        
-        if (uploadedImageFile) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                dataToSave.input_image_base64 = reader.result.split(',')[1];
-                sendToServerForSaving(dataToSave);
-=======
             const dataToSend = {
                 text: message.length > 0 ? message : null,
                 imageBase64: null
->>>>>>> branch 'main' of https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK.git
             };
 
             if (file) {
