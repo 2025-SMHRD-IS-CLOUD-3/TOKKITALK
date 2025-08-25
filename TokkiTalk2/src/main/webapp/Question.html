@@ -401,6 +401,47 @@
         .nav-item:hover {
             color: #ff6b6b;
         }
+
+        /* ----- 분석 결과 디자인 개선 ----- */
+        .analysis-result p,
+        .analysis-result ul {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .analysis-result strong {
+            color: #495057;
+        }
+        
+        .analysis-result ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 5px;
+        }
+        
+        .analysis-result li {
+            background-color: #e6e8eb;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .analysis-result li:hover {
+            background-color: #d1d3d6;
+        }
+        
+        .analysis-result li strong {
+            display: block;
+            color: #000;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .analysis-result p strong:nth-child(1) {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -569,24 +610,24 @@
 
     // 이미지 첨부 로직
     imageUpload.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        uploadedImageFile = file;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            imagePreview.innerHTML = `<img src="${e.target.result}" alt="업로드 이미지">`;
-            imagePreview.style.display = 'flex';
-        };
-        reader.readAsDataURL(file);
-    } else {
-        uploadedImageFile = null;
-        imagePreview.style.display = 'none';
-        imagePreview.innerHTML = '';
-        messageInput.disabled = false;
-    }
-});
+        const file = event.target.files[0];
+        if (file) {
+            uploadedImageFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.innerHTML = `<img src="${e.target.result}" alt="업로드 이미지">`;
+                imagePreview.style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            uploadedImageFile = null;
+            imagePreview.style.display = 'none';
+            imagePreview.innerHTML = '';
+            messageInput.disabled = false;
+        }
+    });
 
- // analyzeBtn 이벤트 리스너 (강력한 버전)
+    // analyzeBtn 이벤트 리스너 (최종 수정본)
     analyzeBtn.addEventListener('click', async () => {
         const message = messageInput.value.trim();
         const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
@@ -601,18 +642,22 @@
             alert("분석할 텍스트를 입력하거나 이미지를 첨부해주세요.");
             return;
         }
+        
+        // 새로운 분석 시작 시 기존 대화 초기화 (초기 메시지도 비움)
+        resetAnalysis(false);
 
-        const loadingMessage = appendMessage('<div class="loading-dots"><div></div><div></div><div></div></div>', 'bot');
-        messageInput.disabled = true;
-        analyzeBtn.disabled = true;
-
-        // 사용자 메시지 또는 이미지 미리보기 표시
-        if (message.length > 0) {
-            appendMessage(message, 'user');
-        }
+        // 1. 사용자 메시지 또는 이미지 미리보기 먼저 표시
+        
         if (file) {
             appendMessage(`<img src="${URL.createObjectURL(file)}" alt="업로드 이미지" style="max-width: 100%; border-radius: 10px;">`, 'user');
         }
+
+        // 2. 그 다음 로딩 메시지 추가
+        const loadingMessage = appendMessage('<div class="loading-dots"><div></div><div></div><div></div></div>', 'bot');
+        
+        // 버튼 비활성화
+        messageInput.disabled = true;
+        analyzeBtn.disabled = true;
 
         // 이미지를 Base64로 변환하는 Promise
         const getBase64 = (f) => new Promise((resolve, reject) => {
@@ -726,10 +771,19 @@
             return;
         }
 
+        // ⭐ 서버에 보낼 데이터를 새로운 변수에 복사하고 가공
         const dataToSave = {
             input_text: messageInput.value.trim(),
-            result: lastAnalysisResult,
+            result: JSON.parse(JSON.stringify(lastAnalysisResult)), // 객체 복사
         };
+        
+        // ⭐ 서버가 기대하는 형식(문자열)으로 변경
+        if (dataToSave.result && dataToSave.result.surface_meaning) {
+            dataToSave.result.surface_meaning = dataToSave.result.surface_meaning.one_line;
+        }
+        if (dataToSave.result && dataToSave.result.hidden_meaning) {
+            dataToSave.result.hidden_meaning = dataToSave.result.hidden_meaning.one_line;
+        }
         
         if (uploadedImageFile) {
             const reader = new FileReader();
@@ -774,7 +828,7 @@
     }
 
     // 초기화 함수
-    function resetAnalysis() {
+    function resetAnalysis(includeInitialMessage = true) {
         messageInput.value = '';
         messageInput.disabled = false;
         analyzeBtn.disabled = false;
@@ -783,19 +837,23 @@
         imagePreview.innerHTML = '';
         lastAnalysisResult = null;
         
-        chatArea.innerHTML = `
-            <div class="chat-message bot">
-                <div class="message-title">TOKKI</div>
-                <div class="message-content">
-                    안녕하세요! 분석하고 싶은 메시지를 입력해주세요. 🐰<br>
-                    <br>
-                    **예시**<br>
-                    "응... 좀 피곤해" 라고 입력해보세요.<br>
-                    "오늘 저녁에 뭐 먹을까? 🍕" 라고 입력해보세요.<br>
-                    "괜찮아, 신경 쓰지 마" 라고 입력해보세요.
+        if (includeInitialMessage) {
+            chatArea.innerHTML = `
+                <div class="chat-message bot">
+                    <div class="message-title">TOKKI</div>
+                    <div class="message-content">
+                        안녕하세요! 분석하고 싶은 메시지를 입력해주세요. 🐰<br>
+                        <br>
+                        **예시**<br>
+                        "응... 좀 피곤해" 라고 입력해보세요.<br>
+                        "오늘 저녁에 뭐 먹을까? 🍕" 라고 입력해보세요.<br>
+                        "괜찮아, 신경 쓰지 마" 라고 입력해보세요.
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        } else {
+            chatArea.innerHTML = '';
+        }
         
         inputSection.style.display = 'flex';
         imagePreviewContainer.style.display = 'flex';

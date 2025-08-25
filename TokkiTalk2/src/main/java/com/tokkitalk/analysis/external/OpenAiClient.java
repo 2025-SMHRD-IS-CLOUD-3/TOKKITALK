@@ -45,16 +45,31 @@ public class OpenAiClient {
     private static final int MAX_RETRIES = 5; // 재시도 횟수 3 -> 5로 증가
     private static final long INITIAL_DELAY_SECONDS = 5;
 
+ // OpenAiClient.java 파일 내부
     public OpenAiClient() {
         this.http = new OkHttpClient.Builder()
-                .callTimeout(Duration.ofSeconds(60))
-                .readTimeout(Duration.ofSeconds(60))
-                .build();
+            .callTimeout(Duration.ofSeconds(60))
+            .readTimeout(Duration.ofSeconds(60))
+            .build();
+
         String key = System.getenv("OPENAI_API_KEY");
-        if (key == null || key.isEmpty()) {
+        if (key != null && !key.isEmpty()) {
+            System.out.println("[DEBUG] API 키가 환경변수(OPENAI_API_KEY)에서 로드되었습니다.");
+        } else {
             key = System.getProperty("openai.api.key");
+            if (key != null && !key.isEmpty()) {
+                System.out.println("[DEBUG] API 키가 시스템 속성(openai.api.key)에서 로드되었습니다.");
+            } else {
+                System.out.println("[DEBUG] API 키가 설정되지 않았습니다.");
+            }
         }
+        
         this.apiKey = key;
+
+        // 최종 로드된 키 값 확인 (보안을 위해 일부만 출력)
+        if (this.apiKey != null && this.apiKey.length() > 4) {
+            System.out.println("[DEBUG] 최종 로드된 API Key: " + this.apiKey.substring(0, 4) + "...");
+        }
         this.model = System.getProperty("openai.model", "gpt-4o");
     }
 
@@ -75,6 +90,14 @@ public class OpenAiClient {
         final String SYSTEM_PROMPT = "너는 '여자어 번역기'다. 사용자가 보낸 문장이나 이미지에 있는 텍스트를 분석해 "
                 + "남성이 이해하기 쉬운 '직설 번역'과 '상황별 대응'을 제시한다. "
                 + "이미지가 오면 먼저 텍스트를 추출(OCR)하고, 대화의 화자/시간/흐름을 파악해라.\n\n"
+
+                + "이미지 분석 필수 지침:\n"
+                + "1) 대화 시간대를 정확히 파악: 오전/오후/저녁/밤 (11:44, 11:45 등)\n"
+                + "2) 대화 시작자를 명확히 식별: 누가 먼저 연락했는지 (여자: '오빠 일어났어?')\n"
+                + "3) 대화 흐름을 순서대로 분석: 질문→답변→반응→재질문 순서\n"
+                + "4) 시간 간격을 고려: 11:44→11:45→11:45 (1분 간격)\n"
+                + "5) 반언어 신호를 세밀히 분석: '.....' (5개 점)의 의미\n"
+                + "6) 맥락적 상황을 추론: 아침에 남자가 먼저 연락하지 않은 상황\n\n"
 
                 + "분석 원칙:\n"
                 + "1) 발화 맥락을 필수 반영: a) 누가 선톡했는지, b) 직전 연락 공백, c) 시각(아침/밤), d) 대화 흐름(질문→응답 지연→감탄사 등). "
@@ -189,7 +212,12 @@ public class OpenAiClient {
             
             String combinedPrompt = "분석할 텍스트: " + (text != null && !text.isEmpty() ? text : "없음") + "\n";
             if (resizedImageBase64 != null && !resizedImageBase64.isEmpty()) {
-                combinedPrompt += "이미지에 포함된 텍스트를 읽고 함께 분석해줘.";
+                combinedPrompt += "이미지에 포함된 대화를 분석해라:\n";
+                combinedPrompt += "1) 시간대와 대화 시작자를 파악해라\n";
+                combinedPrompt += "2) 대화 흐름을 순서대로 분석해라\n";
+                combinedPrompt += "3) 반언어 신호('.....' 등)를 해석해라\n";
+                combinedPrompt += "4) 맥락적 상황(아침에 남자가 먼저 연락하지 않은 상황)을 고려해라\n";
+                combinedPrompt += "5) 여자의 서운함과 숨은 의도를 정확히 파악해라";
             }
             
             JsonObject textContent = new JsonObject();
