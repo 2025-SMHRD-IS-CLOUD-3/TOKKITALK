@@ -70,7 +70,7 @@ public class OpenAiClient {
         if (this.apiKey != null && this.apiKey.length() > 4) {
             System.out.println("[DEBUG] 최종 로드된 API Key: " + this.apiKey.substring(0, 4) + "...");
         }
-        this.model = System.getProperty("openai.model", "gpt-4o");
+        this.model = System.getProperty("openai.model", "gpt-4o-mini");
     }
 
     public boolean isConfigured() {

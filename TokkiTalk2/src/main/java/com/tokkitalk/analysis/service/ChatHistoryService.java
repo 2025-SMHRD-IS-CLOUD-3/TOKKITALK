@@ -21,12 +21,9 @@ public class ChatHistoryService {
      */
     public void saveMessage(String userId, String role, String message) {
         try {
-            Long userIdLong = Long.parseLong(userId);
-            analysisDAO.saveToChatHistory(userIdLong, role, message);
+            // 🚨 userId를 String 타입 그대로 사용하도록 변경
+            analysisDAO.saveToChatHistory(userId, role, message);
             System.out.println("번역 히스토리 저장 성공 - User: " + userId + ", Role: " + role);
-        } catch (NumberFormatException e) {
-            System.err.println("사용자 ID 변환 오류: " + userId);
-            throw new RuntimeException("유효하지 않은 사용자 ID입니다.", e);
         } catch (Exception e) {
             System.err.println("번역 히스토리 저장 실패: " + e.getMessage());
             throw new RuntimeException("히스토리 저장 중 오류가 발생했습니다.", e);
@@ -40,13 +37,10 @@ public class ChatHistoryService {
      */
     public List<HistoryItem> getUserHistory(String userId) {
         try {
-            Long userIdLong = Long.parseLong(userId);
-            List<HistoryItem> history = analysisDAO.getChatHistory(userIdLong);
+            // 🚨 userId를 String 타입 그대로 사용하도록 변경
+            List<HistoryItem> history = analysisDAO.getChatHistory(userId);
             System.out.println("번역 히스토리 조회 성공 - User: " + userId + ", 개수: " + history.size());
             return history;
-        } catch (NumberFormatException e) {
-            System.err.println("사용자 ID 변환 오류: " + userId);
-            throw new RuntimeException("유효하지 않은 사용자 ID입니다.", e);
         } catch (Exception e) {
             System.err.println("번역 히스토리 조회 실패: " + e.getMessage());
             throw new RuntimeException("히스토리 조회 중 오류가 발생했습니다.", e);

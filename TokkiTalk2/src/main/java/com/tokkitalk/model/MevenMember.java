@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MevenMember {
 	
+	private Long user_no;
 	private String user_id;
 	private String user_pw;
 	private String user_name;

@@ -20,7 +20,7 @@ public class AnalysisService {
 	private final AnalysisDAO analysisDAO = new AnalysisDAO();
 	private final OpenAiClient openAiClient = new OpenAiClient();
 
-	public AnalysisResult analyze(String analysisId, AnalyzeRequest request, String imageBase64, Long userId) {
+	public AnalysisResult analyze(String analysisId, AnalyzeRequest request, String imageBase64, String userId) {
 	    AnalysisResult result = null;
 	    // Try LLM if configured; fallback to heuristic
 	    if (openAiClient.isConfigured()) {

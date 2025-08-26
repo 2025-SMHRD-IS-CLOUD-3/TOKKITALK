@@ -548,7 +548,10 @@
         // 전역 변수로 이미지 파일 저장 및 분석 결과 저장
         let uploadedImageFile = null;
         let lastAnalysisResult = null;
-
+     // 히스토리 저장용 전역 변수
+        let lastInputText = "";
+        let lastInputImage = null;  // base64 형식
+        
         // 로그인 상태에 따라 헤더 UI를 업데이트하는 함수
         function updateHeaderUI() {
             const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
@@ -640,7 +643,25 @@
             const message = messageInput.value.trim();
             const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
             const file = imageUpload.files[0];
+            
+            lastInputText = message || "";
+            lastInputImage = null;
 
+            if (file) {
+                const getBase64 = (f) => new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(f);
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = (error) => reject(error);
+                });
+
+                try {
+                    lastInputImage = await getBase64(file);
+                } catch (error) {
+                    console.error('이미지 변환 실패', error);
+                }
+            }
+            
             if (!isLoggedIn) {
                 alert('로그인이 필요한 서비스입니다.');
                 return;
@@ -751,32 +772,31 @@
             }
         }
 
-        // 히스토리 저장 함수
+     // 히스토리 저장 함수
         async function saveAnalysis() {
+            console.log("[클릭] 저장 버튼 클릭됨");
+
             if (!lastAnalysisResult) {
                 alert("저장할 분석 결과가 없습니다.");
                 return;
             }
 
+            if (!lastInputText && !lastInputImage) {
+                alert("텍스트나 이미지를 입력하세요!");
+                return;  // 🚨 아예 서버로 보내지 않음
+            }
+
             const dataToSave = {
-                input_text: messageInput.value.trim(),
+                input_text: lastInputText || null,
+                input_image_base64: lastInputImage || null,
                 result: lastAnalysisResult,
             };
 
-            if (uploadedImageFile) {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    dataToSave.input_image_base64 = reader.result.split(',')[1];
-                    sendToServerForSaving(dataToSave);
-                };
-                reader.readAsDataURL(uploadedImageFile);
-            } else {
-                dataToSave.input_image_base64 = null;
-                sendToServerForSaving(dataToSave);
-            }
+            sendToServerForSaving(dataToSave);
         }
 
         async function sendToServerForSaving(data) {
+            console.log("[전송] 서버에 저장 요청 시작", data);
             try {
                 const url = getApiBase() + '/saveHistory';
                 console.log('저장 요청 데이터:', data);
@@ -786,17 +806,16 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
-
-                console.log('저장 응답 상태:', res.status);
+                console.log("[응답] 저장 API 응답 상태:", res.status);
+                console.log("[응답] 응답 객체:", res);
 
                 if (res.ok) {
                     const result = await res.json();
-                    console.log('저장 성공:', result);
+                    console.log("[성공] 저장 완료:", result);
                     alert('분석 결과가 히스토리에 저장되었습니다.');
                 } else {
                     const errorText = await res.text();
-                    console.error('Save API Error:', res.status, res.statusText, errorText);
-                    console.error('전체 응답:', res);
+                    console.error('Save API Error:', res.status, res.statusText, errorText, res);
                     alert('저장 중 오류가 발생했습니다.\n상태: ' + res.status + '\n오류: ' + errorText);
                 }
             } catch (e) {
