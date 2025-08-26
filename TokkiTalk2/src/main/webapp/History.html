@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>히스토리 - TOKKI TALK</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
@@ -19,328 +15,67 @@
         }
 
         /* 헤더 */
-        .header {
-            background: white;
-            padding: 20px 0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
+        .header { background: white; padding: 20px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
         }
+        .logo { font-size: 28px; font-weight: bold; color: #FFD200; letter-spacing: 2px; cursor: pointer; transition: color 0.3s; }
+        .logo a{ text-decoration: none; color: inherit; }
+        .logo:hover { color: #ff6b6b; }
+        .nav-menu { display: flex; gap: 40px; }
+        .nav-item { color: #666; text-decoration: none; font-size: 16px; font-weight: 500; transition: color 0.3s; }
+        .nav-item:hover { color: #ff6b6b; }
+        .nav-buttons { display: flex; gap: 15px; }
+        .btn-login, .btn-logout, .btn-signup { 
+            border: none; padding: 12px 24px; border-radius: 25px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.3s; 
+        }
+        .btn-login { background: #f1f3f4; color: black; }
+        .btn-login:hover { background: #ff6b6b; color: white; }
+        .btn-signup { background: #FFD200; color: black; }
+        .btn-signup:hover { background: #ff5252; }
+        .btn-logout { background: #f1f3f4; color: black; }
+        .btn-logout:hover { background: #ff6b6b; color: white; }
+        .user-info { display: none; align-items: center; gap: 15px; }
+        .welcome-text { font-size: 16px; color: #333; font-weight: 500; }
 
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #FFD200;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .logo a{
-            text-decoration: none; color: inherit;
-        }
-        .logo:hover {
-            color: #ff6b6b;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 40px;
-        }
-
-        .nav-item {
-            color: #666;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-item:hover {
-            color: #ff6b6b;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .btn-login {
-            background: #f1f3f4;
-            color: black;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .btn-login:hover {
-            background: #ff6b6b;
-        }
-
-        .btn-signup {
-            background: #FFD200;
-            color: black;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .btn-signup:hover {
-            background: #ff5252;
-        }
-
-        .user-info {
-            display: none;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .welcome-text {
-            font-size: 16px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .btn-logout {
-            background: #f1f3f4;
-            color: black;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .btn-logout:hover {
-            background: #ff6b6b;
-            color: white;
-        }
-        
         /* 마이페이지/히스토리 컨테이너 */
-        .mypage-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 30px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-        .mypage-heading {
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .page-subtitle {
-            text-align: center;
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        .history-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 50px 0;
-            color: #666;
-            font-size: 18px;
-        }
-        
-        .loading-dots {
-            width: 60px;
-            height: 30px;
-            margin: 0 auto 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-        }
-
-        .loading-dots div {
-            width: 10px;
-            height: 10px;
-            background-color: #FFD200;
-            border-radius: 50%;
-            animation: bounce 1s infinite ease-in-out;
-        }
+        .mypage-container { max-width: 900px; margin: 40px auto; padding: 30px; background: white; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .mypage-heading { text-align: center; font-size: 28px; font-weight: bold; color: #333; margin-bottom: 10px; }
+        .page-subtitle { text-align: center; font-size: 16px; color: #666; margin-bottom: 30px; }
+        .history-container { display: flex; flex-direction: column; gap: 20px; }
+        .loading { text-align: center; padding: 50px 0; color: #666; font-size: 18px; }
+        .loading-dots { width: 60px; height: 30px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-around; }
+        .loading-dots div { width: 10px; height: 10px; background-color: #FFD200; border-radius: 50%; animation: bounce 1s infinite ease-in-out; }
         .loading-dots div:nth-child(2) { animation-delay: -0.16s; }
         .loading-dots div:nth-child(3) { animation-delay: -0.32s; }
-        
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1.0); }
-        }
-
-        .no-history {
-            text-align: center;
-            padding: 50px 20px;
-            display: none;
-        }
-        
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .empty-icon {
-            font-size: 48px;
-            color: #adb5bd;
-        }
-        
-        .empty-state h3 {
-            font-size: 22px;
-            font-weight: bold;
-            color: #495057;
-        }
-        
-        .empty-state p {
-            font-size: 15px;
-            color: #868e96;
-            margin-bottom: 10px;
-        }
-
-        .btn-primary {
-            background: #FFD200;
-            color: black;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-        }
-        
-        .btn-primary:hover {
-            background: #ffc800;
-            transform: translateY(-2px);
-        }
+        @keyframes bounce { 0%,80%,100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+        .no-history { text-align: center; padding: 50px 20px; display: none; }
+        .empty-state { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .empty-icon { font-size: 48px; color: #adb5bd; }
+        .empty-state h3 { font-size: 22px; font-weight: bold; color: #495057; }
+        .empty-state p { font-size: 15px; color: #868e96; margin-bottom: 10px; }
+        .btn-primary { background: #FFD200; color: black; border: none; padding: 12px 24px; border-radius: 25px; font-size: 16px; font-weight: 500; cursor: pointer; transition: background 0.3s, transform 0.2s; }
+        .btn-primary:hover { background: #ffc800; transform: translateY(-2px); }
 
         /* 히스토리 아이템 */
-        .conversation-item {
-            border: 1px solid #e9ecef;
-            border-radius: 15px;
-            overflow: hidden;
-            background: #fdfdfd;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-        }
+        .conversation-item { border: 1px solid #e9ecef; border-radius: 15px; overflow: hidden; background: #fdfdfd; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: all 0.3s; }
+        .conversation-item:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .conversation-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #f1f3f4; cursor: pointer; }
+        .conversation-info { display: flex; align-items: center; gap: 10px; color: #495057; font-size: 15px; }
+        .conversation-date, .conversation-time { font-weight: 600; }
+        .btn-toggle { background: none; border: none; font-size: 20px; cursor: pointer; color: #868e96; transition: transform 0.3s; }
+        .conversation-content { padding: 20px; display: none; flex-direction: column; gap: 15px; border-top: 1px solid #e9ecef; }
+        .message-item { padding: 12px; border-radius: 12px; line-height: 1.5; }
+        .message-item.user { background-color: #fff9e6; align-self: flex-end; }
+        .message-item.TOKKITALK { background-color: #e6e8eb; align-self: flex-start; }
+        .message-header { font-weight: bold; color: #FFD200; margin-bottom: 5px; }
+        .message-role { font-size: 14px; }
+        .message-content pre { white-space: pre-wrap; word-wrap: break-word; font-family: inherit; font-size: 15px; margin: 0; color: #333; }
 
-        .conversation-item:hover {
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .conversation-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: #f1f3f4;
-            cursor: pointer; /* 헤더 전체를 클릭 가능하도록 설정 */
-        }
-
-        .conversation-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #495057;
-            font-size: 15px;
-        }
-
-        .conversation-date, .conversation-time {
-            font-weight: 600;
-        }
-        
-        .btn-toggle {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: #868e96;
-            transition: transform 0.3s;
-        }
-
-        .conversation-content {
-            padding: 20px;
-            display: none; /* 초기 상태를 none으로 설정 */
-            flex-direction: column;
-            gap: 15px;
-            border-top: 1px solid #e9ecef;
-        }
-
-        .message-item {
-            padding: 12px;
-            border-radius: 12px;
-            line-height: 1.5;
-        }
-        
-        .message-item.user {
-            background-color: #fff9e6;
-            align-self: flex-end;
-        }
-        
-        .message-item.TOKKITALK {
-            background-color: #e6e8eb;
-            align-self: flex-start;
-        }
-        
-        .message-header {
-            font-weight: bold;
-            color: #FFD200;
-            margin-bottom: 5px;
-        }
-        
-        .message-role {
-            font-size: 14px;
-        }
-        
-        .message-content pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            font-family: inherit;
-            font-size: 15px;
-            margin: 0;
-            color: #333;
-        }
-        
         /* 푸터 */
-        .footer {
-            background: #343a40;
-            padding: 20px 0;
-            color: #f8f9fa;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .footer-text {
-            font-size: 14px;
-            color: #adb5bd;
-        }
+        .footer { background: #343a40; padding: 20px 0; color: #f8f9fa; text-align: center; margin-top: 50px; }
+        .footer-text { font-size: 14px; color: #adb5bd; }
     </style>
 </head>
 <body>
@@ -379,14 +114,12 @@
             </div>
         </div>
 
-        <div class="no-history" id="noHistory" style="display: none;">
+        <div class="no-history" id="noHistory">
             <div class="empty-state">
                 <div class="empty-icon">📝</div>
                 <h3>아직 저장된 히스토리가 없어요</h3>
                 <p>분석 페이지에서 메시지를 분석하고 저장해보세요!</p>
-                <button class="btn-primary" onclick="window.location.href='Question.html'">
-                    분석하러 가기
-                </button>
+                <button class="btn-primary" onclick="window.location.href='Question.html'">분석하러 가기</button>
             </div>
         </div>
     </main>
@@ -398,7 +131,6 @@
     </footer>
 
     <script>
-        // DOM 요소 가져오기
         const authButtons = document.getElementById('auth-buttons');
         const userInfoArea = document.getElementById('user-info-area');
         const headerUserName = document.getElementById('headerUserName');
@@ -406,12 +138,11 @@
         const historyContainer = document.getElementById('historyContainer');
         const loading = document.getElementById('loading');
         const noHistory = document.getElementById('noHistory');
-    
-        // 로그인 상태에 따라 헤더 UI를 업데이트하는 함수
+
         function updateHeaderUI() {
             const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
             const userName = sessionStorage.getItem('userName');
-    
+
             if (isLoggedIn && userName) {
                 authButtons.style.display = 'none';
                 userInfoArea.style.display = 'flex';
@@ -421,126 +152,70 @@
                 userInfoArea.style.display = 'none';
             }
         }
-    
-        // API 베이스 계산
+
         function getApiBase() {
-            const segs = window.location.pathname.split('/').filter(s => s.length > 0);
-            if (segs.length > 0 && segs[0].indexOf('.') === -1) {
-                return window.location.origin + '/' + segs[0];
-            }
             const host = window.location.hostname;
-            if (host === '127.0.0.1' || host === 'localhost') {
-                return 'http://localhost:8081/TokkiTalk2';
-            }
+            if (host === '127.0.0.1' || host === 'localhost') return 'http://localhost:8081/TokkiTalk2';
             return window.location.origin;
         }
-    
-        // 히스토리 로드 함수
+
         async function loadHistory() {
             try {
-                const url = getApiBase() + '/getHistory';
-                console.log('히스토리 요청 URL:', url);
-                const res = await fetch(url);
-                
-                if (res.ok) {
-                    const historyItems = await res.json();
-                    console.log('받은 히스토리 데이터:', historyItems);
-                    displayHistory(historyItems);
-                } else {
-                    console.error('히스토리 로드 실패:', res.status);
-                    showError('히스토리를 불러오는데 실패했습니다.');
-                }
+                const res = await fetch(getApiBase() + '/getHistory');
+                if (!res.ok) throw new Error('서버 응답 실패: ' + res.status);
+                const historyItems = await res.json();
+                displayHistory(historyItems);
             } catch (e) {
                 console.error('히스토리 로드 오류:', e);
                 showError('히스토리를 불러오는데 실패했습니다.');
             }
         }
-    
-        // 히스토리 표시 함수
+
         function displayHistory(historyItems) {
             loading.style.display = 'none';
-            
-            if (historyItems.length === 0) {
+            if (!historyItems || historyItems.length === 0) {
                 noHistory.style.display = 'block';
                 return;
             }
-    
-            // 대화별로 그룹화
+
             const conversations = groupByConversation(historyItems);
-            
-            conversations.forEach((conversation, index) => {
+            conversations.forEach(conversation => {
                 const conversationDiv = document.createElement('div');
                 conversationDiv.className = 'conversation-item';
-                
-                const date = conversation.date;
-                const time = conversation.time;
-                
-                // HTML 문자열에 초기 상태를 설정
                 conversationDiv.innerHTML = `
                     <div class="conversation-header" onclick="toggleConversation(this)">
                         <div class="conversation-info">
-                            <span class="conversation-date">${date}</span>
-                            <span class="conversation-time">${time}</span>
+                            <span class="conversation-date">${conversation.date}</span>
+                            <span class="conversation-time">${conversation.time}</span>
                         </div>
-                        <button class="btn-toggle">
-                            <span class="toggle-icon">▶</span>
-                        </button>
+                        <button class="btn-toggle"><span class="toggle-icon">▶</span></button>
                     </div>
                     <div class="conversation-content">
-                        ${conversation.messages
-                            .slice()
-                            .reverse()
-                            .map(msg => `
+                        ${conversation.messages.slice().reverse().map(msg => `
                             <div class="message-item ${msg.role === 'user' ? 'user' : 'TOKKITALK'}">
-                                <div class="message-header">
-                                    <span class="message-role">${msg.role === 'user' ? '사용자' : 'TOKKITALK'}</span>
-                                </div>
-                                <div class="message-content">
-                                    <pre>${msg.content}</pre>
-                                </div>
+                                <div class="message-header"><span class="message-role">${msg.role === 'user' ? '사용자' : 'TOKKITALK'}</span></div>
+                                <div class="message-content"><pre>${msg.content}</pre></div>
                             </div>
                         `).join('')}
                     </div>
                 `;
-                
                 historyContainer.appendChild(conversationDiv);
             });
         }
-    
-        // 대화별로 그룹화
+
         function groupByConversation(historyItems) {
             const conversations = {};
-            
             historyItems.forEach(item => {
-                // 날짜와 시간으로 그룹화
                 const timestamp = item.date + '_' + item.time;
-    
-                if (!conversations[timestamp]) {
-                    conversations[timestamp] = {
-                        date: item.date,
-                        time: item.time,
-                        messages: []
-                    };
-                }
-                
-                conversations[timestamp].messages.push({
-                    id: item.id,
-                    role: item.role,
-                    content: item.content
-                });
+                if (!conversations[timestamp]) conversations[timestamp] = { date: item.date, time: item.time, messages: [] };
+                conversations[timestamp].messages.push({ id: item.id, role: item.role, content: item.role === 'user' ? item.input_text : item.content });
             });
-            
-            // 최신 순 정렬
-            return Object.values(conversations).sort((a,b) => {
-                return new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time);
-            });
+            return Object.values(conversations).sort((a,b) => new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time));
         }
-    
-        // 대화 토글 함수
+
         function toggleConversation(header) {
             const content = header.nextElementSibling;
             const icon = header.querySelector('.toggle-icon');
-            
             if (content.style.display === 'none' || content.style.display === '') {
                 content.style.display = 'flex';
                 icon.textContent = '▼';
@@ -549,33 +224,28 @@
                 icon.textContent = '▶';
             }
         }
-    
-        // 오류 표시 함수
+
         function showError(message) {
             loading.style.display = 'none';
             historyContainer.innerHTML = `
-                <div class="error-message">
-                    <div class="error-icon">⚠️</div>
+                <div class="error-message" style="text-align:center;padding:50px;">
+                    <div style="font-size:48px;">⚠️</div>
                     <h3>오류가 발생했습니다</h3>
                     <p>${message}</p>
                     <button class="btn-primary" onclick="location.reload()">다시 시도</button>
                 </div>
             `;
         }
-    
-        // 페이지 로드 시 실행
+
         document.addEventListener('DOMContentLoaded', () => {
             updateHeaderUI();
             loadHistory();
-    
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    sessionStorage.removeItem('loggedIn');
-                    sessionStorage.removeItem('userName');
-                    alert('로그아웃되었습니다.');
-                    window.location.href = 'main.html';
-                });
-            }
+            if (logoutBtn) logoutBtn.addEventListener('click', () => {
+                sessionStorage.removeItem('loggedIn');
+                sessionStorage.removeItem('userName');
+                alert('로그아웃되었습니다.');
+                window.location.href = 'main.html';
+            });
         });
     </script>
 </body>
