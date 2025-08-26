@@ -206,9 +206,20 @@
         function groupByConversation(historyItems) {
             const conversations = {};
             historyItems.forEach(item => {
-                const timestamp = item.date + '_' + item.time;
-                if (!conversations[timestamp]) conversations[timestamp] = { date: item.date, time: item.time, messages: [] };
-                conversations[timestamp].messages.push({ id: item.id, role: item.role, content: item.role === 'user' ? item.input_text : item.content });
+                const [date, time] = item.created_at.split(' '); // created_at에서 날짜/시간 분리
+                const timestamp = date + '_' + time;
+
+                if (!conversations[timestamp]) {
+                    conversations[timestamp] = { date, time, messages: [] };
+                }
+
+                conversations[timestamp].messages.push({
+                    id: item.chat_id,
+                    role: item.role,
+                    content: item.message_text,   // 실제 텍스트
+                    imageBase64: item.image_base64 || null,
+                    imageUrl: item.image_url || null
+                });
             });
             return Object.values(conversations).sort((a,b) => new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time));
         }
@@ -246,6 +257,44 @@
                 alert('로그아웃되었습니다.');
                 window.location.href = 'main.html';
             });
+        });
+        function formatTokkiTalk(raw) {
+            let data;
+            try {
+                data = JSON.parse(raw);  // JSON 문자열이면 객체로 변환
+            } catch (e) {
+                return raw; // JSON 아니면 그냥 그대로 출력
+            }
+
+            // HTML 포맷 변환
+            let adviceHtml = data.advice.map(a => `
+                <div class="advice-item">
+                    <strong>${a.style}:</strong> 
+                    <span>${a.text}</span>
+                </div>
+            `).join("");
+
+            return `
+                <div class="tokkitalk-box">
+                    <h4 style="color:#FFD200; font-weight:bold;">TOKKITALK</h4>
+                    <p><strong>📝 표면적 의미:</strong><br>${data.surface_meaning.one_line}</p>
+                    <p><strong>🔍 숨은 의도:</strong><br>${data.hidden_meaning.one_line}</p>
+                    <p><strong>😊 감정 상태:</strong><br>${data.emotion.label}</p>
+                    <div class="advice-box">
+                        <div class="advice-header">
+                            <span class="icon">💡</span>
+                            <strong class="advice-title">TOKKI의 제안들</strong>
+                        </div>
+                        ${adviceHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 📌 히스토리 렌더링할 때 message-content 에 적용
+        document.querySelectorAll(".message-content pre").forEach(pre => {
+            const formatted = formatTokkiTalk(pre.innerText.trim());
+            pre.outerHTML = `<div class="message-body">${formatted}</div>`;
         });
     </script>
 </body>

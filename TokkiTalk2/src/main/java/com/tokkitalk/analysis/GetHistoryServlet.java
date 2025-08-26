@@ -70,22 +70,23 @@ public class GetHistoryServlet extends HttpServlet {
     private String convertToJson(List<HistoryItem> items) {
         StringBuilder json = new StringBuilder();
         json.append("[");
-        
+
         for (int i = 0; i < items.size(); i++) {
             HistoryItem item = items.get(i);
             json.append("{");
-            json.append("\"id\":\"").append(escapeJson(item.getId() != null ? item.getId().toString() : "")).append("\",");
-            json.append("\"date\":\"").append(escapeJson(item.getDate())).append("\",");
-            json.append("\"time\":\"").append(escapeJson(item.getTime())).append("\",");
+            json.append("\"chat_id\":\"").append(escapeJson(item.getId() != null ? item.getId().toString() : "")).append("\",");
             json.append("\"role\":\"").append(escapeJson(item.getRole())).append("\",");
-            json.append("\"content\":\"").append(escapeJson(item.getContent())).append("\"");
+            json.append("\"message_text\":\"").append(escapeJson(item.getContent())).append("\",");
+            json.append("\"created_at\":\"").append(escapeJson(item.getCreatedAt())).append("\",");
+            json.append("\"image_base64\":null,");
+            json.append("\"image_url\":null");
             json.append("}");
             
             if (i < items.size() - 1) {
                 json.append(",");
             }
         }
-        
+
         json.append("]");
         return json.toString();
     }

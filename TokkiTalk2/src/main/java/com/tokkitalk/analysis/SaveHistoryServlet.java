@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.tokkitalk.analysis.store.AnalysisDAO;
-import com.tokkitalk.analysis.store.AnalysisRecord;
 import com.tokkitalk.model.MevenMember;
 
 @WebServlet("/saveHistory")
@@ -42,56 +41,54 @@ public class SaveHistoryServlet extends HttpServlet {
             String userIdStr = member.getUser_id();
             System.out.println("DEBUG: userId (String) = " + userIdStr);
             
-            // JSON 요청을 SaveHistoryRequest 객체로 파싱
             SaveHistoryRequest saveRequest = gson.fromJson(request.getReader(), SaveHistoryRequest.class);
             
-            // 🚨 수정된 유효성 검사 로직
-            String inputText = saveRequest.input_text;
-            String inputImageBase64 = saveRequest.input_image_base64; // data 대신 saveRequest 객체 사용
-
-            // 텍스트와 이미지 둘 다 null이거나 비어있는 경우에 에러 반환
-            if (inputText == null || inputText.trim().isEmpty()) {
-                inputText = "[내용 없음]";
-            }
-            if (inputImageBase64 == null || inputImageBase64.trim().isEmpty()) {
-                inputImageBase64 = null; // 이미지 없으면 null로 두기
-            }
-
-         // AnalysisRecord 객체에 데이터 설정
-            AnalysisRecord record = new AnalysisRecord();
-            record.setUserId(userIdStr);
-            record.setText(inputText); // null일 경우 "[내용 없음]" 들어감
-
-            System.out.println("[DEBUG] record.getText(): " + record.getText());
-
-            if (inputImageBase64 != null) {
-                record.setInputType("IMAGE");
-                String pureBase64 = inputImageBase64.substring(inputImageBase64.indexOf(",") + 1);
-                record.setImageBase64(pureBase64);
+            // 어시스턴트 메시지를 빌드하는 로직 (이전 코드를 기반으로 재구성)
+            StringBuilder messageBuilder = new StringBuilder();
+            messageBuilder.append("=== 분석 결과 ===\n");
+            
+            if (saveRequest.result != null) {
+                if (saveRequest.result.surface_meaning != null) {
+                    messageBuilder.append("📝 표면적 의미:\n");
+                    messageBuilder.append(saveRequest.result.surface_meaning.one_line).append("\n\n");
+                }
+                if (saveRequest.result.hidden_meaning != null) {
+                    messageBuilder.append("🔍 숨은 의도:\n");
+                    messageBuilder.append(saveRequest.result.hidden_meaning.one_line).append("\n\n");
+                }
+                if (saveRequest.result.emotion != null) {
+                    messageBuilder.append("😊 감정 상태:\n");
+                    messageBuilder.append(saveRequest.result.emotion.label).append("\n\n");
+                }
+                if (saveRequest.result.advice != null && !saveRequest.result.advice.isEmpty()) {
+                    messageBuilder.append("💡 제안:\n");
+                    for (AdviceData advice : saveRequest.result.advice) {
+                        messageBuilder.append("- ").append(advice.style).append(": ").append(advice.text).append("\n");
+                    }
+                }
             } else {
-                record.setInputType("TEXT");
-                record.setImageUrl(null);
+                 messageBuilder.append("분석 결과가 없습니다.\n");
             }
             
-            String analysisResultJson = gson.toJson(saveRequest.result);
-            record.setAnalysisResult(analysisResultJson);
+            String userMessage = (saveRequest.input_text != null && !saveRequest.input_text.trim().isEmpty()) ? saveRequest.input_text.trim() : "[내용 없음]";
+            String assistantMessage = messageBuilder.toString().trim();
             
-            System.out.println("=== DB에 저장될 AnalysisRecord 객체 정보 ===");
-            System.out.println(record.toString());
-            
-            boolean success = analysisDAO.insertAnalysis(record);
-            
-            if (success) {
+            // DB 저장 로직: 사용자 메시지와 어시스턴트 메시지를 별도로 저장
+            try {
+                // 사용자 메시지 저장
+                analysisDAO.saveToChatHistory(userIdStr, "user", userMessage);
+                
+                // 어시스턴트 메시지 저장
+                analysisDAO.saveToChatHistory(userIdStr, "assistant", assistantMessage);
+                
                 System.out.println("DB 저장 성공!");
-                
-                // 🚨 CHAT_HISTORY에 저장하는 로직
-                analysisDAO.saveToChatHistory(userIdStr, "user", record.getText());
-                
                 out.println("{\"success\": true, \"message\": \"분석 결과가 히스토리에 저장되었습니다.\"}");
-            } else {
-                throw new Exception("DAO에서 DB 저장 실패를 반환했습니다.");
+            } catch (Exception dbError) {
+                System.out.println("❌ DB 저장 실패: " + dbError.getMessage());
+                dbError.printStackTrace();
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                out.println("{\"error\": \"저장 중 오류가 발생했습니다: " + dbError.getMessage() + "\"}");
             }
-            
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("[서버] 예외 발생: " + e.getMessage());
@@ -101,30 +98,30 @@ public class SaveHistoryServlet extends HttpServlet {
         }
     }
     
-    // SaveHistoryRequest, AnalysisResultData 등 내부 클래스들은 변경 없음
+    // 내부 클래스들은 그대로 유지
     public static class SaveHistoryRequest {
         public String input_text;
         public AnalysisResultData result;
         public String input_image_base64;
     }
-
+    
     public static class AnalysisResultData {
         public SubResultData surface_meaning;
         public SubResultData hidden_meaning;
         public EmotionData emotion;
         public List<AdviceData> advice;
     }
-
+    
     public static class SubResultData {
         public String one_line;
         public String detailed;
     }
-
+    
     public static class EmotionData {
         public String label;
         public double valence;
     }
-
+    
     public static class AdviceData {
         public String style;
         public String text;
