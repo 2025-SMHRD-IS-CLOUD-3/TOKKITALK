@@ -139,8 +139,43 @@
 프로젝트 진행하는 동안 발생했던 이슈 중 가장 기억에 남았던 문제와 해결 프로세스 나열(2~5가지 정도)
   
 * 문제1<br>
- 문제점 설명 및 해결방안
+    사용자가 이미지 파일을 첨부했을 때, 이미지 데이터가 서버로 제대로 전송되지않음.<br>
+	서버는 이미지 데이터가 비어 있는 상태로 인식하여 OCR 분석을 실패
+
+      클래스 :  question.html 내 <script> 태그
+
+      원인   :  JavaScript의 FileReader를 사용하여 이미지를 Base64 문자열로 변환하는 작업은 비동기
+      	        (asynchronous)적으로 실행
+    	        기존 코드는 FileReader의 변환 작업이 완료되기를 기다리지 않고, 변환이 끝나기 전에 
+      	        바로 서버로 분석 요청을 보냈습니다. 이 때문에 Base64 데이터가 담기지 않은 채로 
+      	        요청이 전송되는 문제가 발생했습니다.
+
+      해결   :  Promise와 async/await을 사용하여 비동기 파일 변환 작업이 완료된 후 데이터를 전송
+          	    하도록 코드를 수정.
+
+      결과   :  이미지 파일이 완전히 Base64로 변환된 후에야 서버에 요청이 전송되게 되었습니다. 
+                이로 인해 이미지 데이터 손실 없이 안정적으로 OCR 분석을 수행할 수 있게 되어 
+          	    기능이 정상적으로 작동하게 되었습니다.
  
+
+
 * 문제2<br>
- 문제점 설명 및 해결방안
+    DB 저장 문제 : 타입 불일치 및 메시지 누락<br>
+    작업 내용    : 히스토리 저장 기능에서 user의 메시지는 정상 저장되지만, assistant 상담 결과가 올바르게 저장되지 않는 문제가 발생.<br>
+                  chat_history 테이블에서 assistant 레코드가 생성되긴 했으나, 실제 상담 결과가 아닌 다른 형태의 잘못된 값이 저장됨.<br>
+                  analysis 테이블의 USER_ID는 NUMBER, chat_history 테이블의 USER_ID는 <br>
+                  VARCHAR2 → 타입 불일치로 저장 과정에서 충돌 발생.
+
+       클래스 :  SaveHistoryServlet, AnalysisMapper.xml
+
+       원인   :  assistantMessage 문자열이 DB 저장 전에 올바르게 생성되지 않아 누락됨.
+                 AnalysisDAO.saveToChatHistory 호출 시 파라미터 매핑이 일부 누락되어 잘못된 값이 저장됨.
+  
+       해결   :  analysis와 chat_history 테이블의 USER_ID 타입을 VARCHAR2로 통일.
+                 assistantMessage 값이 null/빈 문자열일 때 기본 메시지를 설정하도록 보정.
+                 AnalysisDAO.saveToChatHistory 호출 시 파라미터 매핑을 보완하여 정상전달 되도록 수정.
+
+       결과   :  assistant 메시지가 실제 분석 결과 문자열로 정상 저장됨.
+                 user와 assistant의 대화 모두 chat_history에 기록되어 히스토리 기능이 정상 동작.
+                 USER_ID 타입 불일치 문제도 해결되어 저장 오류가 발생하지 않음.
 
