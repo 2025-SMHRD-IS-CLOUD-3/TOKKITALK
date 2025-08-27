@@ -53,7 +53,7 @@
     <tr>
         <td>서버환경</td>
         <td>
-            <img src="https://img.shields.io/badge/Apache Tomcat 9.0-D22128?style=for-the-badge&logo=Apache Tomcat&logoColor=white"/>
+            <img width="auto" height="30" alt="Image" src="https://github.com/user-attachments/assets/e70c4506-cf39-444d-ab9a-2fe991d47235" />
         </td>
     </tr>
     <tr>
@@ -80,7 +80,7 @@
 <br>
 
 ## 📌 SW유스케이스
-<img width="681" height="494" alt="Image" src="https://github.com/user-attachments/assets/3fdf7b06-3f99-4049-bd4c-678c48284a36" />
+<img width="704" height="710" alt="Image" src="https://github.com/user-attachments/assets/644506a5-6b4b-4d26-8a61-ddb9dedb8f2a" />
 <br>
 
 ## 📌 서비스 흐름도
@@ -88,7 +88,7 @@
 <br>
 
 ## 📌 ER다이어그램
-<img width="641" height="373" alt="Image" src="https://github.com/user-attachments/assets/e82c321b-665a-4730-a3b4-93b878aade6b" />
+<img width="930" height="735" alt="Image" src="https://github.com/user-attachments/assets/fa9bab75-028f-4e8e-a4d4-848206518aca" />
 <br>
 
 ## 🖥 화면 구성
@@ -122,6 +122,7 @@
     <td align="center"><b>Team Master</b></td>
     <td align="center"><b>Team Member</b></td>
   </tr>
+	<br>
   <tr>
     <td align="center"><a href="https://github.com/자신의username작성해주세요" target='_blank'>github</a></td>
     <td align="center"><a href="https://github.com/자신의username작성해주세요" target='_blank'>github</a></td>
