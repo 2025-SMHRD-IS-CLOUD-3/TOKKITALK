@@ -443,6 +443,7 @@ body {
 	display: flex;
 	align-items: center;
 	gap: 8px;
+	cursor: pointer; /* 클릭 영역 개선 */
 }
 
 .gender-radio {
@@ -564,21 +565,17 @@ body {
 		<div class="nav-container">
 			<div class="logo" onclick="goHome()">TOKKI TALK</div>
 			<nav class="nav-menu">
-				<a href="intro.html" class="nav-item">소개</a> <a href="Question.html"
-					class="nav-item"
-					onclick="checkLoginAndRedirect(event, 'Question.html')">대화하기</a> <a
-					href="SenseTest.html" class="nav-item"
-					onclick="checkLoginAndRedirect(event, 'SenseTest.html')">센스고사</a> <a
-					href="MyPage.html" class="nav-item"
-					onclick="checkLoginAndRedirect(event, 'MyPage.html')">마이페이지</a>
+				<a href="intro.html" class="nav-item">소개</a>
+				<a href="Question.html" class="nav-item" onclick="checkLoginAndRedirect(event, 'Question.html')">대화하기</a>
+				<a href="SenseTest.html" class="nav-item" onclick="checkLoginAndRedirect(event, 'SenseTest.html')">센스고사</a>
+				<a href="MyPage.html" class="nav-item" onclick="checkLoginAndRedirect(event, 'MyPage.html')">마이페이지</a>
 			</nav>
 			<div class="nav-buttons" id="auth-buttons">
 				<button class="btn-login" onclick="openLoginModal()">로그인</button>
 				<button class="btn-signup" onclick="openSignupModal()">회원가입</button>
 			</div>
 			<div class="user-info" id="user-info-area">
-				<span class="welcome-text"><span id="inputId">사용자</span>님
-					환영합니다!</span>
+				<span class="welcome-text"><span id="inputId">사용자</span>님 환영합니다!</span>
 				<button class="btn-logout" id="logoutBtn">로그아웃</button>
 			</div>
 		</div>
@@ -587,27 +584,21 @@ body {
 	<main class="main-container">
 		<div class="content-sections-wrapper">
 			<div class="content-section">
-				<h1 class="main-title">
-					여자들의 진짜 속마음,<br>궁금하니?
-				</h1>
+				<h1 class="main-title">여자들의 진짜 속마음,<br>궁금하니?</h1>
 				<p class="main-description">
 					TOKKI TALK과 함께<br> 그녀의 메시지 속 숨은 의미를 파헤쳐보세요!
 				</p>
-				<button class="cta-button"
-					onclick="handleCtaClick(event, 'Question.html')">
+				<button class="cta-button" onclick="handleCtaClick(event, 'Question.html')">
 					나랑 대화해볼래? <span class="icon">💬</span>
 				</button>
 			</div>
 
 			<div class="content-section">
-				<h1 class="main-title">
-					나의 연애 센스는<br>과연 몇 점일까?
-				</h1>
+				<h1 class="main-title">나의 연애 센스는<br>과연 몇 점일까?</h1>
 				<p class="main-description">
 					TOKKI TALK의 센스고사를 통해<br> 당신의 숨겨진 매력과 센스를 발견해보세요!
 				</p>
-				<button class="cta-button"
-					onclick="handleCtaClick(event, 'SenseTest.html')">
+				<button class="cta-button" onclick="handleCtaClick(event, 'SenseTest.html')">
 					센스고사 시작하기 <span class="icon">🚀</span>
 				</button>
 			</div>
@@ -620,10 +611,10 @@ body {
 		</div>
 	</footer>
 
+	<!-- 로그인 모달 -->
 	<div id="loginModal" class="modal-overlay">
 		<div class="modal-content">
-			<button class="modal-close" data-target="loginModal"
-				onclick="closeLoginModal()">&times;</button>
+			<button class="modal-close" data-target="loginModal" onclick="closeLoginModal()">&times;</button>
 			<h2 class="modal-title">로그인</h2>
 
 			<div class="input-group">
@@ -647,22 +638,20 @@ body {
 		</div>
 	</div>
 
+	<!-- 회원가입 모달 -->
 	<div id="signupModal" class="modal-overlay">
 		<div class="signup-modal-content">
-			<button class="modal-close" data-target="signupModal"
-				onclick="closeSignupModal()">&times;</button>
+			<button class="modal-close" data-target="signupModal" onclick="closeSignupModal()">&times;</button>
 			<h2 class="signup-title">회원가입</h2>
 			<div class="signup-underline"></div>
 
 			<div class="signup-input-row">
-				<input type="text" class="signup-input"
-					placeholder="아이디 입력 ( 영문, 숫자 20자 이내 )">
+				<input type="text" class="signup-input" placeholder="아이디 입력 ( 영문, 숫자 20자 이내 )">
 				<button class="duplicate-check-btn">중복 확인</button>
 			</div>
 
 			<div class="input-group">
-				<input type="password" class="signup-input"
-					placeholder="비밀번호 입력(숫자 4자)">
+				<input type="password" class="signup-input" placeholder="비밀번호 입력(숫자 4자)">
 			</div>
 
 			<div class="input-group">
@@ -674,8 +663,8 @@ body {
 			</div>
 
 			<div class="input-group">
-				<label for="date-input">생년월일을 입력하세요.</label> <input type="date"
-					class="date-input" id="date-input">
+				<label for="date-input">생년월일을 입력하세요.</label>
+				<input type="date" class="date-input" id="date-input">
 			</div>
 
 			<div class="gender-group">

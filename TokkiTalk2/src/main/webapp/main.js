@@ -60,48 +60,15 @@ function updateHeaderUI(isLoggedIn, name = '') {
     }
 }
 
-/**
- * @description 로그인 모달을 엽니다.
- */
-function openLoginModal() {
-    loginModal.style.display = 'flex';
-}
+/** 모달 열고 닫기 */
+function openLoginModal() { loginModal.style.display = 'flex'; }
+function closeLoginModal() { loginModal.style.display = 'none'; }
+function openSignupModal() { signupModal.style.display = 'flex'; }
+function closeSignupModal() { signupModal.style.display = 'none'; }
+function closeAllModals() { closeLoginModal(); closeSignupModal(); }
 
-/**
- * @description 로그인 모달을 닫습니다.
- */
-function closeLoginModal() {
-    loginModal.style.display = 'none';
-}
-
-/**
- * @description 회원가입 모달을 엽니다.
- */
-function openSignupModal() {
-    signupModal.style.display = 'flex';
-}
-
-/**
- * @description 회원가입 모달을 닫습니다.
- */
-function closeSignupModal() {
-    signupModal.style.display = 'none';
-}
-
-/**
- * @description 모든 모달을 닫습니다.
- */
-function closeAllModals() {
-    closeLoginModal();
-    closeSignupModal();
-}
-
-/**
- * @description 홈페이지로 이동합니다.
- */
-function goHome() {
-    window.location.href = "main.html";
-}
+/** 홈으로 이동 */
+function goHome() { window.location.href = "main.html"; }
 
 /**
  * @description 성별 라디오 버튼을 선택합니다.
@@ -121,11 +88,7 @@ function selectGender(gender) {
     }
 }
 
-/**
- * @description URL에서 특정 파라미터 값을 가져오는 함수
- * @param {string} name - 가져올 파라미터 이름
- * @returns {string} - 파라미터 값
- */
+/** URL 파라미터 */
 function getUrlParameter(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
@@ -133,34 +96,20 @@ function getUrlParameter(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-/**
- * @description 현재 배포 컨텍스트 경로를 계산 (예: '/TokkiTalk2' 또는 '/')
- * @returns {string} - 컨텍스트 경로
- */
+/** 컨텍스트 경로 */
 function getContextPath() {
     var pathSegments = window.location.pathname.split('/').filter(function(seg){ return seg.length > 0; });
-    if (pathSegments.length === 0) {
-        return '';
-    }
-    if (pathSegments[0].indexOf('.') !== -1) {
-        return '';
-    }
+    if (pathSegments.length === 0) return '';
+    if (pathSegments[0].indexOf('.') !== -1) return '';
     return '/' + pathSegments[0];
 }
 
-/**
- * @description API 베이스 URL 계산
- * @returns {string} - API 베이스 URL
- */
+/** API 베이스 URL */
 function getApiBase() {
     var basePath = getContextPath();
-    if (basePath) {
-        return window.location.origin + basePath;
-    }
+    if (basePath) return window.location.origin + basePath;
     var host = window.location.hostname;
-    if (host === '127.0.0.1' || host === 'localhost') {
-        return 'http://localhost:8081/TokkiTalk2';
-    }
+    if (host === '127.0.0.1' || host === 'localhost') return 'http://localhost:8081/TokkiTalk2';
     return window.location.origin;
 }
 
@@ -169,11 +118,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     const modalType = urlParams.get('modal');
 
-    if (modalType === 'login') {
-        openLoginModal();
-    } else if (modalType === 'signup') {
-        openSignupModal();
-    }
+    if (modalType === 'login') openLoginModal();
+    else if (modalType === 'signup') openSignupModal();
 		
     // 로그인 상태 처리
     const useridFromUrl = getUrlParameter('userid');
@@ -259,17 +205,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const pw2El = document.querySelector('#signupModal .signup-input[placeholder="비밀번호 확인"]');
             const nameEl = document.querySelector('#signupModal .signup-input[placeholder="이름을 입력해주세요"]');
             const dateEl = document.querySelector('#signupModal .date-input');
-            const genderChecked = document.querySelector('#signupModal .gender-radio.checked');
+
+            // ✅ 성별 선택 요소 가져오기 (수정된 부분)
+            const genderChecked = document.querySelector('#signupModal .gender-option .gender-radio.checked');
+            let gender = '';
+            if (genderChecked) {
+                const optionEl = genderChecked.closest('.gender-option');
+                if (optionEl) gender = optionEl.dataset.gender || '';
+            }
 
             const userId = idInputEl ? idInputEl.value.trim() : '';
             const userPw1 = pw1El ? pw1El.value.trim() : '';
             const userPw2 = pw2El ? pw2El.value.trim() : '';
             const userName = nameEl ? nameEl.value.trim() : '';
             const userDate = dateEl ? dateEl.value : '';
-            let gender = '';
-            if (genderChecked) {
-                gender = genderChecked.dataset.gender;
-            }
 
             if (!/^[A-Za-z0-9]{1,20}$/.test(userId)) {
                 alert('아이디는 영문/숫자 1~20자만 가능합니다.');
