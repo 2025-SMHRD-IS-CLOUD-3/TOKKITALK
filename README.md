@@ -144,10 +144,10 @@
 	<br>
   <tr>
     <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/></a></td>
-    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'>github</a></td>
-    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'>github</a></td>
-    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'>github</a></td>
-    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'>github</a></td>
+    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/></a></td>
+    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/></a></td>
+    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/></a></td>
+    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/></a></td>
   </tr>
 </table>
 <br>
