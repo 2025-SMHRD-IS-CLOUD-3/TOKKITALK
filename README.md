@@ -80,23 +80,42 @@
 <br>
 
 ## 📌 SW유스케이스
-<img width="704" height="710" alt="Image" src="https://github.com/user-attachments/assets/644506a5-6b4b-4d26-8a61-ddb9dedb8f2a" />
+<img width="600" height="600" alt="Image" src="https://github.com/user-attachments/assets/d92fef91-c254-4aa3-8a12-ed140d827699" />
 <br>
 
 ## 📌 서비스 흐름도
-<img width="600" height="600" alt="Image" src="https://github.com/user-attachments/assets/b86d921e-6232-467f-882a-22f3d45bb48f" />
+<img width="600" height="600" alt="Image" src="https://github.com/user-attachments/assets/644506a5-6b4b-4d26-8a61-ddb9dedb8f2a" />
 <br>
 
 ## 📌 ER다이어그램
-<img width="930" height="735" alt="Image" src="https://github.com/user-attachments/assets/fa9bab75-028f-4e8e-a4d4-848206518aca" />
+<img width="600" height="600" alt="Image" src="https://github.com/user-attachments/assets/fa9bab75-028f-4e8e-a4d4-848206518aca" />
 <br>
 
 ## 🖥 화면 구성
 
 ### 시작화면/로그인/회원가입/메인페이지/마이페이지/회원정보
-<img width="1050" height="121" alt="Image" src="https://github.com/user-attachments/assets/19a21f98-9e4d-4f25-bfd5-3a5fa2717788" />
-<br>
 
+<br><br>
+
+<td><img width="400" height="400" alt="Image" src="https://github.com/user-attachments/assets/fb0b52b6-5de2-4966-8bcd-ae624a68c082" /></td>
+<br>
+<br><br>
+<td><img width="400" height="400" alt="Image" src="https://github.com/user-attachments/assets/76ed6189-7773-4932-896d-d48b5a3694a4" /></td>
+<br>
+<br><br>
+<td></td><img width="400" height="400" alt="Image" src="https://github.com/user-attachments/assets/4f04fefa-c255-4a51-98df-ba64dfafd30e" /></td>
+<br>
+<br><br>
+<td></td><img width="400" height="400" alt="Image" src="https://github.com/user-attachments/assets/ca880a2e-e47f-4e96-8406-307ab5147d8a" /></td>
+<br>
+<br><br>
+<img width="300" height="300" alt="Image" src="https://github.com/user-attachments/assets/fb98aa7e-0d4a-421e-9c43-63125a381f19" />
+
+<img width="50" height="50" alt="Image" src="https://github.com/user-attachments/assets/cca0882d-0c6a-497e-b9d9-78824173b1a8" />
+
+<img width="300" height="300" alt="Image" src="https://github.com/user-attachments/assets/e1a16774-3c00-4ec2-a3cd-1fcd43f8060e" />
+<br>
+<br>
 
 
 ## 👨‍👩‍👦‍👦 팀원 역할
