@@ -137,7 +137,7 @@
   <tr>
     <td align="center"><b>데이터 크롤링, 기획서 작성</b></td>
     <td align="center"><b>모든작업 문서화, DB 연결</b></td>
-    <td align="center"><b>팀원 및 프로젝트진행 총괄, 기획서 및 산출문서 총괄, 아이디어 도출, 데이터 크롤링, API 연동</b></td>
+    <td align="center"><b>팀원 및 프로젝트진행 총괄, 기획서 및 산출문서 총괄, 아이디어 도출, 데이터 전처리 및 학습, API 연동</b></td>
     <td align="center"><b>웹페이지 구현 (마이페이지, 센스고사)</b></td>
     <td align="center"><b>웹페이지 구현 (메인페이지, 로그인, 회원 가입)</b></td>
   </tr>
