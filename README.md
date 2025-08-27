@@ -135,11 +135,11 @@
     <td align="center"><strong>동환</strong></td>
   </tr>
   <tr>
-    <td align="center"><b>Team Leader</b></td>
-    <td align="center"><b>Team Cordinator</b></td>
-    <td align="center"><b>Project Manager</b></td>
-    <td align="center"><b>Team Master</b></td>
-    <td align="center"><b>Team Member</b></td>
+    <td align="center"><b>데이터 크롤링, 기획서 작성</b></td>
+    <td align="center"><b>모든작업 문서화, DB 연결</b></td>
+    <td align="center"><b>팀원 및 프로젝트진행 총괄, 기획서 및 산출문서 총괄, 아이디어 도출, 데이터 크롤링, API 연동</b></td>
+    <td align="center"><b>웹페이지 구현 (마이페이지, 센스고사)</b></td>
+    <td align="center"><b>웹페이지 구현 (메인페이지, 로그인, 회원 가입)</b></td>
   </tr>
 	<br>
   <tr>
