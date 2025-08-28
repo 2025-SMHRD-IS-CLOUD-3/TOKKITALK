@@ -79,12 +79,14 @@
       USER_ID,
       ROLE,
       MESSAGE_TEXT,
+      IMAGE_BASE64,
       CREATED_AT
   ) VALUES (
       #{chatId, jdbcType=NUMERIC},
       #{userId, jdbcType=VARCHAR},
       #{role, jdbcType=VARCHAR},
       NVL(#{message, jdbcType=CLOB}, '[내용 없음]'),
+      #{imageBase64, jdbcType=CLOB},
       SYSTIMESTAMP
   )
 </insert>

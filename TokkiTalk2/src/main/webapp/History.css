@@ -568,6 +568,15 @@ body {
             color: white;
             background-color: #ff5252;
         }
+
+.chat-image {
+    max-width: 50px;
+    height: auto;
+    display: block; /* 이미지가 독립적인 블록으로 표시되도록 설정 */
+    margin-top: 10px;
+    border-radius: 8px; /* 이미지 모서리를 부드럽게 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 약간의 그림자 효과 */
+}
         hr {
             border: 0;
             height: 1px;

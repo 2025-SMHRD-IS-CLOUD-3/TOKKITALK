@@ -78,7 +78,8 @@ public class GetHistoryServlet extends HttpServlet {
             json.append("\"role\":\"").append(escapeJson(item.getRole())).append("\",");
             json.append("\"message_text\":\"").append(escapeJson(item.getContent())).append("\",");
             json.append("\"created_at\":\"").append(escapeJson(item.getCreatedAt())).append("\",");
-            json.append("\"image_base64\":null,");
+            json.append("\"image_base64\":\"").append(escapeJson(item.getImageBase64() != null ? item.getImageBase64() : ""))
+            .append("\",");
             json.append("\"image_url\":null");
             json.append("}");
             
@@ -110,8 +111,12 @@ public class GetHistoryServlet extends HttpServlet {
         private String createdAt;
         private String date;
         private String time;
+        private String imageBase64;
         
         // Getters and Setters
+        public String getImageBase64() { return imageBase64; }
+        public void setImageBase64(String imageBase64) { this.imageBase64 = imageBase64; }
+        
         public Long getId() { return id; }
         public void setId(Long id) { this.id = id; }
         

@@ -124,7 +124,7 @@ public class OpenAiClient {
                 // 최대 너비와 높이 설정 (가로세로 비율을 유지하며 크기 조절)
                 int newWidth = originalImage.getWidth();
                 int newHeight = originalImage.getHeight();
-                double maxDim = 128.0; // OpenAI 권장 해상도에 맞춰 최대 크기 1024 설정
+                double maxDim = 256.0; // OpenAI 권장 해상도에 맞춰 최대 크기 1024 설정
 
                 if (newWidth > maxDim || newHeight > maxDim) {
                     double aspectRatio = (double) originalImage.getWidth() / (double) originalImage.getHeight();

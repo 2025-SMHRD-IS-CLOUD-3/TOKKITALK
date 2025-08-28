@@ -76,10 +76,10 @@ public class SaveHistoryServlet extends HttpServlet {
             // DB 저장 로직: 사용자 메시지와 어시스턴트 메시지를 별도로 저장
             try {
                 // 사용자 메시지 저장
-                analysisDAO.saveToChatHistory(userIdStr, "user", userMessage);
+                analysisDAO.saveToChatHistory(userIdStr, "user", userMessage, saveRequest.input_image_base64);
                 
                 // 어시스턴트 메시지 저장
-                analysisDAO.saveToChatHistory(userIdStr, "assistant", assistantMessage);
+                analysisDAO.saveToChatHistory(userIdStr, "assistant", assistantMessage, null);
                 
                 System.out.println("DB 저장 성공!");
                 out.println("{\"success\": true, \"message\": \"분석 결과가 히스토리에 저장되었습니다.\"}");

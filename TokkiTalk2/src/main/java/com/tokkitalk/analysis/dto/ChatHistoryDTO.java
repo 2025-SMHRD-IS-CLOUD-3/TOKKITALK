@@ -10,13 +10,15 @@ public class ChatHistoryDTO implements Serializable {
     public String role; // "user" or "model"
     public String message;
     public String imageUrl;
+    public String imageBase64;
     public LocalDateTime timestamp;
 
-    public ChatHistoryDTO(String userId, String role, String message, String imageUrl, LocalDateTime timestamp) {
+    public ChatHistoryDTO(String userId, String role, String message, String imageUrl, String imageBase64, LocalDateTime timestamp) {
         this.userId = userId;
         this.role = role;
         this.message = message;
         this.imageUrl = imageUrl;
+        this.imageBase64 = imageBase64;
         this.timestamp = timestamp;
     }
 
@@ -24,6 +26,13 @@ public class ChatHistoryDTO implements Serializable {
     public ChatHistoryDTO() {}
 
     // Getter and Setter methods for all fields
+    public String getImageBase64() {
+        return imageBase64;
+    }
+
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
+    }
     public String getUserId() {
         return userId;
     }

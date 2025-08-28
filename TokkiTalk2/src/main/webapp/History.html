@@ -131,171 +131,207 @@
     </footer>
 
     <script>
-        const authButtons = document.getElementById('auth-buttons');
-        const userInfoArea = document.getElementById('user-info-area');
-        const headerUserName = document.getElementById('headerUserName');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const historyContainer = document.getElementById('historyContainer');
-        const loading = document.getElementById('loading');
-        const noHistory = document.getElementById('noHistory');
+    const authButtons = document.getElementById('auth-buttons');
+    const userInfoArea = document.getElementById('user-info-area');
+    const headerUserName = document.getElementById('headerUserName');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const historyContainer = document.getElementById('historyContainer');
+    const loading = document.getElementById('loading');
+    const noHistory = document.getElementById('noHistory');
 
-        function updateHeaderUI() {
-            const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
-            const userName = sessionStorage.getItem('userName');
+    function updateHeaderUI() {
+        const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
+        const userName = sessionStorage.getItem('userName');
 
-            if (isLoggedIn && userName) {
-                authButtons.style.display = 'none';
-                userInfoArea.style.display = 'flex';
-                headerUserName.textContent = userName;
-            } else {
-                authButtons.style.display = 'flex';
-                userInfoArea.style.display = 'none';
-            }
+        if (isLoggedIn && userName) {
+            authButtons.style.display = 'none';
+            userInfoArea.style.display = 'flex';
+            headerUserName.textContent = userName;
+        } else {
+            authButtons.style.display = 'flex';
+            userInfoArea.style.display = 'none';
         }
+    }
 
-        function getApiBase() {
-            const host = window.location.hostname;
-            if (host === '127.0.0.1' || host === 'localhost') return 'http://localhost:8081/TokkiTalk2';
-            return window.location.origin;
-        }
+    function getApiBase() {
+        const host = window.location.hostname;
+        if (host === '127.0.0.1' || host === 'localhost') return 'http://localhost:8081/TokkiTalk2';
+        return window.location.origin;
+    }
 
-        async function loadHistory() {
-            try {
-                const res = await fetch(getApiBase() + '/getHistory');
-                if (!res.ok) throw new Error('서버 응답 실패: ' + res.status);
-                const historyItems = await res.json();
-                displayHistory(historyItems);
-            } catch (e) {
-                console.error('히스토리 로드 오류:', e);
-                showError('히스토리를 불러오는데 실패했습니다.');
-            }
-        }
-
-        function displayHistory(historyItems) {
+    async function loadHistory() {
+        try {
+            const res = await fetch(getApiBase() + '/getHistory');
+            if (!res.ok) throw new Error('서버 응답 실패: ' + res.status);
+            const historyItems = await res.json();
+            
             loading.style.display = 'none';
             if (!historyItems || historyItems.length === 0) {
                 noHistory.style.display = 'block';
                 return;
             }
 
-            const conversations = groupByConversation(historyItems);
-            conversations.forEach(conversation => {
-                const conversationDiv = document.createElement('div');
-                conversationDiv.className = 'conversation-item';
-                conversationDiv.innerHTML = `
-                    <div class="conversation-header" onclick="toggleConversation(this)">
-                        <div class="conversation-info">
-                            <span class="conversation-date">${conversation.date}</span>
-                            <span class="conversation-time">${conversation.time}</span>
-                        </div>
-                        <button class="btn-toggle"><span class="toggle-icon">▶</span></button>
-                    </div>
-                    <div class="conversation-content">
-                        ${conversation.messages.slice().reverse().map(msg => `
-                            <div class="message-item ${msg.role === 'user' ? 'user' : 'TOKKITALK'}">
-                                <div class="message-header"><span class="message-role">${msg.role === 'user' ? '사용자' : 'TOKKITALK'}</span></div>
-                                <div class="message-content"><pre>${msg.content}</pre></div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                historyContainer.appendChild(conversationDiv);
-            });
+            displayHistory(historyItems);
+        } catch (e) {
+            console.error('히스토리 로드 오류:', e);
+            showError('히스토리를 불러오는데 실패했습니다.');
         }
+    }
 
-        function groupByConversation(historyItems) {
-            const conversations = {};
-            historyItems.forEach(item => {
-                const [date, time] = item.created_at.split(' '); // created_at에서 날짜/시간 분리
-                const timestamp = date + '_' + time;
+    function displayHistory(historyItems) {
+        historyContainer.innerHTML = '';
+        
+        const conversations = groupByConversation(historyItems);
+        
+        conversations.forEach(conversation => {
+            const conversationDiv = document.createElement('div');
+            conversationDiv.className = 'conversation-item';
+            
+            const conversationContentHtml = conversation.messages.slice().reverse().map(msg => {
+                const roleClass = msg.role === 'user' ? 'user' : 'TOKKITALK';
+                const roleName = msg.role === 'user' ? '사용자' : 'TOKKITALK';
+                let messageBody = '';
 
-                if (!conversations[timestamp]) {
-                    conversations[timestamp] = { date, time, messages: [] };
+                if (msg.role === 'TOKKITALK') {
+                    messageBody = formatTokkiTalk(msg.content);
+                } else {
+                    messageBody = `<pre>${msg.content}</pre>`;
                 }
 
-                conversations[timestamp].messages.push({
+                if (msg.image_base64) {
+                	messageBody += `<img src="data:image/png;base64,${msg.image_base64}" class="chat-image" style="max-width:300px; height:auto; margin-top:10px; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.2);">`;
+                }
+
+                return `
+                    <div class="message-item ${roleClass}">
+                        <div class="message-header">
+                            <span class="message-role">${roleName}</span>
+                        </div>
+                        <div class="message-content">
+                            ${messageBody}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            conversationDiv.innerHTML = `
+                <div class="conversation-header" onclick="toggleConversation(this)">
+                    <div class="conversation-info">
+                        <span class="conversation-date">${conversation.date}</span>
+                        <span class="conversation-time">${conversation.time}</span>
+                    </div>
+                    <button class="btn-toggle"><span class="toggle-icon">▶</span></button>
+                </div>
+                <div class="conversation-content">
+                    ${conversationContentHtml}
+                </div>
+            `;
+            historyContainer.appendChild(conversationDiv);
+        });
+    }
+
+    function groupByConversation(historyItems) {
+        const conversations = [];
+        if (!historyItems || historyItems.length === 0) {
+            return conversations;
+        }
+
+        // 히스토리 아이템을 최신순으로 정렬
+        const sortedItems = historyItems.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        let currentConversation = null;
+
+        sortedItems.forEach(item => {
+            // 어시스턴트 메시지를 발견하면 새로운 대화를 시작
+            if (item.role === 'assistant') {
+                currentConversation = {
+                    date: item.created_at.split(' ')[0],
+                    time: item.created_at.split(' ')[1].substring(0, 8),
+                    messages: []
+                };
+                conversations.push(currentConversation);
+            }
+
+            // 현재 대화가 존재하면 메시지를 추가
+            if (currentConversation) {
+                currentConversation.messages.push({
                     id: item.chat_id,
                     role: item.role,
-                    content: item.message_text,   // 실제 텍스트
-                    imageBase64: item.image_base64 || null,
-                    imageUrl: item.image_url || null
+                    content: item.message_text,
+                    image_base64: item.image_base64 || null
                 });
-            });
-            return Object.values(conversations).sort((a,b) => new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time));
-        }
-
-        function toggleConversation(header) {
-            const content = header.nextElementSibling;
-            const icon = header.querySelector('.toggle-icon');
-            if (content.style.display === 'none' || content.style.display === '') {
-                content.style.display = 'flex';
-                icon.textContent = '▼';
-            } else {
-                content.style.display = 'none';
-                icon.textContent = '▶';
             }
-        }
-
-        function showError(message) {
-            loading.style.display = 'none';
-            historyContainer.innerHTML = `
-                <div class="error-message" style="text-align:center;padding:50px;">
-                    <div style="font-size:48px;">⚠️</div>
-                    <h3>오류가 발생했습니다</h3>
-                    <p>${message}</p>
-                    <button class="btn-primary" onclick="location.reload()">다시 시도</button>
-                </div>
-            `;
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            updateHeaderUI();
-            loadHistory();
-            if (logoutBtn) logoutBtn.addEventListener('click', () => {
-                sessionStorage.removeItem('loggedIn');
-                sessionStorage.removeItem('userName');
-                alert('로그아웃되었습니다.');
-                window.location.href = 'main.html';
-            });
         });
-        function formatTokkiTalk(raw) {
-            let data;
-            try {
-                data = JSON.parse(raw);  // JSON 문자열이면 객체로 변환
-            } catch (e) {
-                return raw; // JSON 아니면 그냥 그대로 출력
-            }
 
-            // HTML 포맷 변환
-            let adviceHtml = data.advice.map(a => `
-                <div class="advice-item">
-                    <strong>${a.style}:</strong> 
-                    <span>${a.text}</span>
-                </div>
-            `).join("");
+        return conversations;
+    }
 
-            return `
-                <div class="tokkitalk-box">
-                    <h4 style="color:#FFD200; font-weight:bold;">TOKKITALK</h4>
-                    <p><strong>📝 표면적 의미:</strong><br>${data.surface_meaning.one_line}</p>
-                    <p><strong>🔍 숨은 의도:</strong><br>${data.hidden_meaning.one_line}</p>
-                    <p><strong>😊 감정 상태:</strong><br>${data.emotion.label}</p>
-                    <div class="advice-box">
-                        <div class="advice-header">
-                            <span class="icon">💡</span>
-                            <strong class="advice-title">TOKKI의 제안들</strong>
-                        </div>
-                        ${adviceHtml}
+    function toggleConversation(header) {
+        const content = header.nextElementSibling;
+        const icon = header.querySelector('.toggle-icon');
+        if (content.style.display === 'none' || content.style.display === '') {
+            content.style.display = 'flex';
+            icon.textContent = '▼';
+        } else {
+            content.style.display = 'none';
+            icon.textContent = '▶';
+        }
+    }
+
+    function showError(message) {
+        loading.style.display = 'none';
+        historyContainer.innerHTML = `
+            <div class="error-message" style="text-align:center;padding:50px;">
+                <div style="font-size:48px;">⚠️</div>
+                <h3>오류가 발생했습니다</h3>
+                <p>${message}</p>
+                <button class="btn-primary" onclick="location.reload()">다시 시도</button>
+            </div>
+        `;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateHeaderUI();
+        loadHistory();
+        if (logoutBtn) logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('loggedIn');
+            sessionStorage.removeItem('userName');
+            alert('로그아웃되었습니다.');
+            window.location.href = 'main.html';
+        });
+    });
+
+    function formatTokkiTalk(raw) {
+        let data;
+        try {
+            data = JSON.parse(raw);
+        } catch (e) {
+            return raw;
+        }
+
+        let adviceHtml = data.advice.map(a => `
+            <div class="advice-item">
+                <strong>${a.style}:</strong>
+                <span>${a.text}</span>
+            </div>
+        `).join("");
+
+        return `
+            <div class="tokkitalk-box">
+                <h4 style="color:#FFD200; font-weight:bold;">TOKKITALK</h4>
+                <p><strong>📝 표면적 의미:</strong><br>${data.surface_meaning.one_line}</p>
+                <p><strong>🔍 숨은 의도:</strong><br>${data.hidden_meaning.one_line}</p>
+                <p><strong>😊 감정 상태:</strong><br>${data.emotion.label}</p>
+                <div class="advice-box">
+                    <div class="advice-header">
+                        <span class="icon">💡</span>
+                        <strong class="advice-title">TOKKI의 제안들</strong>
                     </div>
+                    ${adviceHtml}
                 </div>
-            `;
-        }
-
-        // 📌 히스토리 렌더링할 때 message-content 에 적용
-        document.querySelectorAll(".message-content pre").forEach(pre => {
-            const formatted = formatTokkiTalk(pre.innerText.trim());
-            pre.outerHTML = `<div class="message-body">${formatted}</div>`;
-        });
+            </div>
+        `;
+    }
     </script>
 </body>
 </html>

@@ -19,6 +19,7 @@ public class ChatHistoryService {
      * @param role 메시지 역할 (user/assistant)
      * @param message 메시지 내용
      */
+ // 기존: 텍스트만 저장할 때 사용
     public void saveMessage(String userId, String role, String message) {
         try {
             // 🚨 userId를 String 타입 그대로 사용하도록 변경
@@ -29,6 +30,17 @@ public class ChatHistoryService {
             throw new RuntimeException("히스토리 저장 중 오류가 발생했습니다.", e);
         }
     }
+ // 추가: 이미지도 함께 저장할 때 사용
+    public void saveMessage(String userId, String role, String message, String imageBase64) {
+        try {
+            analysisDAO.saveToChatHistory(userId, role, message, imageBase64);
+            System.out.println("히스토리 저장 (이미지 포함) 성공 - User: " + userId + ", Role: " + role);
+        } catch (Exception e) {
+            System.err.println("히스토리 저장 (이미지 포함) 실패: " + e.getMessage());
+            throw new RuntimeException("히스토리 저장 중 오류가 발생했습니다.", e);
+        }
+    }
+    
     
     /**
      * 특정 사용자의 번역 히스토리 조회

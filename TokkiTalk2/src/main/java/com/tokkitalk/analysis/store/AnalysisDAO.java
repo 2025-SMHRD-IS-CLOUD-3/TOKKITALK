@@ -115,6 +115,18 @@ public class AnalysisDAO {
             session.insert(MAPPER_NS + ".insertChatHistory", params);
         }
     }
+    
+    public void saveToChatHistory(String userId, String role, String message, String imageBase64) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("role", role);
+        params.put("message", message);
+        params.put("imageBase64", imageBase64);
+
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            session.insert(MAPPER_NS + ".insertChatHistory", params);
+        }
+    }
 
     // 🚨 4. getChatHistory 메서드: Object userId -> String userId로 변경
     public java.util.List<GetHistoryServlet.HistoryItem> getChatHistory(String userId) {
