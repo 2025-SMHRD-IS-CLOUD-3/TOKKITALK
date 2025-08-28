@@ -207,3 +207,9 @@ https://github.com/user-attachments/assets/ea1d59ca-85c7-47c0-aeb1-d77b98917170
                  user와 assistant의 대화 모두 chat_history에 기록되어 히스토리 기능이 정상 동작.
                  USER_ID 타입 불일치 문제도 해결되어 저장 오류가 발생하지 않음.
 
+
+
+<br>
+<br>
+<br>
+<img width="1467" height="791" alt="image" src="https://github.com/user-attachments/assets/ee1dc791-74da-432b-9242-2dd74b231246" />
