@@ -1,12 +1,18 @@
 
 
 # 📎 맞춤형 언어(여자어) 인식 어플리케이션   SU:DIVE[수:디브] 
-<img width="500" height="500" alt="Image" src="https://github.com/user-attachments/assets/fc5ee352-70f8-45c1-81f3-d8c0363f3858" />
+<img width="1466" height="821" alt="Image" src="https://github.com/user-attachments/assets/0aec375a-c6e9-41be-a8dc-b7236cb1f69d" />
 
 
 ## 👀 서비스 소개
 * 서비스명 : TOKKI Talk 
 * 서비스설명 : 자연어처리 기반 여자어 해석 서비스
+<br>
+<br>
+
+## 제안 배경
+<img width="1466" height="706" alt="Image" src="https://github.com/user-attachments/assets/de13e74e-b8e1-47ab-aed5-46f8568a081d" />
+<br>
 <br>
 
 ## 📅 프로젝트 기간
@@ -116,6 +122,22 @@
 <img width="300" height="300" alt="Image" src="https://github.com/user-attachments/assets/e1a16774-3c00-4ec2-a3cd-1fcd43f8060e" />
 <br>
 <br>
+
+
+## <img width="72" height="72" alt="image" src="https://github.com/user-attachments/assets/7ed2e160-3124-4386-a929-0f87d5e267d7" /> 시연 영상
+https://github.com/user-attachments/assets/ea1d59ca-85c7-47c0-aeb1-d77b98917170
+<br>
+<br>
+<br>
+
+
+## <img width="72" height="72" alt="Image" src="https://github.com/user-attachments/assets/431337c1-9a24-4868-ac9e-9ba1556f499d" />참고 문헌
+<img width="600" height="600" alt="Image" src="https://github.com/user-attachments/assets/4cbb4270-6279-4cd4-9c24-1c68cfb311d9" />
+<br>
+<br>
+<br>
+
+
 
 
 ## 👨‍👩‍👦‍👦 팀원 역할
