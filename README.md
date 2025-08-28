@@ -1,6 +1,6 @@
 
 
-# 📎 맞춤형 언어(여자어) 인식 어플리케이션   SU:DIVE[수:디브] 
+# <img width="72" height="72" alt="Image" src="https://github.com/user-attachments/assets/34fbd140-c766-41b5-90e4-bc95042696de" /> 맞춤형 언어(여자어) 인식 어플리케이션   SU:DIVE[수:디브] <img width="72" height="72" alt="Image" src="https://github.com/user-attachments/assets/34fbd140-c766-41b5-90e4-bc95042696de" />
 <img width="1466" height="821" alt="Image" src="https://github.com/user-attachments/assets/0aec375a-c6e9-41be-a8dc-b7236cb1f69d" />
 
 
@@ -10,19 +10,20 @@
 <br>
 <br>
 
-## 제안 배경
+## <img width="72" height="72" alt="Image" src="https://github.com/user-attachments/assets/cbb693b9-42b5-433d-aafe-a54820058c91" />제안 배경
 <img width="1466" height="706" alt="Image" src="https://github.com/user-attachments/assets/de13e74e-b8e1-47ab-aed5-46f8568a081d" />
 <br>
 <br>
 
-## 기대 효과
+## <img width="72" height="72" alt="Image" src="https://github.com/user-attachments/assets/5c06f023-c54d-4767-a8b6-a790964c22e0" />기대 효과
 <img width="1420" height="685" alt="Image" src="https://github.com/user-attachments/assets/f8fb030d-135e-46b5-8e0f-312389d25069" />
 <br>
 <br>
-
+<br>
 
 ## 📅 프로젝트 기간
 2025.08.12 ~ 2025.08.28 (2주)
+<br>
 <br>
 
 ## ⭐ 주요 기능
@@ -32,6 +33,7 @@
 * 기능4 : 표면적 의미 분석/ 감정 및 의도 분석/ 관계,상황 추론/ 대응 방안 제시
 * 기능5 : 사용자가 결과를 확인할 수 있는 직관적인 UI로 제공
 * 기능6 : 센스고사 테스트 이용 가능
+<br>
 <br>
 
 ## ⛏ 기술스택
