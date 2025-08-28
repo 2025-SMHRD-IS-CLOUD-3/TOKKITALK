@@ -15,6 +15,12 @@
 <br>
 <br>
 
+## 기대 효과
+<img width="1420" height="685" alt="Image" src="https://github.com/user-attachments/assets/f8fb030d-135e-46b5-8e0f-312389d25069" />
+<br>
+<br>
+
+
 ## 📅 프로젝트 기간
 2025.08.12 ~ 2025.08.28 (2주)
 <br>
@@ -82,7 +88,10 @@
 <br>
 
 ## ⚙ 시스템 아키텍처(구조) 예시 
-![서비스 아키텍처2](https://github.com/user-attachments/assets/da05c1c8-ce92-473f-8840-2cbfc1a191e2)
+<img width="1469" height="725" alt="Image" src="https://github.com/user-attachments/assets/01c1b4e5-81ec-4732-840b-9196a32b6410" />
+
+<img width="1452" height="720" alt="Image" src="https://github.com/user-attachments/assets/ed5c59e9-fc4e-4c90-af5c-dc4234fc0900" />
+<br>
 <br>
 
 ## 📌 SW유스케이스
@@ -90,7 +99,7 @@
 <br>
 
 ## 📌 서비스 흐름도
-<img width="600" height="600" alt="Image" src="https://github.com/user-attachments/assets/644506a5-6b4b-4d26-8a61-ddb9dedb8f2a" />
+<img width="1463" height="690" alt="Image" src="https://github.com/user-attachments/assets/d5b92b65-c156-4410-919e-5052552a071e" />
 <br>
 
 ## 📌 ER다이어그램
@@ -112,14 +121,15 @@
 <td></td><img width="400" height="400" alt="Image" src="https://github.com/user-attachments/assets/4f04fefa-c255-4a51-98df-ba64dfafd30e" /></td>
 <br>
 <br><br>
-<td></td><img width="400" height="400" alt="Image" src="https://github.com/user-attachments/assets/ca880a2e-e47f-4e96-8406-307ab5147d8a" /></td>
+<img width="930" height="639" alt="Image" src="https://github.com/user-attachments/assets/29bcc879-93a3-407a-8e51-eb6f65a8854a" />
+
+<img width="933" height="713" alt="Image" src="https://github.com/user-attachments/assets/5da2ac5a-e58b-454e-adab-1c6ea9ed0ce9" />
 <br>
-<br><br>
-<img width="300" height="300" alt="Image" src="https://github.com/user-attachments/assets/fb98aa7e-0d4a-421e-9c43-63125a381f19" />
+<br>
+<br>
+<img width="1334" height="655" alt="Image" src="https://github.com/user-attachments/assets/a85f6a97-3ff0-4a59-b109-6fa666cc1322" />
+<br>
 
-<img width="50" height="50" alt="Image" src="https://github.com/user-attachments/assets/cca0882d-0c6a-497e-b9d9-78824173b1a8" />
-
-<img width="300" height="300" alt="Image" src="https://github.com/user-attachments/assets/e1a16774-3c00-4ec2-a3cd-1fcd43f8060e" />
 <br>
 <br>
 
@@ -129,48 +139,22 @@ https://github.com/user-attachments/assets/ea1d59ca-85c7-47c0-aeb1-d77b98917170
 <br>
 <br>
 <br>
-
+<br>
+<br>
 
 ## <img width="72" height="72" alt="Image" src="https://github.com/user-attachments/assets/431337c1-9a24-4868-ac9e-9ba1556f499d" />참고 문헌
 <img width="600" height="600" alt="Image" src="https://github.com/user-attachments/assets/4cbb4270-6279-4cd4-9c24-1c68cfb311d9" />
 <br>
 <br>
 <br>
-
+<br>
+<br>
 
 
 
 ## 👨‍👩‍👦‍👦 팀원 역할
 <table>
-  <tr>
-    <td align="center"><img width="100" height="100" alt="Image" src="https://github.com/user-attachments/assets/e84232a4-7407-466f-a8e7-c0cc41b11467" /></td>
-    <td align="center"><img width="100" height="100" alt="Image" src="https://github.com/user-attachments/assets/f8ead41c-4281-41c2-be39-47830330061d" /></td>
-    <td align="center"><img width="100" height="100" alt="Image" src="https://github.com/user-attachments/assets/072a27d5-0e96-4677-96ac-8493c46a6971" /></td>
-    <td align="center"><img width="100" height="100" alt="Image" src="https://github.com/user-attachments/assets/1ee8f066-22a4-46a5-ad2c-6a7baac3cb83" /></td>
-    <td align="center"><img width="100" height="100" alt="Image" src="https://github.com/user-attachments/assets/e5e89e3a-ef7b-4dc4-a487-57d0c75fce16" /></td>
-  </tr>
-  <tr>
-    <td align="center"><strong>윤수</strong></td>
-    <td align="center"><strong>동민</strong></td>
-    <td align="center"><strong>소민</strong></td>
-    <td align="center"><strong>종민</strong></td>
-    <td align="center"><strong>동환</strong></td>
-  </tr>
-  <tr>
-    <td align="center"><b>데이터 크롤링, 기획서 작성</b></td>
-    <td align="center"><b>프로젝트 작업 문서화, 백엔드 담당, 번역 서비스 개발 (텍스트 및 이미지 번역 기능), 번역 결과 DB 저장 및 관리</b></td>
-    <td align="center"><b>팀원 및 프로젝트진행 총괄, 기획서 및 산출문서 총괄, 아이디어 도출, DB연동 및 총괄, 데이터 전처리 및 학습, API 연동</b></td>
-    <td align="center"><b>DB 유지보수, 웹페이지 구현 및 유지보수 ( 마이페이지, 센스고사, 히스토리페이지 )</b></td>
-    <td align="center"><b>웹페이지 구현 및 유지보수 (메인페이지, 로그인, 회원가입)</b></td>
-  </tr>
-	<br>
-  <tr>
-    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/></a></td>
-    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/></a></td>
-    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/></a></td>
-    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/></a></td>
-    <td align="center"><a href="https://github.com/2025-SMHRD-IS-CLOUD-3/TOKKITALK" target='_blank'><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/></a></td>
-  </tr>
+<img width="1469" height="784" alt="Image" src="https://github.com/user-attachments/assets/95b1bf55-5953-4ff4-9f64-30ac65fcd2cd" />
 </table>
 <br>
 <br>
