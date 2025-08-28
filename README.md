@@ -1,4 +1,5 @@
-
+<br>
+<br>
 
 # <img width="52" height="52" alt="Image" src="https://github.com/user-attachments/assets/34fbd140-c766-41b5-90e4-bc95042696de" /> 맞춤형 언어(여자어) 인식 어플리케이션   SU:DIVE[수:디브] <img width="52" height="52" alt="Image" src="https://github.com/user-attachments/assets/34fbd140-c766-41b5-90e4-bc95042696de" />
 <img width="1466" height="821" alt="Image" src="https://github.com/user-attachments/assets/0aec375a-c6e9-41be-a8dc-b7236cb1f69d" />
