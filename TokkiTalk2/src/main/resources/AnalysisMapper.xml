@@ -6,22 +6,23 @@
 	<insert id="insertAnalysis"
 		parameterType="com.tokkitalk.analysis.store.AnalysisRecord">
 		INSERT INTO ANALYSIS (
-		    ANALYSIS_ID,       USER_ID,
-		    INPUT_TYPE,
-		    TEXT,
-		    IMAGE_BASE64,      TONE,              ANALYSIS_RESULT,
-		    SUGGESTIONS,       CREATED_AT,
-		    UPDATED_AT
+		ANALYSIS_ID, USER_ID,
+		INPUT_TYPE,
+		TEXT,
+		IMAGE_BASE64, TONE, ANALYSIS_RESULT,
+		SUGGESTIONS, CREATED_AT,
+		UPDATED_AT
 		) VALUES (
-		    ANALYSIS_SEQ.NEXTVAL,  #{userId, jdbcType=VARCHAR},
-		    #{inputType, jdbcType=VARCHAR},
-		    #{text, jdbcType=CLOB},
-		    #{imageBase64, jdbcType=CLOB},     #{tone, jdbcType=VARCHAR},         #{analysisResult, jdbcType=CLOB},
-		    #{suggestions, jdbcType=CLOB},     SYSTIMESTAMP,
-		    SYSTIMESTAMP
+		ANALYSIS_SEQ.NEXTVAL, #{userId, jdbcType=VARCHAR},
+		#{inputType, jdbcType=VARCHAR},
+		#{text, jdbcType=CLOB},
+		#{imageBase64, jdbcType=CLOB}, #{tone, jdbcType=VARCHAR}, #{analysisResult,
+		jdbcType=CLOB},
+		#{suggestions, jdbcType=CLOB}, SYSTIMESTAMP,
+		SYSTIMESTAMP
 		)
 	</insert>
-	
+
 	<select id="selectAnalysis" parameterType="string"
 		resultType="com.tokkitalk.analysis.store.AnalysisRecord">
 		SELECT
@@ -30,10 +31,12 @@
 		TEXT AS text,
 		IMAGE_URL AS imageUrl,
 		TONE AS tone,
-		ANALYSIS_RESULT AS analysisResult,
+		ANALYSIS_RESULT AS
+		analysisResult,
 		SUGGESTIONS AS suggestions,
 		USER_ID AS userId
-		FROM ANALYSIS
+		FROM
+		ANALYSIS
 		WHERE ANALYSIS_ID = #{value}
 	</select>
 
@@ -45,67 +48,84 @@
 		TEXT AS text,
 		IMAGE_URL AS imageUrl,
 		TONE AS tone,
-		ANALYSIS_RESULT AS analysisResult,
+		ANALYSIS_RESULT AS
+		analysisResult,
 		SUGGESTIONS AS suggestions,
 		USER_ID AS userId,
 		CREATED_AT AS createdAt
 		FROM ANALYSIS
 		WHERE USER_ID = #{userId}
-		ORDER BY CREATED_AT DESC
+		ORDER BY
+		CREATED_AT DESC
 		OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
 	</select>
 
 	<!-- Feedback 저장 (스키마에 맞춤) -->
 	<insert id="insertFeedback" parameterType="map">
-		INSERT INTO ANALYSIS_FEEDBACK (
-		FEEDBACK_ID, ANALYSIS_ID, LIKE_STATUS, PARTNER_REACTION, USER_COMMENT, CREATED_AT
+		INSERT INTO
+		ANALYSIS_FEEDBACK (
+		FEEDBACK_ID, ANALYSIS_ID, LIKE_STATUS,
+		PARTNER_REACTION, USER_COMMENT, CREATED_AT
 		) VALUES (
-		ANALYSIS_FEEDBACK_SEQ.NEXTVAL, #{analysis_id}, #{liked}, #{partner_reaction}, #{user_comment,
+		ANALYSIS_FEEDBACK_SEQ.NEXTVAL, #{analysis_id}, #{liked},
+		#{partner_reaction}, #{user_comment,
 		jdbcType=VARCHAR}, SYSTIMESTAMP
 		)
 	</insert>
 
 	<delete id="deleteAnalysis" parameterType="string">
-		DELETE FROM ANALYSIS WHERE ANALYSIS_ID = #{value}
+		DELETE FROM ANALYSIS
+		WHERE ANALYSIS_ID = #{value}
 	</delete>
 
 	<!-- CHAT_HISTORY 저장 -->
 	<insert id="insertChatHistory" parameterType="map">
-  <selectKey keyProperty="chatId" resultType="long" order="BEFORE">
-    SELECT CHAT_HISTORY_SEQ.NEXTVAL FROM DUAL
-  </selectKey>
-  INSERT INTO CHAT_HISTORY (
-      CHAT_ID,
-      USER_ID,
-      ROLE,
-      MESSAGE_TEXT,
-      IMAGE_BASE64,
-      CREATED_AT
-  ) VALUES (
-      #{chatId, jdbcType=NUMERIC},
-      #{userId, jdbcType=VARCHAR},
-      #{role, jdbcType=VARCHAR},
-      NVL(#{message, jdbcType=CLOB}, '[내용 없음]'),
-      #{imageBase64, jdbcType=CLOB},
-      SYSTIMESTAMP
-  )
-</insert>
+		<selectKey keyProperty="chatId" resultType="long"
+			order="BEFORE">
+			SELECT CHAT_HISTORY_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO CHAT_HISTORY (
+		CHAT_ID,
+		USER_ID,
+		ROLE,
+		MESSAGE_TEXT,
+		IMAGE_BASE64,
+		CREATED_AT
+		) VALUES (
+		#{chatId, jdbcType=NUMERIC},
+		#{userId, jdbcType=VARCHAR},
+		#{role, jdbcType=VARCHAR},
+		NVL(#{message, jdbcType=CLOB}, '[내용 없음]'),
+		#{imageBase64, jdbcType=CLOB},
+		SYSTIMESTAMP
+		)
+	</insert>
 
-	  <!-- CHAT_HISTORY 조회 -->
-  <select id="selectChatHistory" parameterType="map" resultType="com.tokkitalk.analysis.GetHistoryServlet$HistoryItem">
-    SELECT
-      CHAT_ID AS id,
-      USER_ID AS userId,
-      ROLE AS role,
-      MESSAGE_TEXT AS content,
-      IMAGE_BASE64 AS imageBase64,
-      IMAGE_URL AS imageUrl,
-      TO_CHAR(CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS createdAt
-    FROM CHAT_HISTORY
-    WHERE USER_ID = #{userId}
-    ORDER BY CREATED_AT DESC
-</select>
-	
+	<!-- CHAT_HISTORY 조회 -->
+	<select id="selectChatHistory" parameterType="map"
+		resultType="com.tokkitalk.analysis.GetHistoryServlet$HistoryItem">
+		SELECT
+		CHAT_ID AS id,
+		USER_ID AS userId,
+		ROLE AS role,
+		MESSAGE_TEXT AS content,
+		IMAGE_BASE64 AS imageBase64,
+		IMAGE_URL AS imageUrl,
+		TO_CHAR(CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS createdAt
+		FROM CHAT_HISTORY
+		WHERE USER_ID = #{userId}
+		ORDER BY CREATED_AT DESC
+	</select>
+
+	<delete id="deleteChatHistoryByIds" parameterType="map">
+		DELETE FROM chat_history
+		WHERE user_id = #{userId}
+		AND chat_id IN
+		<foreach item="item" index="index" collection="chatIds"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
 
 </mapper>
 

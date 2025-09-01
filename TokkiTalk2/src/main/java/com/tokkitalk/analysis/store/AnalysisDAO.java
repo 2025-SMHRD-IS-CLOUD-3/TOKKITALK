@@ -155,4 +155,16 @@ public class AnalysisDAO {
             return false;
         }
     }
+    
+    public void deleteChatHistoryByIds(String userId, List<Integer> chatIds) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) { // true로 설정하여 자동 커밋
+            Map<String, Object> params = new HashMap<>();
+            params.put("userId", userId);
+            params.put("chatIds", chatIds);
+            session.delete(MAPPER_NS + ".deleteChatHistoryByIds", params);
+        } catch (Exception e) {
+            System.err.println("[ERROR] deleteChatHistoryByIds 실패: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }

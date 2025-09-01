@@ -1,337 +1,63 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>히스토리 - TOKKI TALK</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            color: #333;
-            min-height: 100vh;
-        }
-
-        /* 헤더 */
-        .header { background: white; padding: 20px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .nav-container {
-            max-width: 1200px; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
-        }
-        .logo { font-size: 28px; font-weight: bold; color: #FFD200; letter-spacing: 2px; cursor: pointer; transition: color 0.3s; }
-        .logo a{ text-decoration: none; color: inherit; }
-        .logo:hover { color: #ff6b6b; }
-        .nav-menu { display: flex; gap: 40px; }
-        .nav-item { color: #666; text-decoration: none; font-size: 16px; font-weight: 500; transition: color 0.3s; }
-        .nav-item:hover { color: #ff6b6b; }
-        .nav-buttons { display: flex; gap: 15px; }
-        .btn-login, .btn-logout, .btn-signup { 
-            border: none; padding: 12px 24px; border-radius: 25px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.3s; 
-        }
-        .btn-login { background: #f1f3f4; color: black; }
-        .btn-login:hover { background: #ff6b6b; color: white; }
-        .btn-signup { background: #FFD200; color: black; }
-        .btn-signup:hover { background: #ff5252; }
-        .btn-logout { background: #f1f3f4; color: black; }
-        .btn-logout:hover { background: #ff6b6b; color: white; }
-        .user-info { display: none; align-items: center; gap: 15px; }
-        .welcome-text { font-size: 16px; color: #333; font-weight: 500; }
-
-        /* 마이페이지/히스토리 컨테이너 */
-        .mypage-container { max-width: 900px; margin: 40px auto; padding: 30px; background: white; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .mypage-heading { text-align: center; font-size: 28px; font-weight: bold; color: #333; margin-bottom: 10px; }
-        .page-subtitle { text-align: center; font-size: 16px; color: #666; margin-bottom: 30px; }
-        .history-container { display: flex; flex-direction: column; gap: 20px; }
-        .loading { text-align: center; padding: 50px 0; color: #666; font-size: 18px; }
-        .loading-dots { width: 60px; height: 30px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-around; }
-        .loading-dots div { width: 10px; height: 10px; background-color: #FFD200; border-radius: 50%; animation: bounce 1s infinite ease-in-out; }
-        .loading-dots div:nth-child(2) { animation-delay: -0.16s; }
-        .loading-dots div:nth-child(3) { animation-delay: -0.32s; }
-        @keyframes bounce { 0%,80%,100% { transform: scale(0); } 40% { transform: scale(1.0); } }
-        .no-history { text-align: center; padding: 50px 20px; display: none; }
-        .empty-state { display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .empty-icon { font-size: 48px; color: #adb5bd; }
-        .empty-state h3 { font-size: 22px; font-weight: bold; color: #495057; }
-        .empty-state p { font-size: 15px; color: #868e96; margin-bottom: 10px; }
-        .btn-primary { background: #FFD200; color: black; border: none; padding: 12px 24px; border-radius: 25px; font-size: 16px; font-weight: 500; cursor: pointer; transition: background 0.3s, transform 0.2s; }
-        .btn-primary:hover { background: #ffc800; transform: translateY(-2px); }
-
-        /* 히스토리 아이템 */
-        .conversation-item { border: 1px solid #e9ecef; border-radius: 15px; overflow: hidden; background: #fdfdfd; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: all 0.3s; }
-        .conversation-item:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .conversation-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #f1f3f4; cursor: pointer; }
-        .conversation-info { display: flex; align-items: center; gap: 10px; color: #495057; font-size: 15px; }
-        .conversation-date, .conversation-time { font-weight: 600; }
-        .btn-toggle { background: none; border: none; font-size: 20px; cursor: pointer; color: #868e96; transition: transform 0.3s; }
-        .conversation-content { padding: 20px; display: none; flex-direction: column; gap: 15px; border-top: 1px solid #e9ecef; }
-        .message-item { padding: 12px; border-radius: 12px; line-height: 1.5; }
-        .message-item.user { background-color: #fff9e6; align-self: flex-end; }
-        .message-item.TOKKITALK { background-color: #e6e8eb; align-self: flex-start; }
-        .message-header { font-weight: bold; color: #FFD200; margin-bottom: 5px; }
-        .message-role { font-size: 14px; }
-        .message-content pre { white-space: pre-wrap; word-wrap: break-word; font-family: inherit; font-size: 15px; margin: 0; color: #333; }
-
-        /* 푸터 */
-        .footer { background: #343a40; padding: 20px 0; color: #f8f9fa; text-align: center; margin-top: 50px; }
-        .footer-text { font-size: 14px; color: #adb5bd; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>히스토리 - TOKKI TALK</title>
+<link rel="stylesheet" href="History.css">
 </head>
 <body>
-    <header class="header">
-        <div class="nav-container">
-            <div class="logo"><a href="main.html">TOKKI TALK</a></div>
-            <nav class="nav-menu">
-                <a href="intro.html" class="nav-item">소개</a>
-                <a href="Question.html" class="nav-item">대화하기</a>
-                <a href="SenseTest.html" class="nav-item">센스고사</a>
-                <a href="MyPage.html" class="nav-item">마이페이지</a>
-            </nav>
-            <div class="nav-buttons" id="auth-buttons">
-                <button class="btn-login" onclick="window.location.href='main.html'">로그인</button>
-                <button class="btn-signup" onclick="window.location.href='main.html'">회원가입</button>
-            </div>
-            <div class="user-info" id="user-info-area">
-                <span class="welcome-text"><span id="headerUserName">사용자</span>님 환영합니다!</span>
-                <button class="btn-logout" id="logoutBtn">로그아웃</button>
-            </div>
-        </div>
-    </header>
+	<header class="header">
+		<div class="nav-container">
+			<div class="logo">
+				<a href="main.html">TOKKI TALK</a>
+			</div>
+			<nav class="nav-menu">
+				<a href="intro.html" class="nav-item">소개</a>
+				<a href="Question.html" class="nav-item">대화하기</a>
+				<a href="SenseTest.html" class="nav-item">센스고사</a>
+				<a href="MyPage.html" class="nav-item">마이페이지</a>
+			</nav>
+			<div class="nav-buttons" id="auth-buttons">
+				<button class="btn-login" onclick="window.location.href='main.html'">로그인</button>
+				<button class="btn-signup" onclick="window.location.href='main.html'">회원가입</button>
+			</div>
+			<div class="user-info" id="user-info-area">
+				<span class="welcome-text"><span id="headerUserName">사용자</span>님 환영합니다!</span>
+				<button class="btn-logout" id="logoutBtn">로그아웃</button>
+			</div>
+		</div>
+	</header>
 
-    <main class="mypage-container">
-        <h1 class="mypage-heading">📚 분석 히스토리</h1>
-        <p class="page-subtitle">이전에 분석한 메시지들의 기록을 확인할 수 있어요!</p>
-        
-        <div class="history-container" id="historyContainer">
-            <div class="loading" id="loading">
-                <div class="loading-dots">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-                <p>히스토리를 불러오는 중...</p>
-            </div>
-        </div>
+	<main class="mypage-container">
+		<h1 class="mypage-heading">📚 분석 히스토리</h1>
+		<p class="page-subtitle">이전에 분석한 메시지들의 기록을 확인할 수 있어요!</p>
 
-        <div class="no-history" id="noHistory">
-            <div class="empty-state">
-                <div class="empty-icon">📝</div>
-                <h3>아직 저장된 히스토리가 없어요</h3>
-                <p>분석 페이지에서 메시지를 분석하고 저장해보세요!</p>
-                <button class="btn-primary" onclick="window.location.href='Question.html'">분석하러 가기</button>
-            </div>
-        </div>
-    </main>
+		<div class="history-container" id="historyContainer">
+			<div class="loading" id="loading">
+				<div class="loading-dots">
+					<div></div><div></div><div></div>
+				</div>
+				<p>히스토리를 불러오는 중...</p>
+			</div>
+		</div>
 
-    <footer class="footer">
-        <div class="footer-container">
-            <p class="footer-text">© 2025 TOKKI TALK. All Rights Reserved.</p>
-        </div>
-    </footer>
+<div class="pagination-container" id="pagination"></div>
 
-    <script>
-    const authButtons = document.getElementById('auth-buttons');
-    const userInfoArea = document.getElementById('user-info-area');
-    const headerUserName = document.getElementById('headerUserName');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const historyContainer = document.getElementById('historyContainer');
-    const loading = document.getElementById('loading');
-    const noHistory = document.getElementById('noHistory');
+		<div class="no-history" id="noHistory">
+			<div class="empty-state">
+				<div class="empty-icon">📝</div>
+				<h3>아직 저장된 히스토리가 없어요</h3>
+				<p>분석 페이지에서 메시지를 분석하고 저장해보세요!</p>
+				<button class="btn-primary" onclick="window.location.href='Question.html'">분석하러 가기</button>
+			</div>
+		</div>
+	</main>
 
-    function updateHeaderUI() {
-        const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
-        const userName = sessionStorage.getItem('userName');
+	<footer class="footer">
+		<p class="footer-text">© 2025 TOKKI TALK. All Rights Reserved.</p>
+	</footer>
 
-        if (isLoggedIn && userName) {
-            authButtons.style.display = 'none';
-            userInfoArea.style.display = 'flex';
-            headerUserName.textContent = userName;
-        } else {
-            authButtons.style.display = 'flex';
-            userInfoArea.style.display = 'none';
-        }
-    }
-
-    function getApiBase() {
-        const host = window.location.hostname;
-        if (host === '127.0.0.1' || host === 'localhost') return 'http://localhost:8081/TokkiTalk2';
-        return window.location.origin;
-    }
-
-    async function loadHistory() {
-        try {
-            const res = await fetch(getApiBase() + '/getHistory');
-            if (!res.ok) throw new Error('서버 응답 실패: ' + res.status);
-            const historyItems = await res.json();
-            
-            loading.style.display = 'none';
-            if (!historyItems || historyItems.length === 0) {
-                noHistory.style.display = 'block';
-                return;
-            }
-
-            displayHistory(historyItems);
-        } catch (e) {
-            console.error('히스토리 로드 오류:', e);
-            showError('히스토리를 불러오는데 실패했습니다.');
-        }
-    }
-
-    function displayHistory(historyItems) {
-        historyContainer.innerHTML = '';
-        
-        const conversations = groupByConversation(historyItems);
-        
-        conversations.forEach(conversation => {
-            const conversationDiv = document.createElement('div');
-            conversationDiv.className = 'conversation-item';
-            
-            const conversationContentHtml = conversation.messages.slice().reverse().map(msg => {
-                const roleClass = msg.role === 'user' ? 'user' : 'TOKKITALK';
-                const roleName = msg.role === 'user' ? '사용자' : 'TOKKITALK';
-                let messageBody = '';
-
-                if (msg.role === 'TOKKITALK') {
-                    messageBody = formatTokkiTalk(msg.content);
-                } else {
-                    messageBody = `<pre>${msg.content}</pre>`;
-                }
-
-                if (msg.image_base64) {
-                	messageBody += `<img src="data:image/png;base64,${msg.image_base64}" class="chat-image" style="max-width:300px; height:auto; margin-top:10px; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.2);">`;
-                }
-
-                return `
-                    <div class="message-item ${roleClass}">
-                        <div class="message-header">
-                            <span class="message-role">${roleName}</span>
-                        </div>
-                        <div class="message-content">
-                            ${messageBody}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            conversationDiv.innerHTML = `
-                <div class="conversation-header" onclick="toggleConversation(this)">
-                    <div class="conversation-info">
-                        <span class="conversation-date">${conversation.date}</span>
-                        <span class="conversation-time">${conversation.time}</span>
-                    </div>
-                    <button class="btn-toggle"><span class="toggle-icon">▶</span></button>
-                </div>
-                <div class="conversation-content">
-                    ${conversationContentHtml}
-                </div>
-            `;
-            historyContainer.appendChild(conversationDiv);
-        });
-    }
-
-    function groupByConversation(historyItems) {
-        const conversations = [];
-        if (!historyItems || historyItems.length === 0) {
-            return conversations;
-        }
-
-        // 히스토리 아이템을 최신순으로 정렬
-        const sortedItems = historyItems.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-        let currentConversation = null;
-
-        sortedItems.forEach(item => {
-            // 어시스턴트 메시지를 발견하면 새로운 대화를 시작
-            if (item.role === 'assistant') {
-                currentConversation = {
-                    date: item.created_at.split(' ')[0],
-                    time: item.created_at.split(' ')[1].substring(0, 8),
-                    messages: []
-                };
-                conversations.push(currentConversation);
-            }
-
-            // 현재 대화가 존재하면 메시지를 추가
-            if (currentConversation) {
-                currentConversation.messages.push({
-                    id: item.chat_id,
-                    role: item.role,
-                    content: item.message_text,
-                    image_base64: item.image_base64 || null
-                });
-            }
-        });
-
-        return conversations;
-    }
-
-    function toggleConversation(header) {
-        const content = header.nextElementSibling;
-        const icon = header.querySelector('.toggle-icon');
-        if (content.style.display === 'none' || content.style.display === '') {
-            content.style.display = 'flex';
-            icon.textContent = '▼';
-        } else {
-            content.style.display = 'none';
-            icon.textContent = '▶';
-        }
-    }
-
-    function showError(message) {
-        loading.style.display = 'none';
-        historyContainer.innerHTML = `
-            <div class="error-message" style="text-align:center;padding:50px;">
-                <div style="font-size:48px;">⚠️</div>
-                <h3>오류가 발생했습니다</h3>
-                <p>${message}</p>
-                <button class="btn-primary" onclick="location.reload()">다시 시도</button>
-            </div>
-        `;
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        updateHeaderUI();
-        loadHistory();
-        if (logoutBtn) logoutBtn.addEventListener('click', () => {
-            sessionStorage.removeItem('loggedIn');
-            sessionStorage.removeItem('userName');
-            alert('로그아웃되었습니다.');
-            window.location.href = 'main.html';
-        });
-    });
-
-    function formatTokkiTalk(raw) {
-        let data;
-        try {
-            data = JSON.parse(raw);
-        } catch (e) {
-            return raw;
-        }
-
-        let adviceHtml = data.advice.map(a => `
-            <div class="advice-item">
-                <strong>${a.style}:</strong>
-                <span>${a.text}</span>
-            </div>
-        `).join("");
-
-        return `
-            <div class="tokkitalk-box">
-                <h4 style="color:#FFD200; font-weight:bold;">TOKKITALK</h4>
-                <p><strong>📝 표면적 의미:</strong><br>${data.surface_meaning.one_line}</p>
-                <p><strong>🔍 숨은 의도:</strong><br>${data.hidden_meaning.one_line}</p>
-                <p><strong>😊 감정 상태:</strong><br>${data.emotion.label}</p>
-                <div class="advice-box">
-                    <div class="advice-header">
-                        <span class="icon">💡</span>
-                        <strong class="advice-title">TOKKI의 제안들</strong>
-                    </div>
-                    ${adviceHtml}
-                </div>
-            </div>
-        `;
-    }
-    </script>
+	<script src="History.js"></script>
 </body>
 </html>
