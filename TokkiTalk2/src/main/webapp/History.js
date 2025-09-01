@@ -7,7 +7,7 @@ const loading = document.getElementById('loading');
 const noHistory = document.getElementById('noHistory');
 const paginationContainer = document.getElementById('pagination'); // 페이지네이션 컨테이너 변수 추가
 
-const ITEMS_PER_PAGE = 2; // 페이지당 항목 수
+const ITEMS_PER_PAGE = 5; // 페이지당 항목 수
 let totalConversations = []; // 전체 대화 기록을 저장할 배열
 
 function updateHeaderUI() {
